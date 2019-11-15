@@ -1,0 +1,70 @@
+/* Start of header top */
+.header-top img{
+    padding-top: 21px;
+    padding-bottom: 13px;
+}
+
+.header-menu ul{
+    list-style-type: none;
+}
+
+.header-menu li{
+    float: left;
+    padding-left: 53px;
+    line-height: 80px;
+}
+
+.header-menu li a{
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+}
+
+.header-menu.active{
+    background-color: aqua;
+}
+
+.header-menu li a:hover{
+    color:green;
+}
+
+.header-menu ul img {
+    background-repeat: no-repeat;
+    padding-top: 32px;
+
+}
+
+.header-menu span{
+    display : block;
+    width: auto;
+    height: 30px;
+}
+
+.header-menu span:hover{
+    background-color: blue;
+}
+
+.header-menu a{
+    
+}
+
+
+
+
+/* End of heador top */
+/*/////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+
+
+
+
+/* Header bottom part */
+
+.header-bottom li a{
+    text-decoration: none;
+    color: #7c8282;
+}
+
+.header-bottom a:hover{
+    color:black;
+}

@@ -1,0 +1,519 @@
+/* Start of header top */
+body{
+    background-color: #f3f3f3;
+    width: 1500px;
+}.header-top-l img{
+    padding-top: 21px;
+    padding-bottom: 13px;
+}
+
+.header-top-r ul{
+    list-style-type: none;
+}
+
+.header-top-l img{
+    width:103px;
+     height:30px;
+}
+
+.header-top-r li{
+    float: left;
+    padding-left: 25px;
+    padding-right: 28px;
+}
+
+#search{
+    padding-right: 0px;
+}
+
+.header-top-r li a{
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    line-height: 80px;
+}
+
+.header-top-r ul img {
+    background-repeat: no-repeat;
+    padding-top: 32px;
+}
+
+.header-top-r ul li a:hover{
+    color: blueviolet;
+}
+
+.header-top-r ul li.active{
+    background-color: black;
+    border:white;
+}
+
+/* Header bottom part */
+
+.header-bottom-l{
+    /* text-align: left; */
+    color: #7c8282;
+}
+
+.header-bottom-r ul{
+    list-style-type: none;
+}
+
+.header-bottom-r li{
+    display: inline-block;
+    color: #7c8282;
+}
+
+.header-bottom-r li a{
+    text-decoration: none;
+    color:#7c8282;
+}
+
+.header-bottom-r a:hover{
+    color:black;
+}
+/* End of Header section */
+
+
+
+
+/*Body section start*/
+
+.main-imageSlider .imageSlider{
+    width: 1170px;
+    height: 830px;
+}
+
+.imageSlider .box{
+    position: relative;
+}
+
+
+
+.imageSlider .box .text{
+    position: absolute;
+    top:430px;
+    left:450px;
+    font-size: 40px;
+}
+
+.imageSlider .box .btn1{
+    background: url("../image/slider-left.png");
+    background-repeat: no-repeat;
+    position : absolute;
+    top: 350px;
+    height: 60px;
+    width: 50px;
+}
+
+.imageSlider .box .btn2{
+    background: url("../image/slider-right.png");
+    background-repeat: no-repeat;
+    position : absolute;
+    top: 350px;
+    right: 0px;
+    height: 60px;
+    width: 50px;
+}
+
+.indicator{
+    padding-top: 20px;
+}
+
+.indicator ul{
+    list-style: none;
+    text-align: center;
+}
+
+.indicator ul li{
+    display: inline-block;
+}
+
+.indicator ul li.active{
+    background: url('../image/slider-active.png');
+    width: 60px;
+    height: 5px;
+}
+
+.indicator ul li.inactive{
+    background: url('../image/slider-inactive.png');
+    width: 60px;
+    height: 5px;
+}
+
+
+.second-imageSlider{
+    width: 1170px;
+    height: 660px;
+}
+
+.slider-l{
+    width: 870px;
+    float: left;
+    padding-right: 30px;
+}
+
+
+
+.slider-l .imageSlider .box .btn1{
+    background: url("../image/slider-left.png");
+    background-repeat: no-repeat;
+    position : absolute;
+    top: 150px;
+    height: 70px;
+    width: 70px;
+}
+
+.slider-l .imageSlider .box .btn2{
+    background: url("../image/slider-right.png");
+    background-repeat: no-repeat;
+    position : absolute;
+    top: 150px;
+    right: 0px;
+    height: 70px;
+    width: 70px;
+}
+
+.slider-l .box .image img{
+    width: 870px;
+}
+
+
+.slider-l .imageSlider{
+    position :relative;
+    width: 870px;
+}
+.slider-l .imageSlider .text{
+    position: absolute;
+    top: 350px;
+    right: -0px;
+}
+
+
+
+
+.slider-r{
+    float: right;
+    width: 270px;
+}
+
+.slider{
+    height: 190px;
+}
+
+.slider .imageSlider{
+    position: relative;
+    width: 270px;
+}
+
+.slider .imageSlider .indicator{
+    padding-top: 10px;
+}
+
+.slider .imageSlider .text{
+    font-size: 20px;
+}
+
+.slider-r .imageSlider .box .btn1{
+    background: url("../image/slider-left-small.png");
+    background-repeat: no-repeat;
+    position : absolute;
+    top: 75px;
+    height: 40px;
+    width: 40px;
+}
+
+.slider-r .imageSlider .box .btn2{
+    background: url("../image/slider-right-small.png");
+    background-repeat: no-repeat;
+    position : absolute;
+    top: 75px;
+    right: 0px;
+    height: 40px;
+    width: 40px;
+}
+
+.slider-r .imageSlider{
+    width: 270px;
+    height: 180px;
+}
+
+.slider-r .imageSlider .image img{
+    width: 270px;
+    height: 170px;
+}
+
+
+.slider .box .text{
+    position: absolute;
+    top: 100px;
+    left: 50px;
+}
+
+.slider-r .photo .title{
+    padding-top: 50px;
+    font-size: 20px;
+    font-weight: bolder;
+    color: black;
+    padding-left: 10px;
+    padding-bottom: 30px;
+}
+
+.slider-r .photo .photo-list ul{
+    list-style-type: none;
+}
+
+.slider-r .photo .photo-list ul li{
+    display: inline-block;
+}
+
+.slider-r .photo .photo-list ul li{
+    background: url("../image/blue.png");
+    background-size: cover;
+    height: 70px;
+    width: 70px;
+    padding-right: 10px;
+}
+
+
+
+/* Information section starts here */
+
+.info{
+    width: 1170px;
+    height: 420px;
+}
+
+.info-wrapper{
+    width: 270px;
+    display: inline-block;
+    padding-right: 15px;
+}  
+
+.info .info-container{
+    background-color: #f8f8f8;
+    position: relative;
+    height: 310px;
+    padding: 20px 20px 20px 20px;
+    display: inline-block;
+}
+
+.info .info-container .button {
+    background: url("../image/li-hover.png");
+    background-color: #76c7c1;
+}
+
+
+.info .info-container .button:hover {
+    background: url("../image/li-hover.png");
+    background-color: #e9645b;
+}
+
+.info .info-wrapper .info-container .icon{
+    background: url("../image/1.png");
+    width: 76px;
+    height: 76px;
+    background-repeat: no-repeat;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info .info-wrapper .info-container .head {
+    text-align: center  ;
+}
+
+.info .head {
+    padding-top: 10px;
+    font-size: 20px;
+    font-weight: bold ;
+    padding-bottom: 20px;
+}
+
+.info .para{
+    color: #707070;
+    font-size: 18px;
+}
+
+
+.info .button {
+    height: 54px;
+    width: 200px;
+    background: url("../image/li-hover.png");
+    position : absolute;
+    bottom: 20px;
+
+}
+
+.info .info-container .button p{
+    color: white;
+    text-align: center;
+    font-size: 19px;
+    padding-top: 15px;
+}
+
+
+
+
+
+/* Hidder css stars now */
+.hidders{
+    width: 1170;
+    height: auto;
+    padding-right: 30px;
+}
+
+.mainHidder .hidders .hidder{
+    display: inline-block;
+    width: 800px;
+}
+
+.mainHidder .hidders .hidder .inform{
+    position : initial;
+    height: 100px;
+    width: 860px;
+    display: none;
+}
+
+.mainHidder .title{
+    float: left;
+    height: 40px;
+    width: 800px;
+    background-color: #f8f8f8;
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.mainHidder .title .head{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.mainHidder .title .img{
+    background: url("../image/plus-sign.png");
+    height: 20px;
+    width: 20px;
+    background-repeat: no-repeat;
+    float: right;
+    padding-right: 20px;
+}
+
+.mainHidder .hidders .inform{
+    text-align: justify;
+}
+
+
+
+
+
+.mainHidder .title:hover + div.inform{
+    padding-top: 30px;
+    padding-left: 30px;
+    display: inline-block;
+    color: black;
+}
+
+
+
+
+
+/* gallery */
+
+.gallery{
+    width: 1170px;
+    height: 400px;
+}
+
+.small-gallery{
+    padding-top: 20px;
+    display: inline-block;
+}
+
+.photo{
+    background: url("../image/before-hover.png");
+}
+
+
+
+
+/* Footer part start */
+
+.footer-top{
+    background: url("../image/bottom-bg.png");
+    background-repeat: repeat-x ;
+    background-color: #76c7c1;
+    min-height: 255px;
+    padding-top: 45px;
+    
+}
+
+.footer-top-l{
+    float: left;
+    width: 340px;
+}
+
+.footer-top-l p{
+    padding-top: 20px;
+    line-height: 25px;
+}
+
+.footer-menu ul{
+    list-style-image: url("../image/img-icon1.png");   
+}
+
+.footer-top-r{
+    float : right;
+    width: 830px;
+}
+
+.footer-menu{
+    float: left;
+}
+
+.blog{
+    float: right;
+    width: 380px;
+}
+
+.company{
+    padding-left: 10px;
+    width: 175px;
+    float: left;
+}
+
+.community{
+    padding-left: 10px;
+    width: 170px;
+    float: right;
+}
+
+.blog{
+    width: 360px;
+}
+
+.blog ul{
+    list-style: none;
+    display: inline-block;
+}
+
+.blog li p{
+    text-align: justify;
+}
+
+.footer-bottom{
+    height: 50px;
+    background-color: #6bb4ad;
+}
+
+.copyright {
+    float: left;
+    width :200px;
+    padding :20px 0px 0px 0px;
+}
+
+.subscriber{
+    padding-top: 13px;
+    float: right;
+}
+
+.subscriber a{
+    padding-left: 24px;
+}

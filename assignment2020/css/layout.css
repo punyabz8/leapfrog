@@ -1,0 +1,40 @@
+.lrPadding{
+    padding-left: 165px;
+    padding-right: 165px;
+}
+
+.header{
+    height: 180px;
+}
+
+.header-top{
+    background-color: #76c7c1;
+    height:80px;
+    background-image: url("../image/header-bg.png");
+    background-position: bottom;
+    background-repeat: repeat-x;
+}
+
+.header-bottom{
+    line-height: 80px;
+    height: 80px;    
+    background-color: #ececec;
+}
+
+.header-top-l {
+    height: 80px;
+    float: left;
+}
+
+.header-top-r{
+    float: right;
+    height: 80px;
+}
+
+.header-bottom-l{
+    float: left;
+}
+
+.header-bottom-r{
+    float: right;
+}

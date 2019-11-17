@@ -89,6 +89,8 @@
     line-height: 20px;
 }
 
+
+
 .col3-l{
     padding-top:73px;
 }
@@ -108,6 +110,13 @@
     float: left;
     width: 520px;
 }
+
+.first-main-container p a{
+    text-decoration: underline;
+    color: #808c8c;
+}
+
+.first-main-container p a:hover{color :red;}
 
 .first-r{
     float: right;
@@ -195,11 +204,166 @@
     background-image: url("../image/our-team.png");
     background-position: left;
     background-repeat: repeat-x;
+    background-color: #f3f3f3;
+}
+
+.team{
+    padding-top: 50px;
+}
+.title{
+    text-align: center;
+    font-size: 40px;
+}
+
+.team{
+    background: url("../image/background.jpg");
+    background-position-x: left;
+    background-repeat: repeat-x;
+}
+
+.team-wrapper{
+    padding-top: 30px;
+}
+
+.team-container{
+    width: 270px;
+    height: 313px;
+    position: relative;
+    background-image: url("../image/profile.jpg");
+    background-size: cover;
+    display: inline-block;
+}
+
+.team-info{
+    display: none;
+    padding: 20px 20px 20px 20px;
+    line-height: 23px;
+}
+
+.team-info p{
+    color :white;
+}
+
+.info ul{
+    list-style-type: none; 
+    padding-top: 110px;
+}
+
+.info ul li{
+    float: left;
+    width: 30px;
+    height: 30px;
+    padding-right: 25px;
+    
+}
+
+.buton{
+    background-image: url("../image/button.png");
+    color: #fcffff;
+    position: absolute;
+    bottom: -15px;
+    left:90px;
+    border: 1px solid #fcffff;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+}
+
+.buton p{
+    padding-top: 5px;
+}
+
+.team-container:hover .buton{
+    background-image: url("../image/button-hover.png");
 }
 
 
+.team-container:hover{
+    background-image: url("../image/team-info.jpg");
+}
 
 
+.final{
+    background-color: #f3f3f3;
+}
+
+.final .head{
+    color: red;
+    text-align: center;
+    font-size: 25px;
+}
+
+.final .info p{
+    padding-top: 15px;
+    padding-left: 40px;
+    padding-right: 40px;
+    text-align: center;
+}
+
+.clients{
+    padding-top: 40px;
+}
+
+.clients p{
+    float: left;
+    font-size: 25px;
+}
+
+.line{
+    background-color: #e1e1e1;
+    height: 8px;
+    display: inline-block;
+}
+
+.more-info{
+    float : right;
+}
+
+.more-info ul{
+    list-style: none;
+}
+
+.more-info ul li{
+    display: inline-block;
+}
+
+.more-info ul li:hover {
+    background: url("../image/left-arrow-red.png");
+}
+
+/* .clients p{
+    padding-top: 40px;
+}
+
+.more-info{
+    float: right;
+}
+
+ .clients .line{ 
+    background: url("../image/level.png");
+    background-repeat: repeat-x;
+    display: inline-block;
+} 
+
+.clients ul{
+    list-style: none;
+}
+.clients ul li{
+    display: inline-block;
+} */
+
+.queries{
+    padding-top: 60px;
+}
+
+.query{
+    display: inline-block;
+}
+
+
+/* .team-container:hover .team-info{
+    display: block;
+} */
 
 /* Body part end here */
 
@@ -207,85 +371,85 @@
 
 
 /* Footer part start */
-footer{
-    height: auto;
-}
 
 .footer-top{
+    background: url("../image/bottom-bg.png");
+    background-repeat: repeat-x ;
     background-color: #76c7c1;
-    min-height: 300px;
+    min-height: 255px;
     padding-top: 45px;
+    
 }
 
-.footer-top-left, .footer.bottom .copyright{
+.footer-top-l{
     float: left;
+    width: 340px;
 }
 
-.footer-top-left p{
-    padding-top: 28px;
-    line-height: 28px;
-}
-
-.footer-top-left{
-    width: 360px;
-}
-
-.footer-top-right{
-    width : 600px;
-    text-align: left;
-}
-.blog{
-    width: 300px;
+.footer-top-l p{
+    padding-top: 20px;
+    line-height: 25px;
 }
 
 .footer-menu ul{
     list-style-image: url("../image/img-icon1.png");   
 }
 
-.footer-top-right{
-    display:inline-block;
+.footer-top-r{
+    float : right;
+    width: 830px;
+}
+
+.footer-menu{
+    float: left;
+}
+
+.blog{
+    float: right;
+    width: 380px;
 }
 
 .company{
-    width: 400px;
-    margin-left: 30px;
-    display: inline-block;
+    padding-left: 10px;
+    width: 175px;
+    float: left;
 }
 
 .community{
-    display: inline-block;
+    padding-left: 10px;
+    width: 170px;
+    float: right;
 }
 
-
-
-
- .blog{
-    display: inline-block;
-} 
+.blog{
+    width: 360px;
+}
 
 .blog ul{
-    list-style-type: none;
+    list-style: none;
+    display: inline-block;
 }
 
-.blot ul li{
-    float:inline-block;
+.blog li p{
+    text-align: justify;
 }
 
 .footer-bottom{
     height: 50px;
     background-color: #6bb4ad;
-
 }
 
 .copyright {
+    float: left;
     width :200px;
     padding :20px 0px 0px 0px;
 }
-/* 
-.footer .bottom img{
-    padding: 14px 0px 14px 0px;
-} */
 
 .subscriber{
+    padding-top: 13px;
     float: right;
+}
+
+.subscriber a{
+    padding-left: 24px;
 }

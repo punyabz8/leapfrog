@@ -387,6 +387,8 @@
 
 /* Footer part start */
 
+/* Footer part start */
+
 .footer-top{
     background: url("../image/bottom-bg.png");
     background-repeat: repeat-x ;
@@ -419,34 +421,40 @@
     float: left;
 }
 
-.blog{
-    float: right;
-    width: 380px;
-}
 
 .company{
-    padding-left: 10px;
+    padding-left: 20px;
     width: 175px;
     float: left;
 }
 
 .community{
-    padding-left: 10px;
+    padding-left: 20px;
     width: 170px;
     float: right;
 }
 
 .blog{
-    width: 360px;
+    float: right;
+    width: 380px;
+}
+
+.blog p.title{
+    font-size: 20px;
 }
 
 .blog ul{
     list-style: none;
+}
+
+.blog ul li{
     display: inline-block;
 }
 
 .blog li p{
     text-align: justify;
+    width: 260px;
+    padding-left: 20px;
 }
 
 .footer-bottom{
@@ -457,7 +465,7 @@
 .copyright {
     float: left;
     width :200px;
-    padding :20px 0px 0px 0px;
+    padding :20px
 }
 
 .subscriber{

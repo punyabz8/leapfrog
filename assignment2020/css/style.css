@@ -541,7 +541,7 @@ body{
 
 
 .demo4{
-    width: 1170px;
+    /* width: 1170px; */
     height: 160px;
 }
 
@@ -580,6 +580,64 @@ body{
 }
 
 
+.list{
+    /* width :1170px; */
+
+    padding-top: 40px;
+    height: 300px;
+}
+
+.list-l{
+    float: left;
+    width: 540px;
+}
+
+.list-r{
+    float: right;
+    width: 540px;
+}
+
+.list-l-l{
+    float: left;
+    width: 240px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.list-l-r{
+    float: right;
+    width: 240px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.list-r-l{
+    float: left;
+    width: 240px;
+}
+
+.list-r-r{
+    float: right;
+    width :240px;
+}
+
+/* .list-l-r{
+    float: right;
+    width: 260px;
+} */
+/* 
+.list-r-l{
+    float: left;
+    width:260;
+}
+
+.list-r-r{
+    float: right;
+    width: 260px;
+} */
+
+
+
 /* Footer part start */
 
 .footer-top{
@@ -614,34 +672,40 @@ body{
     float: left;
 }
 
-.blog{
-    float: right;
-    width: 380px;
-}
 
 .company{
-    padding-left: 10px;
+    padding-left: 20px;
     width: 175px;
     float: left;
 }
 
 .community{
-    padding-left: 10px;
+    padding-left: 20px;
     width: 170px;
     float: right;
 }
 
 .blog{
-    width: 360px;
+    float: right;
+    width: 380px;
+}
+
+.blog p.title{
+    font-size: 20px;
 }
 
 .blog ul{
     list-style: none;
+}
+
+.blog ul li{
     display: inline-block;
 }
 
 .blog li p{
     text-align: justify;
+    width: 260px;
+    padding-left: 20px;
 }
 
 .footer-bottom{
@@ -652,7 +716,7 @@ body{
 .copyright {
     float: left;
     width :200px;
-    padding :20px 0px 0px 0px;
+    padding :20px
 }
 
 .subscriber{

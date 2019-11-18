@@ -9,9 +9,19 @@
     list-style-type: none;
 }
 
+.header-top-l img{
+    width:103px;
+     height:30px;
+}
+
 .header-top-r li{
     float: left;
-    padding-left: 53px;
+    padding-left: 25px;
+    padding-right: 28px;
+}
+
+#search{
+    padding-right: 0px;
 }
 
 .header-top-r li a{
@@ -28,6 +38,11 @@
 
 .header-top-r ul li a:hover{
     color: blueviolet;
+}
+
+.header-top-r ul li.active{
+    background-color: black;
+    border:white;
 }
 
 /* .header-top-r li span{

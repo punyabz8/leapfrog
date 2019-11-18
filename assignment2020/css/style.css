@@ -1,4 +1,8 @@
 /* Start of header top */
+p{
+    overflow: hidden;
+}
+
 body{
     background-color: #f3f3f3;
     width: 1500px;
@@ -38,13 +42,26 @@ body{
     padding-top: 32px;
 }
 
+.header-top-r .act{
+    
+    background-color: #63a19e;
+    display: block;
+    border-style: solid;
+    margin-top: -10px;
+    border-color: #63a19e;
+    border-width: 2px 3px 3px 4px;
+    width:100px;
+    height:40px;
+    background-color:#63a19e;
+    text-align:center;
+}
+
 .header-top-r ul li a:hover{
     color: blueviolet;
 }
 
-.header-top-r ul li.active{
-    background-color: black;
-    border:white;
+.header-top-r ul li.active + .change{
+    color: black;
 }
 
 /* Header bottom part */
@@ -419,19 +436,148 @@ body{
 
 .gallery{
     width: 1170px;
-    height: 400px;
+    height:800px;
 }
 
 .small-gallery{
     padding-top: 20px;
+    height: 260px;
+    
+}
+
+
+
+.small-gallery ul{
+    list-style: none;
+}
+
+.small-gallery ul li{
     display: inline-block;
 }
 
-.photo{
+
+
+.small-gallery li{
+    height: 250px;
+    width: 250px;
+    padding-left: 15px;
+    padding-right: 15px;
     background: url("../image/before-hover.png");
 }
 
 
+
+.large-gallery{
+    padding-top: 20px;
+    
+}
+
+
+
+.large-gallery ul{
+    list-style: none;
+}
+
+.large-gallery ul li{
+    display: inline-block;
+    height: 400px;
+    width: 550px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background: url("../image/before-hover.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+.text-demo{
+    text-align: justify;
+}
+
+.demo1{
+    width: 1170px;
+    height: 160px;
+}
+
+.demo1 .content{
+    padding-top: 10px;
+}
+
+
+.demo2{
+    width:1170px;
+    height: 160px;
+}
+
+.demo2 .demo2-l{
+    float: left;
+    width: 560px;
+    padding-top: 10px;
+    padding-right: 15px;
+}
+
+.demo2 .demo2-r{
+    float: right;
+    width: 560px;
+    padding-top: 10px;
+    padding-left: 15px;
+}
+
+.demo3{
+    /* width:1170px; */
+    height: 160px;
+}
+
+.demo3-l{
+    float: left;
+    width: 870px;
+    padding-right: 30px;
+}
+
+.demo3-r{
+    float: right;
+    width: 270px;
+}
+
+
+.demo4{
+    width: 1170px;
+    height: 160px;
+}
+
+.demo4 .demo4-l{
+    float: left;
+    width: 540px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.demo4 .demo4-r{
+    float: right;
+    width: 540px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.demo4 .demo4-l-l{
+    float: left;
+    width: 260px;
+}
+
+.demo4 .demo4-l-r{
+    float: right;
+    width: 250px;
+}
+
+.demo4 .demo4-r-l{
+    float: left;
+    width: 260px;   
+}
+
+.demo4 .demo4-r-r{
+    float: right;
+    width: 260px;
+}
 
 
 /* Footer part start */

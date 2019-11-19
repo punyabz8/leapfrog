@@ -9,6 +9,22 @@
     list-style-type: none;
 }
 
+.header-top-r span{
+    height: 20px;
+    width: 90px;
+    /* padding: 10px 20px 10px 20px; */
+    /* background-color: #60a29e; */
+    background :url("../image/menu-active.png");
+    background-size: auto;
+    /* border: solid black; */
+    /* border-width: 1px 2px 3px 1px; */
+}
+/* 
+.header-top-r ul li a:hover{
+    color: #5b9d93;
+} */
+
+
 .header-top-l img{
     width:103px;
      height:30px;
@@ -36,27 +52,6 @@
     padding-top: 32px;
 }
 
-.header-top-r ul li a:hover{
-    color: blueviolet;
-}
-
-.header-top-r ul li.active{
-    background-color: black;
-    border:white;
-}
-
-/* .header-top-r li span{
-    display : block;
-    height: 30px;
-    background-color: blue;
-} */
-    /* 
-    .back{
-        background: url("../image/down-arrow.png");
-        background-repeat: no-repeat;
-        background-position: bottom;
-        background-size: auto;
-    }   */
 
 /* End of heador top */
 /*/////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -246,6 +241,7 @@
     position: relative;
     background-image: url("../image/profile.jpg");
     background-size: cover;
+    position:relative;
     display: inline-block;
 }
 
@@ -253,6 +249,8 @@
     display: none;
     padding: 20px 20px 20px 20px;
     line-height: 23px;
+    position:absolute;
+    top:0;
 }
 
 .team-info p{
@@ -262,6 +260,11 @@
 .info ul{
     list-style-type: none; 
     padding-top: 110px;
+}
+
+.team-container:hover .team-info
+{
+    display: block;
 }
 
 .info ul li{

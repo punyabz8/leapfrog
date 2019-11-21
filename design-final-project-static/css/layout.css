@@ -8,4 +8,8 @@ header{
 }
 nav{
     margin: 0 auto;
+   overflow: auto;
+}
+*{
+    outline: 1px dotted red;
 }

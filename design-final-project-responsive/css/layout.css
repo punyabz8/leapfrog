@@ -1,0 +1,15 @@
+header{
+    margin: 0 auto;
+    line-height: 102px;
+}
+.width{
+    width: 1170px;
+    margin: 0 auto;
+}
+nav{
+    margin: 0 auto;
+   overflow: auto;
+}
+*{
+    outline: 1px dotted red;
+}

@@ -576,3 +576,18 @@ button{
 .mobile .mobOut img{
     height: 430px;
 }
+
+
+
+@media screen and (max-width:768px){
+    
+    
+    .width{
+        width:95%;
+        margin: 0 auto;
+    }
+    .navbar-l{
+        width:100%;
+        text-align:center;
+    }
+}

@@ -1,6 +1,6 @@
 header{
     margin: 0 auto;
-    line-height: 102px;
+    line-height: 100px;
 }
 .width{
     width: 1170px;
@@ -8,8 +8,5 @@ header{
 }
 nav{
     margin: 0 auto;
-   overflow: auto;
-}
-*{
-    outline: 1px dotted red;
+   /* overflow: auto; */
 }

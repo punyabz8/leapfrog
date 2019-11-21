@@ -1,7 +1,3 @@
-/* body{
-    background: url("../background.png");
-    background-repeat: no-repeat;
-} */
 header{
     background-color: white;
 }
@@ -14,7 +10,7 @@ header{
 }
 nav .navbar-l{
     float: left;
-    line-height: 115px;
+    line-height: 100px;
 }
 .navigation ul:first-child{
     float: right;
@@ -66,7 +62,7 @@ nav .navbar-l{
     width: 1068px; 
 }
 .info-c{
-    padding-top: 100px;
+    padding-top: 115px;
     padding-bottom: 120px;
 }
 .info-c .text{
@@ -85,11 +81,11 @@ nav .navbar-l{
     padding: 26px 54px;
 }
 .service-w{
-    padding:98px 0px;
+    padding:90px 0px 0px 0px;
 }
 .service-c{
     display: inline-block;
-    padding-bottom: 85px;
+    padding-bottom: 43px;
     overflow: hidden;
 }
 .service-contain{
@@ -108,16 +104,21 @@ nav .navbar-l{
 .service-b{
     text-align: center;
     padding-top: 18px;
+    padding-bottom: 102px;
     background-color: white;
 }
 .design{
     background-image: linear-gradient(180deg,#ff6c54,#ff3858);
 }
-.design-c, .feeds-c, .team-c{
+.design-c{
     padding: 90px 0px 0px 20px;
 }
+
+.feeds-c, .team-c{
+    padding: 80px 0px 0px 20px;
+}
 .design-c-t{
-    padding-bottom: 90px;
+    padding-bottom: 140px;
 }
 .design-c-t p, .feeds-c-t p{
     color: white;
@@ -130,6 +131,7 @@ nav .navbar-l{
 .responsive-l{
     float: left;
     height: 570px;
+    margin-left: 75px;
 }
 .responsive-r{
     float: right;
@@ -159,7 +161,7 @@ nav .navbar-l{
     background-image: linear-gradient(180deg,#59ebc9,#4bdecc);
 }
 .feeds-c{
-    padding: 90px 0px 90px 0px;
+    padding: 80px 0px 50px 0px;
 }
 .feeds-c-t p{
     color: white;
@@ -218,7 +220,7 @@ nav .navbar-l{
 .feed-link p{
     text-align: center;
     color: #929ba0;
-    padding: 20px 30px;
+    padding: 20px 30px 10px 30px
 }
 .feed-link{
     text-decoration: none;
@@ -238,7 +240,7 @@ nav .navbar-l{
     background-color: #233537;
 }
 .live-data-w{
-    padding: 57px 0px 112px 0px;
+    padding: 57px 0px 90px 0px;
 }
 .live-content{  
     width: 270px;
@@ -259,7 +261,7 @@ nav .navbar-l{
     color: #afb6b9;
 }
 .team-c-t p:first-child{
-    font-size: 40px;
+    font-size: 35px;
     margin-bottom: 40px;
     color: black;
     font-weight: 100;
@@ -320,7 +322,7 @@ nav .navbar-l{
 }
 .option{
     padding-top: 50px;
-    padding-bottom: 102px;
+    padding-bottom: 80px;
 }
 .scrolling-w p{
     color:white;
@@ -345,7 +347,7 @@ nav .navbar-l{
     background-color: #233537;
 }
 .subscribe-w{
-    padding-top: 92px;
+    padding-top: 70px;
 }
 .subscribe-content p{
     color: white;
@@ -367,7 +369,6 @@ nav .navbar-l{
     border-color: white;
 }
 .subscribe-content{
-    padding-bottom: 96px;
     text-align: center;
 }
 .subscribe-content a{
@@ -398,7 +399,7 @@ nav .navbar-l{
 }
 .about-content h3{
     padding-bottom: 47px;
-    font-size: 26px;
+    font-size: 18px;
 }
 .about-content p{
     color: #929ba0;
@@ -406,7 +407,7 @@ nav .navbar-l{
 .modern-design{
     background-image: linear-gradient(180deg,#58ebca,#53e6cb);
     clear: both;
-    padding-top: 110px;
+    padding-top: 95px;
 }
 .modern-w-l{
     float: left;
@@ -425,7 +426,7 @@ nav .navbar-l{
 .modern-content .white{
     color : white;
     padding-top: 25px;
-    padding-left: 100px;
+    margin-left: 100px;
 }
 .client-t{
     text-align: center;

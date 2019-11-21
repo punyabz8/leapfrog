@@ -1,7 +1,3 @@
-/* body{
-    background: url("../background.png");
-    background-repeat: no-repeat;
-} */
 header{
     background-color: white;
 }
@@ -14,7 +10,7 @@ header{
 }
 nav .navbar-l{
     float: left;
-    line-height: 115px;
+    line-height: 100px;
 }
 .navigation ul:first-child{
     float: right;
@@ -61,12 +57,12 @@ nav .navbar-l{
     background-image: linear-gradient(180deg,#6cfec6,#43d6cd);
     background-size: auto;
 }
-.info-w{
+.info-c{
     padding: 150px 102px;   
     width: 1068px; 
 }
 .info-c{
-    padding-top: 100px;
+    padding-top: 115px;
     padding-bottom: 120px;
 }
 .info-c .text{
@@ -84,12 +80,12 @@ nav .navbar-l{
     border-radius: 10px;
     padding: 26px 54px;
 }
-.service-w{
-    padding:98px 0px;
+.service-c{
+    padding:90px 0px 0px 0px;
 }
 .service-c{
     display: inline-block;
-    padding-bottom: 85px;
+    padding-bottom: 43px;
     overflow: hidden;
 }
 .service-contain{
@@ -108,16 +104,21 @@ nav .navbar-l{
 .service-b{
     text-align: center;
     padding-top: 18px;
+    padding-bottom: 102px;
     background-color: white;
 }
 .design{
     background-image: linear-gradient(180deg,#ff6c54,#ff3858);
 }
-.design-c, .feeds-c, .team-c{
+.design-c{
     padding: 90px 0px 0px 20px;
 }
+
+.feeds-c, .team-c{
+    padding: 80px 0px 0px 20px;
+}
 .design-c-t{
-    padding-bottom: 90px;
+    padding-bottom: 140px;
 }
 .design-c-t p, .feeds-c-t p{
     color: white;
@@ -130,6 +131,7 @@ nav .navbar-l{
 .responsive-l{
     float: left;
     height: 570px;
+    margin-left: 75px;
 }
 .responsive-r{
     float: right;
@@ -159,7 +161,7 @@ nav .navbar-l{
     background-image: linear-gradient(180deg,#59ebc9,#4bdecc);
 }
 .feeds-c{
-    padding: 90px 0px 90px 0px;
+    padding: 80px 0px 50px 0px;
 }
 .feeds-c-t p{
     color: white;
@@ -218,14 +220,14 @@ nav .navbar-l{
 .feed-link p{
     text-align: center;
     color: #929ba0;
-    padding: 20px 30px;
+    padding: 20px 30px 10px 30px
 }
 .feed-link{
     text-decoration: none;
 }
 .feed-link .title{
     color: black;
-    font-weight: bold;
+    font-ceight: bold;
     font-size: 20px;
 }
 .more-feeds-icon{
@@ -237,8 +239,8 @@ nav .navbar-l{
 .live-data{
     background-color: #233537;
 }
-.live-data-w{
-    padding: 57px 0px 112px 0px;
+.live-data-c{
+    padding: 57px 0px 90px 0px;
 }
 .live-content{  
     width: 270px;
@@ -259,10 +261,10 @@ nav .navbar-l{
     color: #afb6b9;
 }
 .team-c-t p:first-child{
-    font-size: 40px;
+    font-size: 35px;
     margin-bottom: 40px;
     color: black;
-    font-weight: 100;
+    font-ceight: 100;
 }
 .team-c-t{
     padding-bottom: 98px;
@@ -294,7 +296,7 @@ nav .navbar-l{
     width: 270px;
 }
 .team-content .name, .client-b .name{
-    font-weight: 100;
+    font-ceight: 100;
     padding-top: 34px;
     font-size: 20px;
 }
@@ -311,7 +313,7 @@ nav .navbar-l{
 .scrolling{
     background-image: linear-gradient(180deg,#ff5b55,#ff3558);
 }
-.scrolling-w{
+.scrolling-c{
     text-align: center;
 }
 .pause{
@@ -320,19 +322,19 @@ nav .navbar-l{
 }
 .option{
     padding-top: 50px;
-    padding-bottom: 102px;
+    padding-bottom: 80px;
 }
-.scrolling-w p{
+.scrolling-c p{
     color:white;
     font-size: 18px;
 }
-.scrolling-w .title{
+.scrolling-c .title{
     font-size: 26px;
 }
-.scrolling-w ul{
+.scrolling-c ul{
     list-style: none;
 }
-.scrolling-w li{
+.scrolling-c li{
     display: inline-block;
 }
 .left-btn{
@@ -344,14 +346,14 @@ nav .navbar-l{
 .subscribe{
     background-color: #233537;
 }
-.subscribe-w{
-    padding-top: 92px;
+.subscribe-c{
+    padding-top: 70px;
 }
 .subscribe-content p{
     color: white;
     font-size: 26px;
     margin-bottom: 48px;
-    font-weight: 100;
+    font-ceight: 100;
 }
 .subscribe-content form{
     display: inline-block;
@@ -367,7 +369,6 @@ nav .navbar-l{
     border-color: white;
 }
 .subscribe-content{
-    padding-bottom: 96px;
     text-align: center;
 }
 .subscribe-content a{
@@ -379,7 +380,7 @@ nav .navbar-l{
 .about{
     background-color: white;
 }
-.about-w{
+.about-c{
     padding: 95px 0px ;
 }
 .about-l{
@@ -398,7 +399,7 @@ nav .navbar-l{
 }
 .about-content h3{
     padding-bottom: 47px;
-    font-size: 26px;
+    font-size: 18px;
 }
 .about-content p{
     color: #929ba0;
@@ -406,15 +407,15 @@ nav .navbar-l{
 .modern-design{
     background-image: linear-gradient(180deg,#58ebca,#53e6cb);
     clear: both;
-    padding-top: 110px;
+    padding-top: 95px;
 }
-.modern-w-l{
+.modern-l{
     float: left;
     width: 250px;
     margin-left: 200px;
     margin-top: 30px;
 }
-.modern-w-r{
+.modern-r{
     padding-top: 111px;
 }
 .modern-content h3{
@@ -425,7 +426,7 @@ nav .navbar-l{
 .modern-content .white{
     color : white;
     padding-top: 25px;
-    padding-left: 100px;
+    margin-left: 100px;
 }
 .client-t{
     text-align: center;
@@ -438,7 +439,7 @@ nav .navbar-l{
 }
 .client-t .title{
     font-size: 32px;
-    font-weight: bold;
+    font-ceight: bold;
     padding-bottom: 40px;
 }
 .client-content{
@@ -535,11 +536,11 @@ button{
     background-color: #233537;
     text-align: center;
 }
-.footer-b-w p{
+.footer-b-c p{
     color: white;
     line-height: 100px;
 }
-.footer-b-w p a{
+.footer-b-c p a{
     text-decoration: none;
     color: #10cab7;
 }
@@ -577,17 +578,10 @@ button{
     height: 430px;
 }
 
+@media screen and (max-cidth: 768px){
 
+}
 
-@media screen and (max-width:768px){
-    
-    
-    .width{
-        width:95%;
-        margin: 0 auto;
-    }
-    .navbar-l{
-        width:100%;
-        text-align:center;
-    }
+@media screen and (max-cidth:360px){
+
 }

@@ -186,7 +186,7 @@ nav .navbar-l{
 .feeds-navbar ul li a{
     text-decoration: none;
 }
-.feeds-navbar    ul li a:hover{
+.feeds-navbar ul li a:hover{
     color: white;
 }
 .feeds-navbar .active{
@@ -406,17 +406,17 @@ nav .navbar-l{
 }
 .modern-design{
     background-image: linear-gradient(180deg,#58ebca,#53e6cb);
-    clear: both;
     padding-top: 95px;
 }
-.modern-w-l{
+.modern-l{
     float: left;
-    width: 250px;
     margin-left: 200px;
     margin-top: 30px;
+    width: 250px;
 }
-.modern-w-r{
+.modern-r{
     padding-top: 111px;
+    float: right;
 }
 .modern-content h3{
     font-size: 26px;
@@ -495,6 +495,9 @@ nav .navbar-l{
     font-size: 26px;
     border-color: white;
 }
+.subscribe-form{
+    margin-bottom: 90px;
+}
 form .email{
     margin-left: 30px;
 }
@@ -504,12 +507,11 @@ form .message{
     width: 720px;
 }
 button{
-    padding: 20px 30px;
+    padding: 15px 30px;
     font-size: 16px;
     background-color: #233537;
     color : white;
     float: right;
-    margin-bottom: 90px;
 }
 .footer-t{
     padding-top: 115px;
@@ -524,6 +526,7 @@ button{
     width: 900px;
 }
 .footer-t-r{
+    float: right;
     width: 370px;
     color: white;
     background-image: linear-gradient(180deg,#57eaca,#4cdecc);
@@ -546,34 +549,65 @@ button{
 }
 
 .back-image{
-    background: url("../image/google.png");
-    background-size: cover;
-    padding-top:180px;
+    position: relative;
+    width: 920px;
+    margin: 0 auto;
 }
-.front-image{
+.black-image div{
+    width: 624px;
+    display: block;
+    position: absolute;
+}
+.front-image1{
+    text-align: right;
+    z-index: 10;
+}
+.front-image2{
+    text-align: left;
+    z-index: 20;
+    margin-top: -430px;
+}
+.front-image3{
     text-align: center;
-    margin-top:-240px;
+    margin-top:-500px;
+    z-index: 30;
 }
-
-
+.back-image img:hover{
+    z-index: 9999;
+}
 
 .mobile{
     position :relative;
-    padding-top: 120px;
-    margin-left: 200px;
+    padding-top: 100px;
+    margin-left: 100px;
     padding-left: 40px;
 }
-.mobile:hover .mobOut{
+.mobile .front{
+    position: absolute;
+    background: url("../image/phone.png");
+    padding: 50px 15px 50px 15px;
+    background-repeat: no-repeat;
+    width: 214px;
+    height: 434px;
+}
+.mobile .back{
+    background: url("../image/phone-s.png");
+    padding:40px 15px 50px 15px;
     z-index: -10;
+    margin-left: 150px;
+    margin-top: 50px;
+    background-repeat: no-repeat;
+    width: 162px;
+    height: 324px;
 }
-.mobile .phone img{
-    height:330px;
+.mobile .front img{
+    width: 85%;
+    height: 80%;
 }
-.mobile .mobOut{
-    position :absolute;
-    left:-100px;
-    top: 60px;
+.mobile .back img{
+    width: 85%;
+    height: 90%;
 }
-.mobile .mobOut img{
-    height: 430px;
+.mobile .back:hover .mobile .front{
+    z-index: -20;
 }

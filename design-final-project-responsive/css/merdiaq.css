@@ -3,5 +3,10 @@
         width: 22.5em;
         margin: 0 auto;
     }
-
+    .navbar-r{
+        display: none;
+    }
+    .header{
+        width: 100%;
+    }
 }

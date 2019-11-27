@@ -1,9 +1,9 @@
 header{
     margin: 0 auto;
-    line-height: 100px;
+    line-height: 15em;
 }
 .width{
-    width: 1170px;
+    width: 80%;
     margin: 0 auto;
 }
 nav{

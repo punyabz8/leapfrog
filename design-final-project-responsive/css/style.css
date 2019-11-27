@@ -12,13 +12,13 @@ nav .navbar-l{
     float: left;
     line-height: 100px;
 }
-.navigation ul:first-child{
+.navbar-r ul:first-child{
     float: right;
 }
-.navigation ul{
+.navbar-r ul{
     list-style: none;
 }
-.navigation ul li{
+.navbar-r ul li{
     display: inline-block;
 }
 .navbar-a{
@@ -46,7 +46,7 @@ nav .navbar-l{
 .has-menu:hover ul{
     background-color: white;
 }
-.navbar-a.active, .navigation a:hover{
+.navbar-a.active, .navbar-r a:hover{
     display: block;
     background-image: linear-gradient(180deg,#68fac7,#4bdecc);
     line-height: 40px;
@@ -60,8 +60,6 @@ nav .navbar-l{
 .info-c{
     padding: 150px 102px;   
     width: 1068px; 
-}
-.info-c{
     padding-top: 115px;
     padding-bottom: 120px;
 }

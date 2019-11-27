@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+</head>
+<body>
+    <script>
+        var languages = ['java','c','js','python','go','c#','java','c','js','python','go','c++','java','c','js','python','java','c','js','python','go','php'];
+        var unique=[];
+        var obj={};
+        languages.forEach(function(value,index){
+            if(unique.indexOf(value)==-1){
+                unique.push(value);
+                obj[value]=0;
+            }
+                
+        });
+
+        console.log(unique);
+        
+
+        var count=0;
+        languages.forEach(function(value,index){
+            if(obj.hasOwnProperty(value))
+                obj[value]+=1;
+        });
+       
+        console.log(obj);
+
+
+        //task 1
+        //pattern of star
+        var num=10;
+        
+        function astrickPattern(num){
+            var str='';
+            for(var i=num;i>0;i--){
+                var line='';
+                for(var j=i;j>0;j--){
+                line+='*';
+                if(j==1)
+                    line+="\n";
+                }
+                str=str+line;
+            }
+            return str;    
+        }
+        console.log(astrickPattern(num));
+
+
+        //task 2
+        //Pring education array values
+        var myInfo = {name:"Punya Ram Duwal",address:"Bhaktapur",emails:"duwalsusan8@gmail.com",interests:"Cycling",education:[{name:'Tara Secondary School',enrolledDate:2070},{name:'Khwopa College',enrolledDate:2072}],};
+        
+        myInfo.education.forEach(function(value,index){
+            console.log(value);
+        });
+
+
+
+        //task 3    Searching object content
+        var fruits = [
+                {id: 1, name: 'Banana', color: 'yellow'},
+                {id: 2, name:'Apple', color: 'Red'}
+            ];
+        
+
+        function searchByName(fruits,fruitName){
+            // fruits.forEach(function(element){
+            //     console.log(element.name);
+            //     if(element.name.toUpperCase=fruitName.toUpperCase)
+            //         return element;
+            //     else
+            //         return element;
+            // });
+            return fruits.filter(function(fruit){return fruit.name.toUpperCase()==fruitName.toUpperCase()})[0];
+        }
+        console.log(searchByName(fruits,'Apple'));
+
+
+        function searchBykey(fruits, key,value){
+            return fruits.filter(function(fruit){
+                return fruit.hasOwnProperty(key)&&fruit[key]==value
+            })[0];
+        }
+        console.log(searchBykey(fruits,"name",'Banana'));
+        
+
+
+        //task 4    
+        var numbers =[1,2,3,4];
+
+        function transform(collection , tranFunc){
+            var newNum = collection.map(function(item){
+                return tranFunc(item);
+            });
+            // newNum.forEach(function(value,index){
+            //     newNum[index]=tranFunc(value);
+            // });
+            return newNum;
+        }
+
+        var output = transform(numbers, function(num){
+            return num/2;
+        });
+
+        console.log("Input array    >",numbers);
+        console.log("Output of the function >",output);
+
+
+        //task 5    Sorting array of objects
+        var arr = [{id: 1,name: 'John'},
+        {id: 3, name: 'Mary'}, 
+        {id: 2, name: 'Andrew'}];
+
+        function SortBy(arr, key){
+            var newArray = arr.map(function(item){
+                return Object.assign({},item);
+            });
+
+            newArray.sort(function(a,b){
+                console.log("a and b value  >",a,b);
+                if(b[key]<a[key])
+                    return 1;
+                else if(b[key]>a[key])
+                    return -1;
+                else
+                    return 0;
+            });
+            return newArray;
+        }
+
+        var sorted = SortBy(arr,'id');
+        console.log("Not sorted   >",arr);
+        console.log("Sorted   >",sorted);
+
+
+
+        // task 6 normalization
+        var input = {
+            '1': {
+                id: 1,
+                name: 'John',
+                children: [
+                { id: 2, name: 'Sally' },
+                { id: 3, name: 'Mark', children: [{ id: 4, name: 'Harry' }] }
+                ]
+            },
+            '5': {
+                id: 5,
+                name: 'Mike',
+                children: [{ id: 6, name: 'Peter' }]
+            }
+            };
+
+        
+
+    </script>
+</body>
+</html>

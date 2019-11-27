@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DOM animation</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div id = "box">
+			<div id = "circle">
+					
+			</div>
+    </div>
+		<script type="text/javascript">
+				var box = document.getElementById('box');
+				var circle = document.getElementById('circle');
+
+				var boxInfo = {width: 800, height: 500};
+				var circlePosition = 0;
+				var movementSpeed = 2;
+
+				function setStyleToBox(){
+					box.style.border = '1px solid black';
+					box.style.height = boxInfo.height + 'px';
+					box.style.width = boxInfo.width + 'px';
+					box.style.margin = '0 auto';
+					box.style.position = 'relative';
+				}
+				setStyleToBox();
+
+				function drawingCircle(cb){
+					setInterval(function(){
+						cb();
+						changeCirclePosition();
+						console.log(circlePosition);
+					},10);
+					
+				}
+
+				function changeCirclePosition(){
+					circlePosition = circlePosition + movementSpeed;
+					if(circlePosition >= boxInfo.height - boxInfo.height / 10)
+					{
+						movementSpeed = - 2;
+					}
+					if(circlePosition <= 0)
+					{
+						movementSpeed = 2;
+					}
+				}
+
+				drawingCircle(function(){
+					circle.style.position = 'absolute';
+					circle.style.borderRadius = boxInfo.width / 10 + 'px';
+					circle.style.height = boxInfo.height / 10 + 'px';
+					circle.style.width = boxInfo.height / 10  + 'px';
+					circle.style.marginLeft = boxInfo.width / 2 + 'px';
+					circle.style.top = circlePosition + 'px';
+					circle.style.backgroundColor = 'blue';
+				});
+				
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    /* background: linear-gradient(180deg,red,black); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+    background-color: red;
+
+}
+h3{
+    background: linear-gradient(180deg,skyblue ,lightblue);
+    line-height: 110px;
+    text-align: center;
+    margin-bottom: 50px;
+    color: midnightblue;
+}
+.carousel-container{
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    border: 5px solid white;
+}
+.carousel-wrapper{
+    height: auto;
+}
+.carousel-wrapper img{
+    position: absolute;
+    width: 100%;
+    width: auto;
+    opacity: 0;
+    max-height: 400px;
+}
+.carousel-container .leftButton, .carousel-container .rightButton{
+    position: absolute;
+    top: 45%;
+    background-color: #888;
+    height: 50px;
+    width: 40px;
+    z-index: 10;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    opacity: 0.6;
+}
+.carousel-container .rightButton{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    right: 0px;
+}
+.carousel-container .rightButton:hover,.carousel-container .leftButton:hover{
+    background-color: #222;
+    cursor: pointer;
+}
+.carousel-container .arrow{
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    border: 4px solid white;
+    width: 10px;
+    height: 10px;
+    border-left: none;
+    border-bottom: none;
+    transform: rotateZ(45deg);
+    display: inline-block;
+}
+.carousel-container .leftArrow{
+    transform: rotateZ(-135deg);
+    left: 15px;
+}
+.carousel-container #image-indicators{
+    position: absolute;
+    bottom: 0%;
+    display: inline-block;
+    z-index: 10;
+    width: 100%;
+    height: 10%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: center;
+}
+.carousel-container #image-indicators .dot{
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    background-color: #888;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 10px;
+}
+.carousel-container #image-indicators .dot:hover,.carousel-container #image-indicators .dot.active{
+    background-color: #222;
+}
+.carousel-container #image-indicators .dot:first-child{
+    margin: 0;;
+}
+.carousel-wrapper .moveCurrentLeft{
+    animation-duration: 1s;
+    animation: moveImageLeft;
+    animation-timing-function: ease-out;
+    opacity: 1;
+}
+.carousel-wrapper .moveNextLeft{
+    animation-duration: 1s;
+    animation-name: moveNextImageleft;
+    animation-timing-function: ease-in;
+    opacity: 1;
+}
+@keyframes moveImageLeft{
+    from{
+        margin-left: 0%;
+        opacity: 0.5;
+    }
+    to{
+        margin-left: -100%;
+        opacity: 1;
+    }
+}
+@keyframes moveNextImageleft{
+    from{
+        margin-left: 100%;
+        opacity: 0.5;
+    }
+    to{
+        margin-left: 0%;
+        opacity: 1;
+    }
+}
+.carousel-container .moveCurrentRight{
+    animation-duration: 1s;
+    animation-name: moveImageRight;
+    animation-timing-function: ease;
+    opacity: 1;
+}
+.carousel-container .moveNextRight{
+    animation-duration: 1s;
+    animation-name: moveNextImageRight;
+    animation-timing-function: ease;
+    opacity: 1;
+}
+@keyframes moveImageRight{
+    from{
+        margin-left: 0%;
+        opacity: 0.5;
+    }
+    to{
+        margin-left: 100%;
+        opacity: 1;
+    }
+}
+@keyframes moveNextImageRight{
+    from{
+        margin-left: -100%;
+        opacity: 0.5;
+    }
+    to{
+        margin-left: 0%;
+        opacity: 1;
+    }
+}

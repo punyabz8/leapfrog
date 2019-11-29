@@ -3,8 +3,6 @@ var carouselCollection = [], i, j;
 carouselContainer = document.getElementsByClassName('carousel-container');
 
 for(j = 0; j < carouselContainer.length; j++){
-	console.log(j);
-	console.log(carouselContainer[j]);
 	carouselCollection[j] = new carousel();
 	carouselCollection[j].init(carouselContainer[j], j);
 }
@@ -28,7 +26,7 @@ function carousel(carouselContainer){
 
 	this.newIndex = 0;
   this.slideIndex = 0;
-  this.intervalTime = 1500;
+  this.intervalTime = 5000;
 
   this.setCarousel = function(carouselObject){
 		this.carouselContainer = carouselObject;
@@ -107,8 +105,9 @@ function carouselSetProperities(carouselObj){
 
 	// Time interval to slide image
   setInterval(function(){
-    if(carouselObj.slideIndex < carouselObj.sliderImage.length)
-        moveSlider(carouselObj.slideIndex + 1, carouselObj.carouselNumber);
+	if(carouselObj.slideIndex < carouselObj.sliderImage.length)
+		moveSlider(carouselObj.slideIndex + 1, carouselObj.carouselNumber);
+		
   },carouselObj.intervalTime);
 }
 
@@ -169,18 +168,16 @@ function moveSlider(newIndex, num){
       moveCurrent: '',
       moveNext: ''
   };
-  console.log(num);
-  console.log(carouselCollection[num]);
   if(newIndex > carouselCollection[num].slideIndex){
-      animationClass.moveCurrent = 'moveCurrentLeft';
-      animationClass.moveNext = 'moveNextLeft';
-      if(newIndex >= carouselCollection[num].sliderImage.length){
-          newIndex = 0;
-      }
+		animationClass.moveCurrent = 'moveCurrentLeft';
+		animationClass.moveNext = 'moveNextLeft';
+		if(newIndex >= carouselCollection[num].sliderImage.length){
+				newIndex = 0;
+		}
   }else if(newIndex < carouselCollection[num].slideIndex)
   {
     if(newIndex < 0)
-        {newIndex = carouselCollection[num].sliderImage.length - 1;}
+		{newIndex = carouselCollection[num].sliderImage.length - 1;}
     animationClass.moveCurrent = 'moveCurrentRight';
     animationClass.moveNext = 'moveNextRight';
   }
@@ -190,14 +187,13 @@ function moveSlider(newIndex, num){
     for(i = 0; i < carouselCollection[num].sliderImage.length; i++){
       carouselCollection[num].sliderImage[i].classList = '';
       carouselCollection[num].sliderImage[i].style.opacity = 0;
-      carouselCollection[num].dots[i].classList.remove("active");
     }  
-    current.style.opacity = 1;
+		current.style.opacity = 1;
+    next.style.opacity = 1;
     current.classList.add(animationClass.moveCurrent);
     next.classList.add(animationClass.moveNext);
-    carouselCollection[num].dots[newIndex].classList.add("active");
-    next.style.opacity = 1;
-    carouselCollection[num].slideIndex = newIndex;
+		carouselCollection[num].slideIndex = newIndex;
+		carouselCollection[num].dots[newIndex].style.backgroundColor = '#888';
   }
 }
 

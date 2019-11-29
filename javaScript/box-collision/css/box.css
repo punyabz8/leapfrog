@@ -1,0 +1,11 @@
+*{
+    margin: 0%;
+    padding: 0%;
+}
+.app{
+    height: 500px;
+    width: 500px;
+}
+.game{
+    margin: 200px auto;
+}

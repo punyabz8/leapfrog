@@ -1,3 +1,4 @@
+var position=0;
 (function(){
 	function Vehicle(parentElement){
 		this.x = null;
@@ -63,7 +64,9 @@
 			console.log(this.laneWidth);
 			console.log(this.laneMiddle);
 			var player = document.createElement('div');
-			player.style.backgroundColor = 'red';
+			player.style.background = 'url("./image/car.png")';
+			player.style.backgroundSize = '60px 100px';
+			player.style.backgroundRepeat = 'no-repeat';
 			player.style.position = 'absolute';
 			player.style.width = this.width + 'px';
 			player.style.height = this.height + 'px';
@@ -176,20 +179,20 @@
 			document.onkeydown = function(e){
 				switch(e.keyCode){
 					case 37:
-						console.log('left key');
+						if(that.player.lane > 1)
+							{that.player.lane -= 1;}
 						that.gameContinue();
 						break;
 					case 39:
-						console.log('right Key');
+						if(that.player.lane < 3)
+							{that.player.lane += 1;}
 						that.gameContinue();
 						break;
 				}
 			}
 			setInterval(function(){
 				that.gameContinue();
-			},2000);
-
-
+			},20);
 		}
 
 		this.init = function(){
@@ -235,6 +238,8 @@
 
 		this.gameContinue = function() {
 			this.player.movePlayer();
+			position++;
+			this.gameContainer.style.backgroundPositionY=position+"px";
 		}
 	}
 

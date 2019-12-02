@@ -2,8 +2,8 @@
 function Box(parentElement) {
   this.x = 10;
   this.y = 10;
-    this.dx = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
-    this.dy = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
+  this.dx = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
+  this.dy = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
   this.width = 80;
   this.height = 80;
   this.element = null;

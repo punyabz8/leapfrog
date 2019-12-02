@@ -142,7 +142,6 @@
 
     this.moveBoxes = function() {
       for(var i=0; i < this.boxCount; i++) {
-        
         boxes[i].boxCollision(boxes, MAX_WIDTH, MAX_HEIGHT);
         boxes[i].boundaryCollision(MAX_WIDTH, MAX_HEIGHT);
         boxes[i].move();

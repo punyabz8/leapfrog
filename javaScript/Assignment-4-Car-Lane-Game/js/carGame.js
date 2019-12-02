@@ -59,7 +59,7 @@
 
 	}
 
-	function PlayerVehicle(){
+	function PlayerVehicle(gameIndex){
 		this.x = null;
 		this.y = null;
 		this.lane = 2;
@@ -70,8 +70,8 @@
 		this.laneMiddle = null;
 		this.containerWidth = null;
 		this.containerHeight = null;
+		this.playerIndex = gameIndex;
 		var gameFinished = false;
-
 
 		var that = this;
 
@@ -135,15 +135,28 @@
 		}
 
 		this.bottonPressed = function(event){
-			if(gameFinished == false){
-				console.log("Hgamecrashed   >",gameFinished);
-				if(event.code == "ArrowLeft"){
+			if(gameFinished == false && this.playerIndex % 2 == 1){
+				if(event.code == "ArrowLeft"){	
 					if(this.lane > 1){
 						this.lane--;
 						this.movePlayer();
 					}
 				}
 				if(event.code == 'ArrowRight'){
+					if(this.lane < 3){
+						this.lane++;
+						this.movePlayer();
+					}
+				}
+			}
+			else if(gameFinished == false && this.playerIndex % 2 == 0){
+				if(event.code == "KeyA"){	
+					if(this.lane > 1){
+						this.lane--;
+						this.movePlayer();
+					}
+				}
+				if(event.code == 'KeyD'){
 					if(this.lane < 3){
 						this.lane++;
 						this.movePlayer();
@@ -216,7 +229,6 @@
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 	}
 	function createButton(button, text){
-		console.log(button);
 		button.style.width = '100%';
 		button.style.height = '50px';
 		button.style.color = 'white';
@@ -231,8 +243,8 @@
 		this.speed = 10;
 		this.score = null;
 		this.player = null;
-		var myHighScore = null;
 		this.highScore = null;
+		var myHighScore = null;
 		this.gameStart = false;
 		this.gameWrapper = null;
 		this.imageSlider = null;
@@ -289,7 +301,6 @@
 			highScore.style.textAlign = 'center';
 			scoreBoard.append(temp);
 			scoreBoard.append(highScore);
-			console.log('my high score > ',myHighScore);
 			highScore.innerHTML = myHighScore;
 
 			createButton(startBtn, 'Start Game');
@@ -303,7 +314,7 @@
 			this.scoreWrapper.append(startBtn);
 			this.scoreWrapper.append(resetBtn);
 
-			var player = new PlayerVehicle(this.gameContainer);
+			var player = new PlayerVehicle(this.gameIndex);
 			player.init(this.gameContainer);
 			this.player = player;
 			var vehicle = new Vehicle(getRandomInt(1, 4), that.speed);
@@ -364,7 +375,6 @@
 						this.speed += 1;
 						increment++;
 						vehicles.forEach(function(el) {
-							console.log(that.speed);
 							
 							el.speed = that.speed;
 						});
@@ -379,7 +389,6 @@
 		this.newCars = function(){
 			newCar = vehicles[vehicles.length - 1].y > (this.player.height * 2.5) ? true : false;
 			if(newCar == true){
-				console.log(that.speed);
 				var vehicle = new Vehicle(getRandomInt(1, 4), that.speed);
 				vehicle.init(this.gameContainer);
 				vehicles.push(vehicle);

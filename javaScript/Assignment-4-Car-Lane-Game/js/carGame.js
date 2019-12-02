@@ -1,20 +1,28 @@
-var position=0;
 (function(){
-	function Vehicle(parentElement){
+	var position = 0;
+	var speed = 10;
+	var flag = true;
+	var gameFinished = false;
+
+	function Vehicle(lane){
 		this.x = null;
 		this.y = null;
-		this.lane = null;
-		this.speed = null;
-		this.width = null;
-		this.height = 60;
-		this.element = 100;
-		// this.vehicleType = [{'type': 'car', 'width': '50px', 'height': '100px'},
-		// {'type': 'bus', 'width': '50px', 'height': '120px'},
-		// {'type': 'jeep', 'width': '50px', 'height': '110px'}];
+		this.lane = lane;
+		this.speed = speed;
+		this.width = 60;
+		this.height = 100;
+		this.element = null;
+		this.laneWidth = null;
+		this.laneMiddle = null;
+		this.containerWidth = null;
+		this.containerHeight = null;
 
-		this.init = function(){
-			// this.vehicleType = Math.randomInt(3);
-
+		this.init = function(gameContainer){
+			this.containerWidth = gameContainer.offsetWidth;
+			this.containerHeight = gameContainer.offsetHeight;
+			this.laneWidth = Math.floor(gameContainer.offsetWidth / 3);
+			this.laneMiddle = Math.floor(this.laneWidth / 2) - Math.floor(this.width / 2);
+			this.createCar(gameContainer);
 		}
 
 		this.setPosition = function(x, y){
@@ -22,13 +30,9 @@ var position=0;
 			this.y = y;
 		}
 
-		this.collision = function(){
-			//collision detection
-		}
-
-		this.checkBoundary = function(width, height){
-			if(this.y > height){
-				//do something to obstacle
+		this.checkBoundary = function(){
+			if(this.y - this.height > this.containerHeight){
+				return true;
 			}
 		}
 
@@ -36,33 +40,48 @@ var position=0;
 			this.y += this.speed;
 			this.draw();
 		}
-
 		this.draw = function(){
+			this.element.style.left = this.x + 'px';
 			this.element.style.top = this.y + 'px';
 		}
+		this.createCar = function(gameContainer,laneNo){
+			var vehicle = document.createElement('div');
+			vehicle.style.background = 'url("./image/car.png")';
+			vehicle.style.position = 'absolute';
+			vehicle.style.backgroundSize = '60px 100px';
+			vehicle.style.width = this.width + 'px';
+			vehicle.style.height = this.height + 'px';
+			vehicle.style.transform = 'rotateZ(180deg)';
+			vehicle.style.backgroundRepeat = 'no-repeat';
+			
+			this.setPosition((Math.floor(this.laneWidth / 2) - Math.floor(this.width / 2)) + ((lane -1) * this.laneWidth), -this.height);
+			this.element = vehicle;
+			gameContainer.append(vehicle);
+			this.draw();
+		}
+
 	}
 
 	function PlayerVehicle(){
 		this.x = null;
 		this.y = null;
 		this.lane = 2;
-		this.width = 80;
-		this.height = 120;
+		this.width = 60;
+		this.height = 100;
 		this.element = null;
 		this.laneWidth = null;
 		this.laneMiddle = null;
 		this.containerWidth = null;
 		this.containerHeight = null;
+		var that = this;
 
-		this.vehicleType = [{'type': 'car', 'width': '50px', 'height': '100px'}];
+		// this.vehicleType = [{'type': 'car', 'width': '50px', 'height': '100px'}];
 
 		this.init = function(gameContainer){
 			this.containerWidth = gameContainer.offsetWidth;
 			this.containerHeight = gameContainer.offsetHeight;
 			this.laneWidth = Math.floor(gameContainer.offsetWidth / 3);
 			this.laneMiddle = Math.floor(this.laneWidth / 2) - Math.floor(this.width / 2);
-			console.log(this.laneWidth);
-			console.log(this.laneMiddle);
 			var player = document.createElement('div');
 			player.style.background = 'url("./image/car.png")';
 			player.style.backgroundSize = '60px 100px';
@@ -70,21 +89,33 @@ var position=0;
 			player.style.position = 'absolute';
 			player.style.width = this.width + 'px';
 			player.style.height = this.height + 'px';
+			document.addEventListener("keydown",this.bottonPressed.bind(this));
 			this.element = player;
-			console.log(gameContainer.offsetHeight);
 			this.setPosition((Math.floor(this.containerWidth / 2) - Math.floor(this.width / 2)), (this.containerHeight - this.height));
 			this.draw();
 			gameContainer.append(player);
 		}
 
 		this.setPosition = function(x, y){
-			console.log(x,y);
 			this.x = x;
 			this.y = y;
 		}
 
-		this.collision = function(){
-			//collision detection
+		this.collision = function(vehicles){
+			var collided = false;
+			vehicles.forEach(function(element) {
+				if (that.x < element.x + element.width &&
+					that.x + that.width > element.x &&
+					that.y < element.y + element.height &&
+					that.y + that.height > element.y) {
+						collided = true;
+				 }
+			});
+			if(collided == true){
+				return true;
+			}else{
+				return false;
+			}
 		}
 
 		this.movePlayer = function(){
@@ -95,12 +126,22 @@ var position=0;
 			this.element.style.top = this.y + 'px';
 			this.element.style.left = this.x + 'px';
 		}
-	}
 
-	//THis is slider creator 
-	function createSlider(parentElement){
-		for(var i = 0; i < 5; i++)
-		parentElement.backgroundWrapper
+		this.bottonPressed = function(event){
+			console.log(event.which);
+			if(event.code == "ArrowLeft"){
+				if(this.lane > 1){
+					this.lane--;
+					this.movePlayer();
+				}
+			}
+			if(event.code == 'ArrowRight'){
+				if(this.lane < 3){
+					this.lane++;
+					this.movePlayer();
+				}
+			}
+		}
 	}
 
 	function setParentProperties(parent){
@@ -108,9 +149,9 @@ var position=0;
 		// parent.style.width = parent.offsetWidth < 500 ? 500 + 'px' : parent.offsetWidth;
 		// parent.style.height = parent.offsetHeight < 600 ? 600 + 'px' : parent.offsetHeight;
 		parent.style.height = '700px';
-		parent.style.width = '1000px';
+		parent.style.width = '600px';
 		parent.style.position = 'relative';
-		parent.style.margin = '0 auto';
+		// parent.style.margin = '0 auto';
 	}
 
 	function setGameWrapperProperties(parentInc, gameWrapper){
@@ -128,11 +169,15 @@ var position=0;
 	}
 
 	function setGameContainerProperties(parentInc, gameContainer){
+		gameContainer.style.overflow = 'hidden';
 		gameContainer.style.position = 'relative';
 		gameContainer.style.background = 'url("./image/road.png")';
-		gameContainer.style.backgroundSize = 'cover';
+		gameContainer.style.backgroundSize = parentInc.offsetWidth * 0.7 + 'px ' + parentInc.offsetHeight + 'px';
 		gameContainer.style.height = parentInc.offsetHeight + 'px';
 		gameContainer.style.width = Math.floor(parentInc.offsetWidth * 0.70) + 'px';
+		// gameContainer.style.backgroundSize = parentInc.containerWidth +'px' + 'auto';
+		// gameContainer.style.backgroundSize = 'par' + parentInc.containerHeight + 'px';
+
 	}
 
 	function setBackgroundWrapperProperties(parentInc, backgroundWrapper){
@@ -144,8 +189,6 @@ var position=0;
 	}
 
 	function setScoreContainerProperties(scoreWrapper, scoreBoard){
-		console.log(scoreWrapper.offsetHeight);
-		console.log(scoreWrapper.offsetWidth);
 		scoreBoard.style.height = '50%';
 		scoreBoard.style.width = '100%';
 		scoreBoard.style.backgroundColor = 'green';
@@ -160,6 +203,8 @@ var position=0;
 
 	function Game(parentElement, gameIndex){
 		var vehicles = [];
+		var increment = 3;
+		var gameInterval = null;
 		this.score = null;
 		this.player = null;
 		this.gameWrapper = null;
@@ -170,30 +215,8 @@ var position=0;
 		this.parentElement = parentElement;
 		this.parentWidth = parentElement.offsetWidth;
 		this.parentHeight = parentElement.offsetHeight;
-
+		
 		var that = this;
-
-		this.startGame= function(){
-			var vehicle = new Vehicle(this.gameContainer);
-			
-			document.onkeydown = function(e){
-				switch(e.keyCode){
-					case 37:
-						if(that.player.lane > 1)
-							{that.player.lane -= 1;}
-						that.gameContinue();
-						break;
-					case 39:
-						if(that.player.lane < 3)
-							{that.player.lane += 1;}
-						that.gameContinue();
-						break;
-				}
-			}
-			setInterval(function(){
-				that.gameContinue();
-			},20);
-		}
 
 		this.init = function(){
 			var score = document.createElement('p');
@@ -205,13 +228,13 @@ var position=0;
 			var scoreWrapper = document.createElement('div');
 			var gameContainer = document.createElement('div');
 			var backgroundWrapper = document.createElement('div');
-
 			setParentProperties(this.parentElement);
 			setGameContainerProperties(this.parentElement, gameContainer);
 			setGameWrapperProperties(this.parentElement, gameWrapper);
 			setScoreWrapperProperties(this.parentElement, scoreWrapper);
 			setBackgroundWrapperProperties(gameContainer, backgroundWrapper);
 			setScoreContainerProperties(scoreWrapper, scoreBoard);
+			this.score = score;
 			this.gameWrapper = gameWrapper;
 			this.scoreWrapper = scoreWrapper;
 			this.gameContainer = gameContainer;
@@ -220,26 +243,75 @@ var position=0;
 			this.gameWrapper.append(gameContainer);
 			this.gameContainer.append(backgroundWrapper);
 
-			score.innerHTML = '0';
+			score.innerHTML = 0;
 			score.style.textAlign = 'center';
-			score.style.fontSize = 40 + 'px';
-			console.log(scoreBoard.offsetHeight);
-			score.style.margin = 'auto auto';
+			score.style.fontSize = 60 + 'px';
+			score.style.paddingTop = 40 + 'px';
 			scoreBoard.append(score);
 			this.scoreWrapper.append(scoreBoard);
 
 			var player = new PlayerVehicle(this.gameContainer);
 			player.init(this.gameContainer);
 			this.player = player;
-			this.player.movePlayer();
+
+			var vehicle = new Vehicle();
+			vehicle.init(this.gameContainer);
+			vehicles.push(vehicle);
+
 			this.startGame();
-			
+		}
+
+		this.startGame= function(){
+			this.gameInterval = setInterval(function(){
+				that.gameContinue();
+				that.newCars();
+			},40 - increment);
 		}
 
 		this.gameContinue = function() {
-			this.player.movePlayer();
-			position++;
-			this.gameContainer.style.backgroundPositionY=position+"px";
+			if(gameFinished == true){
+				clearInterval(this.gameInterval);
+				this.resetGame();
+			}else{
+				this.player.movePlayer();
+				if(this.player.collision(vehicles) == true){
+					gameFinished = true;
+				}
+				for(var i = 0; i< vehicles.length; i++){
+					vehicles[i].moveCar();
+					if(vehicles[i].checkBoundary() == true){
+						that.gameContainer.removeChild(vehicles[i].element);
+						this.score.innerHTML++;
+						vehicles.shift();
+						break;
+					}
+				}
+				position += increment;
+				this.gameContainer.style.backgroundPositionY=position+"px";
+				if(this.score.innerHTML % 5 == 0 && this.score.innerHTML != 0){
+					if(flag == true){
+						speed += 1;
+						increment += 2;
+						vehicles.forEach(function(el) {
+							el.speed = speed;
+						});
+						flag = false;
+					}
+				}
+				if(flag == false && this.score.innerHTML % 5 > 1){
+					flag = true;
+				}
+			}
+		}
+		this.newCars = function(){
+			newCar = vehicles[vehicles.length - 1].y > 150 ? true : false;
+			if(newCar == true){
+				var vehicle = new Vehicle(getRandomInt(1, 4));
+				vehicle.init(this.gameContainer);
+				vehicles.push(vehicle);
+			}
+		}
+		this.resetGame = function(){
 		}
 	}
 

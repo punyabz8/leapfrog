@@ -3,6 +3,7 @@
     padding: 0;
 }
 .carLane{
+    margin-top: 50px;
     width: 300px;
     height: 500px;
 }

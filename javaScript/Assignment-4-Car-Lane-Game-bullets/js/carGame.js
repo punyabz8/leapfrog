@@ -82,7 +82,6 @@
 
 		var that = this;
 
-
 		this.init = function(gameContainer, scoreWrapper){
 			this.containerWidth = gameContainer.offsetWidth;
 			this.containerHeight = gameContainer.offsetHeight;
@@ -136,7 +135,8 @@
 			this.bulletFiredState = true;
 			this.bulletElement = new Bullet();
 			this.bulletElement.init();
-			this.bulletElement.setPosition(this.x, (this.containerHeight - this.height));
+			this.bulletElement.createBullet(lane);
+			this.bulletElement.setPosition(this.x + this.width * 0.40, (this.containerHeight - this.height));
 			this.bulletElement.draw();
 		}
 		
@@ -156,9 +156,10 @@
 				}
 				if(event.code == 'ArrowUp'){
 					{
-						if(this.ammo < 6 && this.ammo > 0 && this.ammo == null){
-							this.ammo--;
-							this.bullet = true;	
+						if(this.bulletAmount <= bullets && this.bulletAmount > 0 && this.bulletFiredState == false){
+							this.bulletAmount--;
+							this.bulletFiredState = true;	
+							this.bulletFired(this.lane);
 						}
 					}
 				}
@@ -178,7 +179,11 @@
 				}
 				if(event.code == 'KeyW'){
 					{
-						this.bulletFired(this.lane);
+						if(this.bulletAmount <= bullets && this.bulletAmount > 0 && this.bulletFiredState == false){
+							this.bulletAmount--;
+							this.bulletFiredState = true;	
+							this.bulletFired(this.lane);
+						}
 					}
 				}
 			}
@@ -195,7 +200,7 @@
 		this.y = null;
 		this.width = null;
 		this.height = null;
-		this.speed = 0;
+		this.speed = 5;
 
 		var that = this;
 		
@@ -206,6 +211,7 @@
 
 		this.createBullet = function(lane){
 			var bullet = document.createElement('div');
+			this.element = bullet;
 			bullet.style.background = 'url(./image/bullet1.png)';
 			bullet.style.height = this.height * 0.1 + 'px';
 			bullet.style.width = this.width * 0.2 + 'px';
@@ -215,20 +221,20 @@
 			bullet.style.position = 'absolute';
 			bullet.style.display = 'inline-block';
 			bullet.style.left = Math.floor(this.width / 5) * i + 'px';
-			this.element = bullet;
-			console.log(bullet);
-			globalGameContainer.append(bullet);
+			globalGameContainer.append(this.element);
 		}
-		this.collision = function(){
-			if (this.x < element.x + element.width &&
-				this.y < element.y + element.height &&
-				this.x + this.width > element.x &&
-				this.y + this.height > element.y) {
-
-				}
+		this.collision = function(cars){
+			for(var i = 0; i < cars.length; i++){
+				if (this.x < cars[i].x + cars[i].width &&
+					this.y < cars[i].y + cars[i].height &&
+					this.x + (this.width * 0.2) > cars[i].x &&
+					this.y + (this.height * 0.1) > cars[i].y) {
+						return i;
+					}
+			}
 		}
 		this.checkBoundary = function(){
-			if(this.y - this.height > this.containerHeight){
+			if(that.y + this.height * 0.1 < 0){
 				return true;
 			}
 		}
@@ -237,12 +243,12 @@
 			this.y = y;
 		}
 		this.moveBullet = function(){
-			this.y -= speed;
+			this.y -= this.speed;
+			this.draw();
 		}
 		this.draw = function(){
-			console.log(that);
-			that.element.style.top = this.y  + 'px';
-			that.element.style.left = this.x + 'px';
+			this.element.style.top = this.y  + 'px';
+			this.element.style.left = this.x + 'px';
 		}
 	}
 
@@ -335,7 +341,6 @@
 		scoreWrapper.style.height = parentInc.offsetHeight + 'px';
 		scoreContainerWidth = Math.floor(parentInc.offsetWidth * 0.30);
 		scoreContainerHeight =  parentInc.offsetHeight;
-		console.log(scoreContainerHeight);
 		scoreWrapper.style.width = Math.floor(parentInc.offsetWidth * 0.30) + 'px';
 
 	}
@@ -380,6 +385,7 @@
 	}
 
 	function Game(parentElement, gameIndex){
+		var GameIncrement = 0;
 		var vehicles = [];
 		var increment = 3;
 		this.speed = 10;
@@ -474,6 +480,7 @@
 				this.gameInterval = setInterval(function(){
 					that.gameContinue();
 					that.newCars();
+					GameIncrement += 1 ;
 				},40 - increment);
 				this.gameStart = true;	
 			}
@@ -504,6 +511,23 @@
 						myHighScore = that.score.innerHTML;
 					}
 				}
+				if(this.player.bulletFiredState == true){
+					that.player.bulletElement.speed += 1;
+					that.player.bulletElement.moveBullet();
+					if(that.player.bulletElement.checkBoundary())
+						{
+							that.gameContainer.removeChild(this.player.bulletElement.element);
+							that.player.bulletFiredState = false;
+						}
+					var bulletCollision = that.player.bulletElement.collision(vehicles);
+					if(bulletCollision != null){
+						that.gameContainer.removeChild(this.player.bulletElement.element);
+						this.gameContainer.removeChild(vehicles[bulletCollision].element);
+						vehicles.splice(bulletCollision, 1);
+						that.player.bulletFiredState = false;
+						this.score.innerHTML++;
+					}
+				}
 				for(var i = 0; i< vehicles.length; i++){
 					vehicles[i].moveCar();
 					if(vehicles[i].checkBoundary() == true){
@@ -520,25 +544,30 @@
 						this.speed += 1;
 						increment++;
 						vehicles.forEach(function(el) {
-							
 							el.speed = that.speed;
 						});
 						flag = false;
 					}
 				}
+				this.newCars = function(){
+					newCar = vehicles[vehicles.length - 1].y > (this.player.height * 2.5) || vehicles.length == 0 ? true : false;
+					if(newCar == true){
+						var vehicle = new Vehicle(getRandomInt(1, 4), that.speed);
+						vehicle.init(this.gameContainer);
+						vehicles.push(vehicle);
+					}
+				}	
 				if(flag == false && this.score.innerHTML % 5 > 1){
 					flag = true;
 				}
+				if(GameIncrement % 150 == 0 && GameIncrement != 0){
+					if(this.player.bulletAmount <=bullets){
+						this.player.bulletAmount++;
+						console.log('bullet amount :',this.player.bulletAmount);
+					}
+				}
 			}
 		}
-		this.newCars = function(){
-			newCar = vehicles[vehicles.length - 1].y > (this.player.height * 2.5) ? true : false;
-			if(newCar == true){
-				var vehicle = new Vehicle(getRandomInt(1, 4), that.speed);
-				vehicle.init(this.gameContainer);
-				vehicles.push(vehicle);
-			}
-		}	
 
 	}
 

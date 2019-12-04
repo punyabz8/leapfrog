@@ -1,3 +1,5 @@
-var Obstacle = function(ctx, parentElement){
-    this.parentElement = parentElement;
+var Obstacle = function(parentElement){
+    this.x = 0;
+    this.y = 0;
+    
 }

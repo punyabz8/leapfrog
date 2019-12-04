@@ -4,9 +4,11 @@ var Bird = function(parentElement){
     this.element = null;
     this.birdAnimation = 1;
     this.speed = 0;
-    this.gravity = 5;
+    this.gravity = 4;
+    this.jumpValue = 60;
     this.x = MAX_WIDTH / 2 - this.width / 2;
     this.y = MAX_HEIGHT /2 - this.height / 2;
+    this.rotate = 0;
     var birds = ['bluebird-downflap.png','bluebird-midflap.png','bluebird-upflap.png'];
 
     var that = this;
@@ -43,20 +45,32 @@ var Bird = function(parentElement){
             this.speed += this.gravity;
             this.y += this.speed;
             if(this.speed > 0){
-                this.element.style.transform = 'rotate('+ this.speed * 360 +')';
-                console.log(this.speed * 360);
+                this.rotate = this.speed * 2.5
+                if(this.rotate >90)
+                    {this.rotate = 90;}
+                this.element.style.transform = 'rotateZ('+ this.rotate + 'deg)';
+            }
+            if(this.jumpState = true){
+                this.rotate = this.jump * 2.5;
+                this.element.style.transform = 'rotateZ('+ this.rotate + 'deg)';
             }
         }
         this.draw();
     }
 
+    this.jump = function(){
+        console.log(this.y);
+        this.y -= this.jumpValue;
+        console.log(this.y);
+        this.speed = 0;
+        this.draw();
+        
+    }
+
     this.collisionButtom = function(element){
-        console.log(element);
-        console.log(this);
-        console.log('Background :x ',element.x, "y ",element.y);
-        console.log('x ',this.x, "y ",this.y);
-        if (this.y + this.height >= MAX_HEIGHT - element.height){
-                return true;
+        // console`.log('Background :x ',element.x, "y ",element.y);
+        if (this.y + this.height/2 >= MAX_HEIGHT - element.height){
+            return true;
         }
     }
 

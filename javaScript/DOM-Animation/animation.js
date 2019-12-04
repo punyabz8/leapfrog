@@ -1,6 +1,6 @@
 var canvas = document.getElementById('animationCanvas');
-canvas.height=800;
-canvas.width=1000;
+canvas.height=600;
+canvas.width=800;
 canvas.style.margin="0 0 0 40%";
 canvas.style.border="1px solid black";
 

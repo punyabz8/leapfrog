@@ -14,6 +14,7 @@ var Foreground = function(parentElement){
         foreground.style.bottom = 0 + 'px';
         foreground.style.height = 80 + 'px';
         foreground.style.width = '100%';
+        foreground.style.overflow = 'hidden';
         parentElement.append(foreground);
         this.draw();
     }

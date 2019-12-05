@@ -21,13 +21,13 @@ function Helix(canvas){
         this.c.fill();
         for( var k =0, y = 100; k < 10; k++, y += 30){
             for(var i = 0; i< 15; i++){
-                var circle = new Circle(this.c, i , y, 0.5);
+                var circle = new Circle(this.c, i , y, 0.4);
                 this.currentLoopCircles.push(circle);
             }
-            for(var i = 0; i< 15; i++){
-                var circle = new Circle(this.c, i , y, -0.5);
-                this.currentLoopCircles.push(circle);
-            }
+            // for(var i = 0; i< 15; i++){
+            //     var circle = new Circle(this.c, i , y, -0.5);
+            //     this.currentLoopCircles.push(circle);
+            // }
         }
         this.draw();
         this.animate();
@@ -73,6 +73,7 @@ function Circle(c, nextX, y, angle){
     this.y = y + (Math.sin(nextX * angle)* 30);
     this.c = c;
     this.dy = 3;
+    this.time = nextX;
     this.radius = 1;
     // this.start = false;
     this.yBackup = this.y;
@@ -99,7 +100,10 @@ function Circle(c, nextX, y, angle){
             if(this.currentRadius == this.MaxCircleRadius){
                 this.circleStateIncreasing = false;
             }
-            this.currentRadius += this.increaseRadiusRate;            
+            if(this.time <= 0){
+                this.currentRadius += this.increaseRadiusRate;
+            }
+            this.time--;
         }else{
             if(this.currentRadius > this.MinCircleRadius){
                 this.currentRadius -= this.increaseRadiusRate;

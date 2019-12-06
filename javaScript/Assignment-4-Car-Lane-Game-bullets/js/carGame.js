@@ -64,7 +64,6 @@
 	var bullets = 5;
 
 	function PlayerVehicle(gameIndex){
-		this.bulletFiredState=false;
 		this.x = null;
 		this.y = null;
 		this.lane = 2;
@@ -77,8 +76,9 @@
 		this.bulletElement = null
 		this.containerWidth = null;
 		this.containerHeight = null;
+		this.bulletFiredState=false;
 		this.playerIndex = gameIndex;
-		var gameFinished = false;
+		this.gameFinished = false;
 
 		var that = this;
 
@@ -108,19 +108,19 @@
 			this.y = y;
 		}
 		this.collision = function(vehicles){
-			// var gameFinished = false;
+			// var that.gameFinished = false;
 			vehicles.forEach(function(element) {
 				if (that.x < element.x + element.width &&
 					that.y < element.y + element.height &&
 					that.x + that.width > element.x &&
 					that.y + that.height > element.y) {
-						gameFinished = true;
+						that.gameFinished = true;
 						setBackground(element, 'crashedRed.png');	
 						setBackground(that, 'tank1.png');
 						that.draw();
 				 }
 			});
-			if(gameFinished == true){
+			if(that.gameFinished == true){
 				return true;
 			}else{
 				return false;
@@ -141,7 +141,7 @@
 		}
 		
 		this.bottonPressed = function(event){
-			if(gameFinished == false && this.playerIndex % 2 == 1){
+			if(that.gameFinished == false && this.playerIndex % 2 == 1){
 				if(event.code == "ArrowLeft"){	
 					if(this.lane > 1){
 						this.lane--;
@@ -164,7 +164,7 @@
 					}
 				}
 			}
-			else if(gameFinished == false && this.playerIndex % 2 == 0){
+			else if(that.gameFinished == false && this.playerIndex % 2 == 0){
 				if(event.code == "KeyA"){	
 					if(this.lane > 1){
 						this.lane--;
@@ -212,14 +212,14 @@
 		this.createBullet = function(lane){
 			var bullet = document.createElement('div');
 			this.element = bullet;
-			bullet.style.background = 'url(./image/bullet1.png)';
-			bullet.style.height = this.height * 0.1 + 'px';
-			bullet.style.width = this.width * 0.2 + 'px';
+			bullet.style.position = 'absolute';
 			bullet.style.bottom = 20 + 'px';
+			bullet.style.width = this.width * 0.2 + 'px';
+			bullet.style.display = 'inline-block';
+			bullet.style.height = this.height * 0.1 + 'px';
+			bullet.style.background = 'url(./image/bullet1.png)';
 			bullet.style.backgroundRepeat = 'no-repeat';
 			bullet.style.backgroundSize = 'contain';
-			bullet.style.position = 'absolute';
-			bullet.style.display = 'inline-block';
 			bullet.style.left = Math.floor(this.width / 5) * i + 'px';
 			globalGameContainer.append(this.element);
 		}
@@ -550,7 +550,8 @@
 					}
 				}
 				this.newCars = function(){
-					newCar = vehicles[vehicles.length - 1].y > (this.player.height * 2.5) || vehicles.length == 0 ? true : false;
+					if(vehicles.length > 0)
+					{newCar = vehicles[vehicles.length - 1].y > (this.player.height * 2.5) || vehicles.length == 0 ? true : false;}
 					if(newCar == true){
 						var vehicle = new Vehicle(getRandomInt(1, 4), that.speed);
 						vehicle.init(this.gameContainer);

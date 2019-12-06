@@ -2,12 +2,14 @@
   function Box(parentElement) {
     this.x = 10;
     this.y = 10;
-    this.dx = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
-    this.dy = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
     this.width = null;
     this.height = null;
     this.element = null;
+    this.boxCollided = false;
+    this.borderCollided = false;
     this.parentElement = parentElement;
+    this.dy = getRandomArbitrary(-2,2) < 1 ? -2 : 2;
+    this.dx = getRandomArbitrary(-2,2) < 1 ? -2 : 2;
     var that = this;
 
     this.init = function () {
@@ -16,12 +18,11 @@
       var box = document.createElement('div');
       box.classList.add('box');
       box.style.position = 'absolute';
-      box.style.backgroundColor = '#'+getTruncatedInt(00,99)+getTruncatedInt(00,99)+getTruncatedInt(00,99);
-      box.style.height = this.height + 'px';
       box.style.width = this.width + 'px';
+      box.style.height = this.height + 'px';
+      box.style.backgroundColor = '#'+getTruncatedInt(00,11)+getTruncatedInt(00,11)+getTruncatedInt(00,11);
       this.parentElement.appendChild(box);
       this.element = box;
-      this.element.onclick = this.boxClicked.bind(this);
       this.draw();
       return this;
     }
@@ -30,33 +31,36 @@
       this.x = x;
       this.y = y;
     }
-
-    this.boxClicked = function (index) {
-      // console.log('boxClicked', this.width);
-    }
-
     this.draw = function () {
-      this.element.style.left = this.x + 'px';
       this.element.style.top = this.y + 'px';
+      this.element.style.left = this.x + 'px';
     }
-    
     this.move = function() {
       this.x += this.dx;
       this.y += this.dy;
       this.draw();
     }
-
     //Collision detection using top, bottom, right and left of box and boundary of container app
     this.boundaryCollision = function(width,height){
       var top = this.y;
-      var bottom = this.y + this.height;
       var left = this.x;
       var right = this.x + this.width;
-      if(top < 0 || bottom > height){
-        this.dy *= -1;
+      var bottom = this.y + this.height;
+      if(top < 0 ){
+        this.dy < 0 ? this.dy *= -1 : this.dy;
+        this.borderCollided = true;
       }
-      if(left < 0 || right > width){
-        this.dx *= -1;
+      if(bottom > height){
+        this.dy > 0 ? this.dy *= -1 : this.dy;
+        this.borderCollided = true;
+      }
+      if(left < 0){
+        this.dx < 0 ? this.dx *= -1 : this.dx;
+        this.borderCollided = true;
+      }
+      if( right > width){
+        this.dx > 0 ? this.dx *= -1 : this.dx;
+        this.borderCollided = true;
       }
     }
 
@@ -65,15 +69,19 @@
       for(var i = 0; i < boxes.length; i++){
         //true if checking box is going to be same one
         if(this != boxes[i]){
-          if (this.x < boxes[i].x + boxes[i].width &&
-            this.x + this.width > boxes[i].x &&
-            this.y < boxes[i].y + boxes[i].height &&
-            this.y + this.height > boxes[i].y) {  
-              if(Math.abs(this.x - boxes[i].x) > Math.abs(this.y - boxes[i].y)){
-                this.dx *= -1;
-              }else{
-                this.dy *= -1;
-              }
+          if(this.boxCollided == false){
+            if (this.x < boxes[i].x + boxes[i].width &&
+              this.x + this.width > boxes[i].x &&
+              this.y < boxes[i].y + boxes[i].height &&
+              this.y + this.height > boxes[i].y) {  
+                if(Math.abs(this.x - boxes[i].x) > Math.abs(this.y - boxes[i].y)){
+                  this.dx *= -1;
+                  that.boxCollided = true;
+                }else{
+                  this.dy *= -1;
+                  that.boxCollided = true;
+                }
+            }
           }
         }
       }
@@ -137,28 +145,41 @@
         }
       }
 
-      setInterval(this.moveBoxes.bind(this), 50);
+      setInterval(this.moveBoxes.bind(this), 1);
     }
 
     this.moveBoxes = function() {
       for(var i=0; i < this.boxCount; i++) {
-        boxes[i].boxCollision(boxes, MAX_WIDTH, MAX_HEIGHT);
-        boxes[i].boundaryCollision(MAX_WIDTH, MAX_HEIGHT);
+        if(!boxes[i].boxCollided)
+        {
+          console.log('box not colided');
+          boxes[i].boxCollision(boxes, MAX_WIDTH, MAX_HEIGHT);
+        }
+        if(!boxes[i].borderCollided)
+        {
+          console.log('Boundry not boxCollided');
+          boxes[i].boundaryCollision(MAX_WIDTH, MAX_HEIGHT);
+        }
         boxes[i].move();
+      }
+      for(var i=0; i < this.boxCount; i++) {
+        boxes[i].boxCollided = false;
+        boxes[i].borderCollided = false;
       }
     }
   }
 
-  var parentElement = document.getElementsByClassName('app');
 
 
   function setParentProperties(parent){
-    parent.style.backgroundColor = 'grey';
     parent.style.margin = '0 auto';
     parent.style.position = 'relative';
+    parent.style.backgroundColor = 'grey';
     parent.style.border = '2px solid blue';
   }
+
+  var parentElement = document.getElementsByClassName('app');
   for(var i = 0; i < parentElement.length; i++){
-    new Game(parentElement[i], i).startGame(50);
+    new Game(parentElement[i], i).startGame(180);
   }
 })();

@@ -19,16 +19,19 @@ function Helix(canvas){
         this.c.fillStyle = 'rgba(0,255,0, 1)';
         this.c.fillRect(0, 0, this.width, this.height);
         this.c.fill();
-        for( var k =0, y = 100; k < 10; k++, y += 30){
-            for(var i = 0; i< 15; i++){
-                var circle = new Circle(this.c, i , y, 0.4);
-                this.currentLoopCircles.push(circle);
+        // for(var z = 0; z< 2; z++){
+            // var changeAngle = z == 0 ? +1 : -1;
+            for( var k =0, y = 100; k < 10; k++, y += 30){
+                for(var i = 0; i< 15; i++){
+                    var circle = new Circle(this.c, i , y, 0.4);
+                    this.currentLoopCircles.push(circle);
+                }
+                // for(var i = 0; i< 15; i++){
+                //     var circle = new Circle(this.c, i , y, -0.5);
+                //     this.currentLoopCircles.push(circle);
+                // }
             }
-            // for(var i = 0; i< 15; i++){
-            //     var circle = new Circle(this.c, i , y, -0.5);
-            //     this.currentLoopCircles.push(circle);
-            // }
-        }
+        // }
         this.draw();
         this.animate();
     }
@@ -70,12 +73,11 @@ function Helix(canvas){
 
 function Circle(c, nextX, y, angle){
     this.x = 100 + (nextX * 30);
-    this.y = y + (Math.sin(nextX * angle)* 30);
+    this.y = y + (Math.sin(nextX * angle )* 30);
     this.c = c;
     this.dy = 3;
     this.time = nextX;
     this.radius = 1;
-    // this.start = false;
     this.yBackup = this.y;
     this.increaseRadiusRate = 0.5;
     this.currentRadius = 5;
@@ -111,7 +113,8 @@ function Circle(c, nextX, y, angle){
             console.log("current radius: ",this.currentRadius);
             if(this.currentRadius == this.MinCircleRadius){
                 this.circleStateIncreasing = true;
-                this.y = this.yBackup
+                // this.y = this.yBackup;
+                this.dy = -this.dy;
             }
         }
         this.draw();

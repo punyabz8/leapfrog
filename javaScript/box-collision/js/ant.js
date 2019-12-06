@@ -2,11 +2,11 @@
 function Box(parentElement) {
   this.x = 10;
   this.y = 10;
-  this.dx = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
-  this.dy = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
   this.width = 80;
   this.height = 80;
   this.element = null;
+  this.dx = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
+  this.dy = getRandomArbitrary(-2,2) < 1 ? -1 : 1;
   this.parentElement = parentElement;
   var that = this;
 
@@ -14,8 +14,8 @@ function Box(parentElement) {
     var box = document.createElement('div');
     box.classList.add('box');
     box.style.position = 'absolute';
-    box.style.height = this.height + 'px';
     box.style.width = this.width + 'px';
+    box.style.height = this.height + 'px';
     box.style.backgroundImage = 'url("./images/ant.gif")';
     box.style.backgroundSize = this.width + 'px ' + this.height + 'px';
     this.parentElement.appendChild(box);
@@ -36,8 +36,8 @@ function Box(parentElement) {
   }
 
   this.draw = function () {
-    this.element.style.left = this.x + 'px';
     this.element.style.top = this.y + 'px';
+    this.element.style.left = this.x + 'px';
   }
   
   this.move = function() {
@@ -51,9 +51,9 @@ function Box(parentElement) {
   //Collision detection using top, bottom, right and left of box and boundary of container app
   this.boundaryCollision = function(width,height){
     var top = this.y;
-    var bottom = this.y + this.height;
     var left = this.x;
     var right = this.x + this.width;
+    var bottom = this.y + this.height;
     if(top < 0 || bottom > height){
       this.dy *= -1;
     }
@@ -90,9 +90,9 @@ function getRandomArbitrary(min, max) {
 function Game(parentElement, parentElementIndex) {
   var boxes = [];
   this.boxCount = 10;
+  this.indexOfBox = null;
   this.parentElement = parentElement;
   this.parentElementIndex = parentElementIndex;
-  this.indexOfBox = null;
   var MAX_WIDTH = this.parentElement.offsetWidth;
   var MAX_HEIGHT = this.parentElement.offsetHeight;
 
@@ -149,12 +149,13 @@ function Game(parentElement, parentElementIndex) {
   }
 }
 
+
 var parentElement = document.getElementsByClassName('ant');
 
 function setParentProperties(parent){
-  parent.style.backgroundColor = 'green';
   parent.style.margin = '0 auto';
   parent.style.position = 'relative';
+  parent.style.backgroundColor = 'green';
   parent.style.border = '2px solid blue';
 }
 for(var i = 0; i < parentElement.length; i++){

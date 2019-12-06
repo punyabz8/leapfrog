@@ -19,10 +19,10 @@ function circlePosition(circle){
     circle.y+=circle.dy;
     if(circle.y+50>=canvas.height)
     {
-        circle.dy=-2;
+        circle.dy=-3;
     }
     if(circle.y-50<=0){
-        circle.dy=2;
+        circle.dy=3;
     }
     console.log(circle);
 }

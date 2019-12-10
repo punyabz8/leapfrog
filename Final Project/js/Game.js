@@ -19,14 +19,14 @@ function Game(canvas){
 	this.frames = 0;
 	this.player = null;
 	this.chapter = null;
+    this.obstacles = [];
 	this.background = null;
-	this.parentElement = canvas;
 	this.viewControl = null;
+	this.parentElement = canvas;
 	this.ctx = canvas.getContext('2d');
 
 	var that = this;
 
-	this.obstacle = null;
 
 	this.init = function(){
 		canvas.width = gameWidth;
@@ -46,7 +46,7 @@ function Game(canvas){
 		});
 
 		var obstacle = new Obstacle(this.ctx);
-		this.obstacle = obstacle;
+		this.obstacles.push(obstacle);
 	}
 	this.startGame = function(){
 		this.init();
@@ -60,8 +60,11 @@ function Game(canvas){
 		this.ctx.translate(-viewControl.x,-viewControl.y);
 		requestAnimationFrame(function(){that.animate()});
 		this.background.draw();
-		this.obstacle.draw();
 		this.player.keyPressed();
+		this.player.checkObstacle(this.obstacles);
+		for(var i = 0; i < this.obstacles.length; i++){
+			this.obstacles[i].draw();
+		}
 		this.player.checkBoundry();
 		this.player.draw();
 		frames++;

@@ -1,6 +1,6 @@
 function Obstacle (ctx){
-    this.x = 20;
-    this.y = 20;
+    this.x = 300;
+    this.y = 700;
     this.width = 40;
     this.height = 40;
 
@@ -13,5 +13,12 @@ function Obstacle (ctx){
     // this.update = function(){
         
     // }
-    this.collision
+    this.checkCollosion = function(player){
+        if (this.x < player.x + player.width &&
+            this.x + this.width > player.x &&
+            this.y < player.y + player.height &&
+            this.y + this.height > player.y) {
+            return true;
+        }
+    }
 }

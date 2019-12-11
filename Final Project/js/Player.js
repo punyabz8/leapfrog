@@ -13,7 +13,7 @@ function Player(ctx){
     this.y = mapInfo.y - 300;
     this.movingState = false;
     this.attackState = false;
-    this.attackCooldown = 30;
+    this.attackCooldown = 40;
     this.enemyTarget = null;
 
     this.init = function(){
@@ -61,11 +61,20 @@ function Player(ctx){
         }
     }
     
+    // this.checkBoundry = function(){
+    //     this.x < 27 ? this.x = 27 : this.x = this.x;
+    //     this.x + this.width > gameWidth - 27 ? this.x = gameWidth - this.width - 27 : this.x = this.x;
+    //     this.y < Math.floor(gameHeight / 4) ? this.y = Math.floor(gameHeight / 4) : this.y = this.y;
+    //     this.y + this.height > mapInfo.y - 535 ? this.y = mapInfo.y - this.height - 535 : this.y = this.y;
+
+        
+    // }
+
     this.checkBoundry = function(){
-        this.x < 27 ? this.x = 27 : this.x = this.x;
-        this.x + this.width > gameWidth - 27 ? this.x = gameWidth - this.width - 27 : this.x = this.x;
-        this.y < Math.floor(gameHeight / 4) ? this.y = Math.floor(gameHeight / 4) : this.y = this.y;
-        this.y + this.height > mapInfo.y - 535 ? this.y = mapInfo.y - this.height - 535 : this.y = this.y;
+        this.x < 20 ? this.x = 20 : false;
+        this.x + this.width > gameWidth - 19 ? this.x = gameWidth - this.width - 19 : false;
+        this.y < 474 ? this.y = 474 : false;
+        this.y + this.height > mapInfo.y - 535 ? this.y = mapInfo.y - this.height - 535 : false;
     }
 
     this.checkObstacle = function(obstacles){
@@ -89,6 +98,7 @@ function Player(ctx){
                         this.y = obstacles[i].y - this.height - 1;
                     }
                 }
+                return true;
             }
         }
     }

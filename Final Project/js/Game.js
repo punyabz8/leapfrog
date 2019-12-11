@@ -3,7 +3,7 @@ var coin = 0;
 var frames = 0;
 var keyPressed = {};
 var experience = 0;
-var gameWidth = 700;
+var gameWidth = 560;
 var gameHeight = window.innerHeight;
 
 var mapInfo = {
@@ -21,7 +21,8 @@ function Game(canvas){
 	this.frames = 0;
 	this.player = null;
 	this.chapter = null;
-    this.obstacles = [];
+	this.obstacles = [];
+	this.enemies = [];
 	this.background = null;
 	this.viewControl = null;
 	this.parentElement = canvas;
@@ -44,14 +45,17 @@ function Game(canvas){
 		document.addEventListener('keyup', function(){
 			keyPressed[event.key] = false;
 		});
-
+		//need seperation later
 		var obstacle = new Obstacle(this.ctx);
 		this.obstacles.push(obstacle);
+		var slime = new Slime(this.ctx);
+		this.enemies.push(slime);
 	}
 	this.startGame = function(){
 		this.init();
 		this.background.draw();
 		this.player.init();
+		this.enemies[this.enemies.length - 1].draw();
 		this.animate();
 	}
 	this.animate = function(){
@@ -64,6 +68,9 @@ function Game(canvas){
 		this.player.checkObstacle(this.obstacles);
 		for(var i = 0; i < this.obstacles.length; i++){
 			this.obstacles[i].draw();
+		}
+		for(var i = 0; i < this.enemies.length; i++){
+			this.enemies[i].update(this.player);
 		}
 		this.player.checkBoundry();
 		this.player.update();

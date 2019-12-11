@@ -1,8 +1,10 @@
-var gameWidth = 800;
-var gameHeight = window.innerHeight;
-var keyPressed = {};
-var frames = 0;
 
+var coin = 0;
+var frames = 0;
+var keyPressed = {};
+var experience = 0;
+var gameWidth = 700;
+var gameHeight = window.innerHeight;
 
 var mapInfo = {
 	x:gameWidth,
@@ -38,11 +40,9 @@ function Game(canvas){
 		this.player = player;
 		document.addEventListener('keydown', function(event){
 			keyPressed[event.key] = true;
-			console.log(keyPressed);
 		},true);
 		document.addEventListener('keyup', function(){
 			keyPressed[event.key] = false;
-			console.log(keyPressed);
 		});
 
 		var obstacle = new Obstacle(this.ctx);
@@ -66,10 +66,8 @@ function Game(canvas){
 			this.obstacles[i].draw();
 		}
 		this.player.checkBoundry();
-		this.player.draw();
+		this.player.update();
 		frames++;
-
-
 
 		this.ctx.restore();
 	}
@@ -79,5 +77,8 @@ function Game(canvas){
 	}
 }
 
+
 var canvas = document.getElementById('myGame');
-var game = new Game(canvas).startGame();
+var game = new Game(canvas);
+game.startGame();
+var nextExperience = 500 * game.player.level;

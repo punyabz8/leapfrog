@@ -1,13 +1,13 @@
-function Obstacle (ctx){
-    this.x = 300;
-    this.y = 700;
-    this.width = 40;
-    this.height = 40;
+function Obstacle (ctx, number){
+    this.x = 50 * number;
+    this.y = 600;
+    this.width = 80;
+    this.height = 80;
 
     this.draw = function(){
         ctx.beginPath();
-        ctx.strokeStyle = 'blue';
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
     this.update = function(){

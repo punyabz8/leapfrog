@@ -19,10 +19,10 @@ img.src = './assets/images/jungleMap.png';
 
 function Game(canvas){
 	this.frames = 0;
+	this.enemies = [];
 	this.player = null;
 	this.chapter = null;
 	this.obstacles = [];
-	this.enemies = [];
 	this.background = null;
 	this.viewControl = null;
 	this.parentElement = canvas;
@@ -45,39 +45,41 @@ function Game(canvas){
 		document.addEventListener('keyup', function(){
 			keyPressed[event.key] = false;
 		});
+
 		//need seperation later
-		var obstacle = new Obstacle(this.ctx);
-		this.obstacles.push(obstacle);
+		for(var i = 0; i < 2; i++){
+			var obstacle = new Obstacle(this.ctx, (i + 1) * 3 );
+			this.obstacles.push(obstacle);
+		}
 		var slime = new Slime(this.ctx);
 		this.enemies.push(slime);
 	}
+
+	// 
 	this.startGame = function(){
+		console.log('Game Started');
 		this.init();
 		this.background.draw();
 		this.player.init();
 		this.enemies[this.enemies.length - 1].draw();
 		this.animate();
 	}
+
 	this.animate = function(){
 		this.ctx.clearRect(0, 0, gameWidth, gameHeight);
 		this.ctx.save();
 		this.ctx.translate(-viewControl.x,-viewControl.y);
-		requestAnimationFrame(function(){that.animate()});
 		this.background.draw();
-		this.player.keyPressed();
-		// this.player.keyPressed(this.obstacles);
-		// this.player.checkObstacle();
+		this.player.update(this.obstacles, this.enemies);
 		for(var i = 0; i < this.obstacles.length; i++){
 			this.obstacles[i].draw();
 		}
 		for(var i = 0; i < this.enemies.length; i++){
-			this.enemies[i].update(this.player);
+			this.enemies[i].update(this.player, this.obstacles);
 		}
-		this.player.checkBoundry();
-		this.player.update();
 		frames++;
-
 		this.ctx.restore();
+		requestAnimationFrame(function(){that.animate()});
 	}
 
 	this.keyPressed = function(event){

@@ -252,65 +252,6 @@
 		}
 	}
 
-
-	
-	// function Bullet(scoreContainer, gameContainer){
-	// 	var bullets = [];
-	// 	this.element = null;
-	// 	this.x = null;
-	// 	this.y = null;
-	// 	this.width = null;
-	// 	this.height = null;
-	// 	this.speed = 0;
-
-	// 	var that = this;
-		
-	// 	this.init = function(){
-	// 		this.width = scoreContainer.offsetWidth;
-	// 		this.height = scoreContainer.offsetHeight;
-	// 	}
-
-	// 	this.createBullet = function(i){
-	// 		var bullet = document.createElement('div');
-	// 		bullet.style.background = 'url(./image/bullet1.png)';
-	// 		bullet.style.height = this.height * 0.1 + 'px';
-	// 		bullet.style.width = this.width * 0.2 + 'px';
-	// 		bullet.style.bottom = 20 + 'px';
-	// 		bullet.style.backgroundSize = 'contain';
-	// 		bullet.style.backgroundRepeat = 'no-repeat';
-	// 		bullet.style.position = 'absolute';
-	// 		bullet.style.display = 'inline-block';
-	// 		bullet.style.left = Math.floor(this.width / 5) * i + 'px';
-	// 		this.element = bullet;
-	// 		scoreContainer.append(bullet);
-	// 		return this;
-	// 	}
-	// 	this.collision = function(){
-	// 		if (this.x < element.x + element.width &&
-	// 			this.y < element.y + element.height &&
-	// 			this.x + this.width > element.x &&
-	// 			this.y + this.height > element.y) {
-
-	// 			}
-	// 	}
-	// 	this.checkBoundary = function(){
-	// 		if(this.y - this.height > this.containerHeight){
-	// 			return true;
-	// 		}
-	// 	}
-	// 	this.setPosition = function(x, y){
-	// 		this.x = x;
-	// 		this.y = y;
-	// 	}
-	// 	this.moveBullet = function(){
-	// 		this.y -= speed;
-	// 	}
-	// 	this.draw = function(){
-	// 		this.element.style.top = this.y  + 'px';
-	// 		this.element.style.left = this.x + 'px';
-	// 	}
-	// }
-
 	function setBackground(car, path){
 		car.element.style.background = 'url(./image/' + path +')';
 		car.element.style.backgroundSize = '60px 100px';
@@ -435,25 +376,28 @@
 			this.gameWrapper.append(gameContainer);
 			this.gameContainer.append(backgroundWrapper);
 			globalGameContainer = gameContainer;
+
 			temp.innerHTML = 'Score:';
 			temp.style.fontSize = 40 + 'px';
 			score.innerHTML = 0;
-			score.style.textAlign = 'center';
 			score.style.fontSize = 60 + 'px';
+			score.style.textAlign = 'center';
 			score.style.paddingTop = 40 + 'px';
 			scoreBoard.append(temp);
 			scoreBoard.append(score);
+
 			temp = document.createElement('p');
 			temp.innerHTML = 'High Score:';
 			temp.style.fontSize = 30 + 'px';
 			highScore.style.fontSize = 40 + 'px';
 			highScore.style.textAlign = 'center';
+
 			scoreBoard.append(temp);
 			scoreBoard.append(highScore);
 			highScore.innerHTML = myHighScore;
 
-			createButton(startBtn, 'Start Game');
 			createButton(resetBtn, 'Reset');
+			createButton(startBtn, 'Start Game');
 			startBtn.onclick = function(){that.startGame();};
 			resetBtn.onclick = function(){that.resetGame();};
 

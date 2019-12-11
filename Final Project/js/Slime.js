@@ -1,53 +1,92 @@
 function Slime(ctx){
-    this.x = 400;
-    this.y = 600;
+    this.x = 200;
+    this.y = 500;
     this.dx = 1;
     this.dy = 1;
     this.speed = 3;
-    this.width = 100;
+    this.width = 50;
     this.damage = 50;
-    this.height = 100;
+    this.height = 50;
     this.state = {alive:true, attack:true, collided:false};
     this.target = null;
     this.movementCooldown = 50;
     this.movementToggle = 1;
+    this.collision = false;
     
-    this.collisionCheck = function(){
-        if (rect1.x < rect2.x + rect2.width &&
-            rect1.x + rect1.width > rect2.x &&
-            rect1.y < rect2.y + rect2.height &&
-            rect1.y + rect1.height > rect2.y)
-            {}
+    this.checkCollision = function(obstacle){
+        if (this.x < obstacle.x + obstacle.width &&
+            this.x + this.width > obstacle.x &&
+            this.y < obstacle.y + obstacle.height &&
+            this.y + this.height > obstacle.y)
+            {
+                return true;
+            }
     }
 
     this.checkBoundry = function(){
         if(this.x < 20){
             this.dx = 1;
-            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
             this.movementToggle = -1;
+            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
         }
         if(this.x + this.width > gameWidth - 19){
             this.dx = -1;
-            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
             this.movementToggle = -1;
+            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
         }
         if(this.y < 474){
             this.dy = 1;
-            // this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
             this.movementToggle = -1;
+            // this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
         }
         if(this.y + this.height > mapInfo.y - 535){
             this.dy = -1;
-            // this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
             this.movementToggle = -1;
+            // this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
         }
     }
     
-    this.checkObstacle = function(){
-
+    this.checkObstacle = function(obstacles){
+        for(var i = 0; i < obstacles.length; i++){
+            if(obstacles[i].checkCollosion(this)){
+                var wy = ((this.width + obstacles[i].width) / 2) * ((this.x + this.width / 2) - (obstacles[i].x + obstacles[i].width / 2));
+                var hx = ((this.height + obstacles[i].height) / 2) * ((this.y + this.height / 2) - (obstacles[i].y + obstacles[i].height / 2));
+                if(wy < hx){
+                    if(wy > -hx){
+                        // console.log('bottom');
+                        this.y = obstacles[i].y + obstacles[i].height + 1;
+                        this.dy = 1;
+                        this.movementToggle = -1;
+                    }
+                    else{
+                        // console.log('left');
+                        this.x = obstacles[i].x - this.width - 1;
+                        this.dx = -1;
+                        this.movementToggle = 1;
+                        this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                    }
+                }else{
+                    if(wy > -hx){
+                        // console.log('right');
+                        this.x = obstacles[i].x + obstacles[i].width + 1;
+                        this.dx = 1;
+                        this.movementToggle = -1;
+                        this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                    }
+                    else{
+                        // console.log('top');
+                        this.y = obstacles[i].y - this.height - 1;
+                        this.dy = -1;
+                        this.movementToggle = -1;
+                    }
+                }
+                this.collision = true;
+            }
+        }
     }
     
-    this.update = function(player){
+    this.update = function(player, obstacle){
+        this.checkObstacle(obstacle);
         if(this.movementToggle == 1){
             this.checkBoundry();
             var distance = Math.sqrt(Math.pow(((this.x + this.width / 2)  - (player.x + player.width / 2)), 2) + Math.pow(((this.y + this.height / 2) - (player.y + player.height / 2)), 2));
@@ -62,7 +101,7 @@ function Slime(ctx){
 
     this.draw = function(){
         ctx.beginPath();
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.fillStyle = 'green';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }

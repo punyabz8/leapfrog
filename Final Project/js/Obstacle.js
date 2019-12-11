@@ -18,7 +18,7 @@ function Obstacle (ctx){
             this.x + this.width > player.x &&
             this.y < player.y + player.height &&
             this.y + this.height > player.y) {
-            return true;
+                return true;
         }
     }
 }

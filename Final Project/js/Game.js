@@ -65,7 +65,8 @@ function Game(canvas){
 		requestAnimationFrame(function(){that.animate()});
 		this.background.draw();
 		this.player.keyPressed();
-		this.player.checkObstacle(this.obstacles);
+		// this.player.keyPressed(this.obstacles);
+		// this.player.checkObstacle();
 		for(var i = 0; i < this.obstacles.length; i++){
 			this.obstacles[i].draw();
 		}

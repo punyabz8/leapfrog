@@ -5,9 +5,10 @@ function Slime(ctx){
     this.y = 500;
     this.speed = 3;
     this.width = 50;
-    this.damage = 50;
+    this.damage = 75;
     this.height = 50;
-    this.target = null;
+    this.health = 300;  // HP
+    this.target = null; // Attacking target
     this.collision = false;
     this.movementToggle = 1;
     this.movementCooldown = 200;
@@ -68,12 +69,12 @@ function Slime(ctx){
         if(this.y < 474){
             this.dy = 1;
             this.movementToggle = -1;
-            // this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
+            this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
         }
         if(this.y + this.height > mapInfo.y - 535){
             this.dy = -1;
             this.movementToggle = -1;
-            // this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
+            this.dx = getRandomInt(-5, 5) > 0 ? this.dx = 1 : this.dx = -1; 
         }
     }
     
@@ -121,7 +122,6 @@ function Slime(ctx){
     
     this.update = function(player, obstacle){
         this.checkObstacle(obstacle);
-        // this.checkCollisionWithPlayer(player);
         if(this.movementToggle == 1){
             this.checkBoundry();
             var distance = Math.sqrt(Math.pow(((this.x + this.width / 2)  - (player.x + player.width / 2)), 2) + Math.pow(((this.y + this.height / 2) - (player.y + player.height / 2)), 2));

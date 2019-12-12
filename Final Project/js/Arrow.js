@@ -1,7 +1,7 @@
 function Arrow(ctx, player){
 	this.dx = 0;
 	this.dy = 0;
-	this.speed = 20;
+	this.speed = 25;
 	this.eCenterX = 0;
 	this.eCentery = 0;
 	this.angle = null;
@@ -57,7 +57,6 @@ function Arrow(ctx, player){
             this.x + this.width > obj.x &&
             this.y < obj.y + obj.height &&
             this.y + this.height > obj.y) {
-				console.log('checked');
 				return true;
         }
     }

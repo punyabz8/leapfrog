@@ -13,8 +13,8 @@ function Player(ctx){
     this.enemyTarget = null;    // which enemy to attack
     this.y = mapInfo.y - 300;   // starting position of hero
     this.movingState = false;
-    this.attackState = false;
-    this.attackCooldown = 40;   // waiting time until next attack
+    this.attackCooldown = 0;   // waiting time until next attack
+    this.attackingTime = 40;    // time to wait for next consecutive attack
 
     var distance = 0;
     var tempArrow = [];
@@ -52,22 +52,25 @@ function Player(ctx){
 
     this.keyPressed = function(obstacles){
         if(keyPressed.ArrowLeft == true || keyPressed.a == true || keyPressed.A == true){
-            // if(!)if
-            this.x = this.x - this.speed;
             this.dx = -1;
+            this.movingState = true;
+            this.x = this.x - this.speed;
         }
         if(keyPressed.ArrowRight == true || keyPressed.d == true || keyPressed.D == true){
-            this.x = this.x + this.speed;
             this.dx = 1;
+            this.movingState = true;
+            this.x = this.x + this.speed;
 
         }
         if(keyPressed.ArrowUp == true || keyPressed.w == true || keyPressed.W == true){
-            this.y = this.y - this.speed;
             this.dy = -1;
+            this.movingState = true;
+            this.y = this.y - this.speed;
         }
         if(keyPressed.ArrowDown == true || keyPressed.s == true || keyPressed.S == true){
-            this.y = this.y + this.speed;
             this.dy = 1;
+            this.movingState = true;
+            this.y = this.y + this.speed;
         }
         // ViewPort location and movement
         if(this.y < viewControl.y + 300){
@@ -83,21 +86,29 @@ function Player(ctx){
             }
         }
     }
-
-    // this.checkCollosion = function(){
-    //     if (this.x < obstacle[i].x + obstacle[i].width &&
-    //         this.x + this.width > obstacle[i].x &&
-    //         this.y < obstacle[i].y + obstacle[i].height &&
-    //         this.y + this.height > obstacle[i].y) {
-    //             return true;
-    //     }
-    // }
     
     this.checkBoundry = function(){
         this.x < 20 ? this.x = 20 : false;
         this.x + this.width > gameWidth - 19 ? this.x = gameWidth - this.width - 19 : false;
         this.y < 474 ? this.y = 474 : false;
         this.y + this.height > mapInfo.y - 535 ? this.y = mapInfo.y - this.height - 535 : false;
+    }
+
+    this.checkPlayerState = function(){
+        if(keyPressed.hasOwnProperty('w')){
+            if(keyPressed.a == false && keyPressed.d == false && keyPressed.w == false && keyPressed.s == false ){
+                    this.movingState = false;
+                }
+        }else if(keyPressed.hasOwnProperty('ArrowUp')){
+            if(keyPressed.ArrowLeft == false && keyPressed.ArrowRight == false && keyPressed.ArrowUp == false && keyPressed.ArrowDown == false ){
+                    this.movingState = false;
+                }
+        }else if(keyPressed.hasOwnProperty('W')){
+            if(keyPressed.A == false && keyPressed.D == false && keyPressed.W == false && keyPressed.S == false){
+                    this.movingState = false;
+                }
+        }
+        
     }
 
     //check player collision with objects
@@ -187,12 +198,12 @@ function Player(ctx){
         this.checkObstacle(obstacles);
         this.playerBackgroundEffect();
         this.checkCollisionWithEnemies(enemies);
-        this.draw();
-        if(frames % 100 == 0)
-            {
-                this.attack(enemies);
-            }
-
+        this.draw(); 
+        this.attackCooldown > 0 ? this.attackCooldown-- : this.attackCooldown = this.attackingTime;
+        this.checkPlayerState();
+        if(this.movingState == false && this.attackCooldown == 0){
+            this.attack(enemies);
+        }
         for(var i = 0; i < this.arrows.length; i++)
         {
             this.arrows[i].checkBoundry();
@@ -212,7 +223,6 @@ function Player(ctx){
         }
 
         // console.log(this.arrows);
-
 
 
     }

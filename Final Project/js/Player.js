@@ -14,7 +14,7 @@ function Player(ctx){
     this.y = mapInfo.y - 300;   // starting position of hero
     this.movingState = false;
     this.attackState = false;
-    this.attackCooldown = 60;   // waiting time until next attack
+    this.attackCooldown = 40;   // waiting time until next attack
 
     var distance = 0;
     var tempArrow = [];
@@ -76,7 +76,7 @@ function Player(ctx){
                 viewControl.y = 0;
             }
         }
-        if(this.y > viewControl.y + gameHeight - 100){
+        if(this.y > viewControl.y + gameHeight -200){
             viewControl.y = viewControl.y + this.speed;
             if(viewControl.y + gameHeight > mapInfo.y){
                 viewControl.y = mapInfo.y - gameHeight;
@@ -84,14 +84,14 @@ function Player(ctx){
         }
     }
 
-    this.checkCollosion = function(){
-        if (this.x < obstacle[i].x + obstacle[i].width &&
-            this.x + this.width > obstacle[i].x &&
-            this.y < obstacle[i].y + obstacle[i].height &&
-            this.y + this.height > obstacle[i].y) {
-                return true;
-        }
-    }
+    // this.checkCollosion = function(){
+    //     if (this.x < obstacle[i].x + obstacle[i].width &&
+    //         this.x + this.width > obstacle[i].x &&
+    //         this.y < obstacle[i].y + obstacle[i].height &&
+    //         this.y + this.height > obstacle[i].y) {
+    //             return true;
+    //     }
+    // }
     
     this.checkBoundry = function(){
         this.x < 20 ? this.x = 20 : false;
@@ -106,23 +106,18 @@ function Player(ctx){
             if(obstacles[i].checkCollosion(this)){
                 var wy = ((this.width + obstacles[i].width) / 2) * ((this.x + this.width / 2) - (obstacles[i].x + obstacles[i].width / 2));
                 var hx = ((this.height + obstacles[i].height) / 2) * ((this.y + this.height / 2) - (obstacles[i].y + obstacles[i].height / 2));
-                console.log('handle obstacle collision');
                 if(wy < hx){
                     if(wy > -hx){
-                        // console.log('bottom');
                         this.y = obstacles[i].y + obstacles[i].height + 1;
                     }
                     else{
-                        // console.log('left');
                         this.x = obstacles[i].x - this.width - 1;
                     }
                 }else{
                     if(wy > -hx){
-                        // console.log('right');
                         this.x = obstacles[i].x + obstacles[i].width + 1;
                     }
                     else{
-                        // console.log('top');
                         this.y = obstacles[i].y - this.height - 1;
                     }
                 }
@@ -130,32 +125,100 @@ function Player(ctx){
         }
     }
 
+    this.checkCollisionWithEnemies = function(enemies){
+        for(var i = 0; i < enemies.length; i++){
+            if (this.x < enemies[i].x + enemies[i].width &&
+                this.x + this.width > enemies[i].x &&
+                this.y < enemies[i].y + enemies[i].height &&
+                this.y + this.height > enemies[i].y)
+                {
+                    var wy = ((this.width + enemies[i].width) / 2) * ((this.x + this.width / 2) - (enemies[i].x + enemies[i].width / 2));
+                    var hx = ((this.height + enemies[i].height) / 2) * ((this.y + this.height / 2) - (enemies[i].y + enemies[i].height / 2));
+                    if(wy < hx){
+                        if(wy > -hx){
+                            // console.log('bottom');
+                            this.y = enemies[i].y + enemies[i].height + 1;
+                            this.dy = 1;
+                            this.movementToggle = -1;
+                        }
+                        else{
+                            // console.log('left');
+                            this.x = enemies[i].x - this.width - 1;
+                            this.dx = -1;
+                            this.movementToggle = 1;
+                            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                        }
+                    }else{
+                        if(wy > -hx){
+                            // console.log('right');
+                            this.x = enemies[i].x + enemies[i].width + 1;
+                            this.dx = 1;
+                            this.movementToggle = -1;
+                            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                        }
+                        else{
+                            // console.log('top');
+                            this.y = enemies[i].y - this.height - 1;
+                            this.dy = -1;
+                            this.movementToggle = -1;
+                        }
+                    }
+                console.log('player collided with ', enemies[i]);
+            }
+        }
+    }
+
+    this.updateHealth = function(){
+        // HP related task
+    }
+
+    this.updateExperience = function(){
+        // Experience related tack
+    }
+
+    this.updateCoin = function(){
+        // Coin related task
+    }
+
     this.update = function(obstacles, enemies){
         tempArrow = [];
         this.keyPressed();
-        this.checkObstacle(obstacles);
         this.checkBoundry();
+        this.checkObstacle(obstacles);
         this.playerBackgroundEffect();
+        this.checkCollisionWithEnemies(enemies);
         this.draw();
-        if(frames % this.attackCooldown == 0)
-            {this.attack(enemies);}
-        for(var i = 0; i < this.arrows.length; i++){
-            if(this.arrows[i].checkBoundry()){
-                tempArrow.push(i);
+        if(frames % 100 == 0)
+            {
+                this.attack(enemies);
+            }
+
+        for(var i = 0; i < this.arrows.length; i++)
+        {
+            this.arrows[i].checkBoundry();
+            this.arrows[i].checkObstacle(obstacles);
+            if(this.arrows[i].checkEnemyCollision(enemies) != null){
+
+            }
+            if(this.arrows[i].collidedState == false){
+                this.arrows[i].update();
             }
         }
-        for(var i = tempArrow.length - 1; i >= 0; i--){
-            this.arrows.splice(tempArrow[i],1);
+        for(var i = this.arrows.length - 1; i >= 0; i--)
+        {
+            if(this.arrows[i].collidedState == true){
+                this.arrows.splice(i, 1);
+            }
         }
-        for(var i = 0; i < this.arrows.length; i++){
-            this.arrows[i].update();
-            this.arrows[i].checkBoundry();
-        }
-        console.log(this.arrows);
+
+        // console.log(this.arrows);
+
+
+
     }
 
     this.draw = function(){
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 15;
         ctx.shadowOffsetX = 10;
         ctx.shadowOffsetY = 15;
         ctx.fillStyle = 'blue';

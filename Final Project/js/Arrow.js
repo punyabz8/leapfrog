@@ -33,22 +33,22 @@ function Arrow(ctx, player){
 	}
 
 	this.checkBoundry = function(){
-        if(this.x < gameBoundary.left){
+		if(this.x < gameBoundary.left){
 			this.collidedTo = 'boundry';
 			this.collidedState = true;
 			return true;
 		}
-        if(this.x + this.width > gameBoundary.right){
+		if(this.x + this.width > gameBoundary.right){
 			this.collidedTo = 'boundry';
 			this.collidedState = true;
 			return true;
 		}
-        if(this.y < gameBoundary.top){
+		if(this.y < gameBoundary.top){
 			this.collidedTo = 'boundry';
 			this.collidedState = true;
 			return true;
 		}
-        if(this.y + this.height >mapInfo.y - gameBoundary.bottom){
+		if(this.y + this.height >mapInfo.y - gameBoundary.bottom){
 			this.collidedTo = 'boundry';
 			this.collidedState = true;
 			return true;
@@ -56,14 +56,14 @@ function Arrow(ctx, player){
 	}
 
 	this.checkCollosion = function(obj){
-        if (this.x < obj.x + obj.width &&
-            this.x + this.width > obj.x &&
-            this.y < obj.y + obj.height &&
-            this.y + this.height > obj.y) {
+		if (this.x < obj.x + obj.width &&
+			this.x + this.width > obj.x &&
+			this.y < obj.y + obj.height &&
+			this.y + this.height > obj.y) {
 				return true;
-        }
-    }
-	
+		}
+	}
+
 	this.checkObstacle = function(obstacles){
 		for(i = 0; i < obstacles.length; i++){
 			if(this.checkCollosion(obstacles[i])){

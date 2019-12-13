@@ -1,8 +1,8 @@
-function Slime(ctx){
+function Slime(ctx, xPosition, yPosition){
     this.dx = 1;
     this.dy = 1;
-    this.x = 200;
-    this.y = 500;
+    this.x = xPosition;
+    this.y = yPosition;
     this.speed = 3;
     this.width = 50;
     this.damage = 75;

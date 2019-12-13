@@ -1,4 +1,4 @@
-
+// tile 48 * 48
 var coin = 0;
 var frames = 0;
 var keyPressed = {};
@@ -51,8 +51,11 @@ function Game(canvas){
 			var obstacle = new Obstacle(this.ctx, (i + 1) * 3 );
 			this.obstacles.push(obstacle);
 		}
-		var slime = new Slime(this.ctx);
+
+		var slime = new Slime(this.ctx, 400, 500);
 		this.enemies.push(slime);
+		var slime1 = new Slime(this.ctx, 300, 800);
+		this.enemies.push(slime1);
 	}
 
 	// 

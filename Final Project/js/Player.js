@@ -37,11 +37,13 @@ function Player(ctx){
 
     
     this.attack = function(enemies){
-        var nearestEnemy = 9999;
+        var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
             distance = Math.sqrt(Math.pow((this.x - enemies[i].x),2) + Math.pow((this.y - enemies[i].y),2));
-            if(nearestEnemy > distance){
+            console.log('distance ',i,': ',distance);
+            if(distance < nearestEnemy){
                 this.enemyTarget = enemies[i];
+                nearestEnemy = distance;
             }
         }
         var arrow = new Arrow(ctx, this);

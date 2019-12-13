@@ -3,9 +3,9 @@ function Player(ctx){
     this.dy = 1;
     this.level = 1;
     this.speed = 8;     //player speed
-    this.width = 45;
+    this.width = 47;
     this.arrows = [];
-    this.height = 45;
+    this.height = 47;
     this.hitPoint = 500;     //Player HP
     this.weaponType = null;
     this.maxHealth = 500;   //Player Max HP
@@ -189,7 +189,7 @@ function Player(ctx){
                             this.movementToggle = -1;
                         }
                     }
-                console.log('player collided with ', enemies[i]);
+                // console.log('player collided with ', enemies[i]);
             }
         }
     }

@@ -1,17 +1,17 @@
-function Slime(ctx, xPosition, yPosition, player){
+function Slime(ctx, x, y, player){
     this.dx = 1;
     this.dy = 1;
-    this.speed = 3;
-    this.width = 50;
-    this.height = 50;
-    this.x = xPosition;     //Initial x-position of slime
-    this.y = yPosition;     //Initial y-position of slime
+    this.speed = 4;
+    this.width = 47;
+    this.height = 47;
+    this.x = 47 * x + 20;     //Initial x-position of slime
+    this.y = 47 * y + 465;     //Initial y-position of slime
     this.hitPoint = 300;    // HP
     this.damagePoint = 75;
     this.collision = false;
     this.movementToggle = 1;
     this.movementTile = 5 * 47;
-    this.movementCooldown = 50;
+    this.movementCooldown = 40;
     this.attackingTarget = player;    // Attacking target (hero)
     this.state = {alive:true, attack:true, collided:false};
     
@@ -131,7 +131,7 @@ function Slime(ctx, xPosition, yPosition, player){
         this.hitPoint = this.hitPoint - (arrow.damagePoint + arrow.damagePoint * criticalDamage + poisionDamage);
     }
     
-    this.update = function(player, obstacle){
+    this.update = function(obstacle){
         this.checkObstacle(obstacle);
         if(this.movementToggle == 1){
             this.checkBoundry();
@@ -145,7 +145,7 @@ function Slime(ctx, xPosition, yPosition, player){
         }
         if(this.movementTile < 1){
             this.movementToggle = -1;
-            this.movementTile = getRandomInt(4, 10) * 47;
+            this.movementTile = getRandomInt(6, 10) * 47;
         }
         if(this.movementToggle == -1){
             if(this.movementCooldown >= 1){

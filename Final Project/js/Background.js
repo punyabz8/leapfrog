@@ -4,7 +4,7 @@ function Background(ctx){
 
     this.draw = function(){
         ctx.beginPath();
-        ctx.drawImage(img, 0, 0, gameWidth, 2004);
+        ctx.drawImage(img, 0, 0, gameWidth, 1700);
         ctx.strokeStyle = 'black';
         ctx.strokeRect(0, 0, gameWidth, mapInfo.y);
         // var pattern = ctx.createPattern(img, 'repeat');

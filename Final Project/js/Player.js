@@ -2,19 +2,26 @@ function Player(ctx){
     this.dx = 1;
     this.dy = 1;
     this.level = 1;
-    this.speed = 8;
+    this.speed = 8;     //player speed
     this.width = 45;
     this.arrows = [];
     this.height = 45;
-    this.health = 500;
-    this.weapon = null;
-    this.maxHealth = 500;
+    this.hitPoint = 500;     //Player HP
+    this.weaponType = null;
+    this.maxHealth = 500;   //Player Max HP
     this.x = gameWidth / 2;
-    this.enemyTarget = null;    // which enemy to attack
     this.y = mapInfo.y - 300;   // starting position of hero
-    this.movingState = false;
+    this.enemyTarget = null;    // which enemy to attack
+
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
+    this.criticalDamage = 0.2;
+    this.poisionDamage = 30;
+    this.poisionDamageIncrement = 3;
+    this.criticalDamageIncreament = 0.05;
+    this.attackingFlags = {critical:true, poision:false, doubleArrow: false};
+    
+    this.movingState = false;
 
     var distance = 0;
     var tempArrow = [];
@@ -40,16 +47,20 @@ function Player(ctx){
         var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
             distance = Math.sqrt(Math.pow((this.x - enemies[i].x),2) + Math.pow((this.y - enemies[i].y),2));
-            console.log('distance ',i,': ',distance);
             if(distance < nearestEnemy){
                 this.enemyTarget = enemies[i];
                 nearestEnemy = distance;
             }
         }
-        var arrow = new Arrow(ctx, this);
-        arrow.init();
-        arrow.draw();
-        this.arrows.push(arrow);
+        this.enemyTarget = nearestEnemy == 99999 ? null : this.enemyTarget;
+        if(this.enemyTarget != null){
+            var arrow = new Arrow(ctx, this);
+            arrow.init();
+            arrow.draw();
+            this.arrows.push(arrow);
+        }else{
+            gameFlags.levelComplete = true;
+        }
     }
 
     this.keyPressed = function(obstacles){
@@ -75,13 +86,16 @@ function Player(ctx){
             this.y = this.y + this.speed;
         }
         // ViewPort location and movement
-        if(this.y < viewControl.y + 300){
+        if(this.y < viewControl.y + 474){
             viewControl.y = viewControl.y - this.speed;
+            if(this.y < 474){
+                viewControl.y = viewControl.y - this.speed;
+            }
             if(viewControl.y < 0){
                 viewControl.y = 0;
             }
         }
-        if(this.y > viewControl.y + gameHeight -200){
+        if(this.y > viewControl.y + gameHeight - 300){
             viewControl.y = viewControl.y + this.speed;
             if(viewControl.y + gameHeight > mapInfo.y){
                 viewControl.y = mapInfo.y - gameHeight;
@@ -89,11 +103,11 @@ function Player(ctx){
         }
     }
     
-    this.checkBoundry = function(){
-        this.x < 20 ? this.x = 20 : false;
-        this.x + this.width > gameWidth - 19 ? this.x = gameWidth - this.width - 19 : false;
-        this.y < 474 ? this.y = 474 : false;
-        this.y + this.height > mapInfo.y - 535 ? this.y = mapInfo.y - this.height - 535 : false;
+    this.checkBoundry = function(){ 
+        this.y < gameBoundary.top ? this.y = gameBoundary.top : false;
+        this.x < gameBoundary.left ? this.x = gameBoundary.left : false;
+        this.x + this.width > gameBoundary.right ? this.x = gameBoundary.right - this.height : false;
+        this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
     }
 
     this.checkPlayerState = function(){
@@ -110,7 +124,6 @@ function Player(ctx){
                     this.movingState = false;
                 }
         }
-        
     }
 
     //check player collision with objects
@@ -198,7 +211,6 @@ function Player(ctx){
         this.keyPressed();
         this.checkBoundry();
         this.checkObstacle(obstacles);
-        this.playerBackgroundEffect();
         this.checkCollisionWithEnemies(enemies);
         this.draw(); 
         this.attackCooldown > 0 ? this.attackCooldown-- : this.attackCooldown = this.attackingTime;
@@ -210,8 +222,10 @@ function Player(ctx){
         {
             this.arrows[i].checkBoundry();
             this.arrows[i].checkObstacle(obstacles);
-            if(this.arrows[i].checkEnemyCollision(enemies) != null){
-
+            var enemyCollision = this.arrows[i].checkEnemyCollision(enemies);
+            // console.log('enemyCollision    :', enemyCollision);
+            if(enemyCollision != null){
+                // enemyCollision
             }
             if(this.arrows[i].collidedState == false){
                 this.arrows[i].update();
@@ -223,19 +237,21 @@ function Player(ctx){
                 this.arrows.splice(i, 1);
             }
         }
+    }
 
-        // console.log(this.arrows);
-
-
+    this.hitByEnemy = function(damageFromEnemy){
+        console.log('htlle');
+        this.hitPoint -= damageFromEnemy;
     }
 
     this.draw = function(){
+        ctx.beginPath();
         ctx.shadowBlur = 15;
         ctx.shadowOffsetX = 10;
         ctx.shadowOffsetY = 15;
         ctx.fillStyle = 'blue';
         ctx.shadowColor = '#333';
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.beginPath();
+        this.playerBackgroundEffect();
     }
 }

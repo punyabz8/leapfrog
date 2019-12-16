@@ -21,31 +21,60 @@ function Player(ctx){
     this.criticalDamageIncreament = 0.025;
     this.attackingFlags = {critical:true, poision:false, doubleArrow: false};
     this.rays = [];
-    
+    this.lines = null;
+    this.enemies = null;
     this.movingState = false;
+    this.playerPositionNearDoor = false;
 
     var distance = 0;
     var tempArrow = [];
 
-    this.init = function(){
+    this.init = function(enemies, obstacles){
         this.draw();
+        this.enemies = enemies;
+        this.lines = new Line(enemies, obstacles);
+		this.lines.createLine();
         console.log('player drawn');
     }
+
+    this.checkEnemyIsInView = function(point){
+		for(var j = 0; j < this.enemies.length; j++){
+			if(point.x >= this.enemies[j].x && point.x <= this.enemies[j].x + this.enemies[j].width && point.y >= this.enemies[j].y && point.y <= this.enemies[j].y + this.enemies[j].height){
+                console.log('hello');
+				return this.enemies[j];
+			}
+		}
+	}
     
     this.attack = function(enemies){
-
+        // var enemyTargets = [];
         // this.rays = [];
-        // for(var j = 0; j < 360; j +=5){
+        // for(var j = 0; j <= 1; j +=5){
         //     this.rays.push(new Ray(ctx, this.x + this.width / 2, this.y + this.height / 2, j));
         // }
-        // for(var j = 0; j < this.rays.length; j++){
-		// 	this.rays[j].draw();
-        // }
         
-
-
-
-
+        // for(var j = 0; j < this.rays.length; j++){
+        //     var temp = {};
+        //     var distance = 9999;
+        //     var newDistance = 0;
+        //     for(var l = 0; l < this.lines.allLines.length; l++){
+        //         var pt = this.rays[j].rayCast(this.lines.allLines[l]);
+        //         newDistance = Math.sqrt(Math.pow(((this.x + this.width / 2) - pt.x),2) + Math.pow(((this.y + this.height / 2) - pt.y),2));
+        //         if(distance > newDistance){
+        //             distance = newDistance;
+        //             temp = pt;
+        //         }
+        //     }
+        //     console.log('collision point' ,temp);
+        //     var enemyChecked = this.checkEnemyIsInView(temp);
+        //     // console.log(enemyChecked);
+        //     if(enemyChecked != null){
+        //         this.enemyTarget = enemyChecked ;
+        //     }
+        // }
+        // for(var j = 0; j < this.rays.length; j++){
+        //     this.rays[j].draw();
+        // }
 
         var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
@@ -109,11 +138,37 @@ function Player(ctx){
         }
     }
     
-    this.checkBoundry = function(){ 
-        this.y < gameBoundary.top ? this.y = gameBoundary.top : false;
-        this.x < gameBoundary.left ? this.x = gameBoundary.left : false;
-        this.x + this.width > gameBoundary.right ? this.x = gameBoundary.right - this.height : false;
-        this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
+    this.checkBoundry = function(levelCompleteFlag){ 
+        if(levelCompleteFlag == false){
+            this.y < gameBoundary.top ? this.y = gameBoundary.top : false;
+            this.x < gameBoundary.left ? this.x = gameBoundary.left : false;
+            this.x + this.width > gameBoundary.right ? this.x = gameBoundary.right - this.height : false;
+            this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
+        }else{
+            if(this.x >= 220 && this.x + this.height <= 340 && this.y < gameBoundary.top){
+                this.playerPositionNearDoor = true;
+            }else if(this.y > gameBoundary.top + 8){
+                this.playerPositionNearDoor = false;    
+            }
+            if(this.playerPositionNearDoor == true){
+                if(this.x < 220 && this.y > gameBoundary.top - 160){
+                    this.x = 220;
+                }else if(this.x + this.height > 340 && this.y > gameBoundary.top - 160){
+                    this.x = 340 - this.height;
+                }
+                if(this.y < gameBoundary.top - 140){
+                    this.y = gameBoundary.top - 140;
+                }
+            }else{
+                if(this.y < gameBoundary.top){
+                    this.y = gameBoundary.top;
+                }
+                this.x < gameBoundary.left ? this.x = gameBoundary.left : false;
+                this.x + this.width > gameBoundary.right ? this.x = gameBoundary.right - this.height : false;
+                this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
+            }
+
+        }
     }
 
     this.checkPlayerState = function(){
@@ -161,7 +216,14 @@ function Player(ctx){
         for(var i = 0; i < enemies.length; i++){
             if (collisionCheck(this, enemies[i]))
                 {
-                    this.hitByEnemy(enemies[i].damagePoint);
+                    if(enemies[i].performedDamage == false && enemies[i].damageCooldown == 0){
+                        this.hitPoint -= enemies[i].damagePoint;
+                        enemies[i].damageCooldown = 100;
+                        enemies[i].performedDamage = true;
+                        console.log('Hero hit point   :',this.hitPoint);
+
+                    }   
+                    
                     var wy = ((this.width + enemies[i].width) / 2) * ((this.x + this.width / 2) - (enemies[i].x + enemies[i].width / 2));
                     var hx = ((this.height + enemies[i].height) / 2) * ((this.y + this.height / 2) - (enemies[i].y + enemies[i].height / 2));
                     if(wy < hx){
@@ -195,11 +257,13 @@ function Player(ctx){
                     }
                 // console.log('player collided with ', enemies[i]);
             }
+            if(enemies[i].damageCooldown > 0){
+                enemies[i].damageCooldown--;
+            }
+            if(enemies[i].damageCooldown == 0){
+                enemies[i].performedDamage = false;
+            }
         }
-    }
-
-    this.updateHealth = function(){
-        // HP related task
     }
 
     this.updateExperience = function(){
@@ -210,11 +274,31 @@ function Player(ctx){
         // Coin related task
     }
 
-    this.update = function(obstacles, enemies){
+    this.update = function(obstacles, enemies, levelCompleteFlag, traps){
         tempArrow = [];
         this.keyPressed();
-        this.checkBoundry();
+        this.checkBoundry(levelCompleteFlag);
         this.checkObstacle(obstacles);
+        // console.log('up',this.hitPoint);
+        for(var z = 0; z < traps.length; z++){
+            if(traps[z].checkCollosion(this) == true){
+                if(traps[z].performedDamage == false && traps[z].damageCooldown == 0){
+                    this.hitPoint -= traps[z].damagePoint;
+                    traps[z].damageCooldown = 100;
+                    traps[z].performedDamage = true;
+                    console.log(this.hitPoint);
+                }   
+            }
+            if(traps[z].damageCooldown > 0){
+                traps[z].damageCooldown--;
+            }
+            if(traps[z].damageCooldown == 0){
+                traps[z].performedDamage = false;
+            }
+            // console.log('traps :',traps[z].damageCooldown);
+            // console.log('traps :',traps[z].performedDamage);
+        }
+        // console.log(this.hitPoint);
         this.checkCollisionWithEnemies(enemies);
         this.draw(); 
         this.attackCooldown > 0 ? this.attackCooldown-- : this.attackCooldown = this.attackingTime;
@@ -241,10 +325,7 @@ function Player(ctx){
                 this.arrows.splice(i, 1);
             }
         }
-    }
-
-    this.hitByEnemy = function(damageFromEnemy){
-        this.hitPoint -= damageFromEnemy;
+        // this.lines.updateEnemyLine(enemies);	//create lines of objects (rectangle -> 4 lines)
     }
 
     // Circle background of hero

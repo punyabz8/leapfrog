@@ -28,8 +28,8 @@ img.src = './assets/images/background1.png';
 
 function Game(canvas){
 	this.coin = 0;
-    this.rays = [];
 	this.frames = 0;
+	this.traps = [];
 	this.enemies = [];
 	this.player = null;
 	this.chapter = null;
@@ -66,29 +66,22 @@ function Game(canvas){
 		this.map.setMapTIles(this.player);
 		for(var i = 0; i < this.map.tileMap.length; i++){
 			for(var j = 0; j < this.map.tileMap[i].length; j++){
-				if(this.map.tileMap[i][j] == 1){
+				if(this.map.tileMap[i][j] >= 1 && this.map.tileMap[i][j] <= 10){
 					this.obstacles.push(this.map.mapDetail[i][j]);
 				}
-				if(this.map.tileMap[i][j] == 10){
+				if(this.map.tileMap[i][j] >= 11 && this.map.tileMap[i][j] <= 20){
 					this.enemies.push(this.map.mapDetail[i][j]);
+				}
+				if(this.map.tileMap[i][j] >= 21 && this.map.tileMap[i][j] <= 30){
+					this.traps.push(this.map.mapDetail[i][j]);
 				}
 			}
 		}
 
 		this.boundaryLine = new Boundary(this.ctx);
-
-
-		//need seperation later
-		// for(var i = 0; i < 2; i++){
-		// 	var obstacle = new Obstacle(this.ctx, (i + 1) * 3 );
-		// 	this.obstacles.push(obstacle);
-		// }
-
-		// var slime = new Slime(this.ctx, 400, 500, player);
-		// this.enemies.push(slime);
-		// var slime1 = new Slime(this.ctx, 300, 800, player);
-		// this.enemies.push(slime1);
 	}
+
+	
 
 	// 
 	this.startGame = function(){
@@ -96,7 +89,7 @@ function Game(canvas){
 		this.init();
 		this.background.draw();
 		this.map.draw();
-		this.player.init();
+		this.player.init(this.enemies, this.obstacles);
 		this.animate();
 	}
 
@@ -106,17 +99,14 @@ function Game(canvas){
 		this.ctx.translate(-viewControl.x,-viewControl.y);		//translate for viewport adjustment
 		this.background.draw();	//draw backgroud image
 		this.map.draw();
-
-	
 		
-
-
-		if(gameFlags.levelComplete == false){
-			this.player.update(this.obstacles, this.enemies);	//Update player position 
-			
+		if(gameFlags.levelComplete == false && gameFlags.gameOver == false){
+			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			for(var i = 0; i < this.enemies.length; i++){
 				this.enemies[i].update(this.obstacles);	//update enemies position
 			}
+
+			// Delete dead enemies
 			for(var i = this.enemies.length - 1; i >= 0; i--)
 			{
 				if(this.enemies[i].hitPoint <= 0){
@@ -125,7 +115,7 @@ function Game(canvas){
 					var temp = i;
 					for(var k = 0; k < this.map.tileMap.length; k++){
 						for(var j = 0; j < this.map.tileMap[k].length; j++){
-							if(this.map.tileMap[k][j] == 10){
+							if(this.map.tileMap[k][j] == 11){
 								if(temp == 0){
 									this.map.mapDetail[k][j] = 0;
 									this.map.tileMap[k][j] = 0;
@@ -137,20 +127,21 @@ function Game(canvas){
 					console.log(this.enemies);
 				}
 			}
-		}else{
-			this.player.update(this.obstacles, this.enemies);	//Update player position 
+			if(this.player.hitPoint <= 0){
+				gameFlags.gameOver = true;
+			}
+		}else if(gameFlags.levelComplete == true && gameFlags.gameOver == false){
+			if(this.player.hitPoint <= 0){
+				gameFlags.gameOver = true;
+			}
+			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			this.map.draw();
 			console.log('Level Complete');
+		}else{
+			this.map.draw();
+			console.log('Game Over');
 		}
-		this.rays = [];
-        for(var j = 0; j < 360; j +=5){
-            this.rays.push(new Ray(this.ctx, this.player.x + this.player.width / 2, this.player.y + this.player.height / 2, j ));
-        }
-        for(var j = 0; j < this.rays.length; j++){
-			this.rays[j].draw();
-			console.log(this.rays[j].dx, this.rays[j].dy);
-        }
-		// console.log(this.rays[0]);
+
 		frames++;
 		this.boundaryLine.draw();
 		this.ctx.restore();
@@ -159,6 +150,13 @@ function Game(canvas){
 
 	this.keyPressed = function(event){
 		this.player.keyPressed(event);
+	}
+
+	this.chooseLevel = function(currentLevel){
+
+	}
+	this.resetMap = function(){
+
 	}
 }
 

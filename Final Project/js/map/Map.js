@@ -11,13 +11,16 @@ function Map(ctx, firstTimeMapLoad){
                     continue;
                 }
                 if(i % 4 == 0 && j % 4 == 0){
-                    // var obstacle = new Obstacle(ctx, i, j);
-                    // this.mapDetail[i].push(obstacle);
                     this.mapDetail[i].push(1);
                     continue;
                 }
-                if(i % 10 == 0 && j % 10 == 0){
-                    this.mapDetail[i].push(10);
+                if(i == 10 && j == 20){
+                    this.mapDetail[i].push(21);
+                    continue;
+                }
+                if(i == 10 && j == 10){
+                    // if(i % 10 == 0 && j % 10 == 0){
+                    this.mapDetail[i].push(11);
                 }else{
                     this.mapDetail[i].push(0);
                 }
@@ -29,13 +32,18 @@ function Map(ctx, firstTimeMapLoad){
     this.setMapTIles = function(player){
         for(var i = 0; i < this.mapDetail.length; i++){
             for(var j = 0; j < this.mapDetail[i].length; j++){
+                var temp = null;
                 if(this.mapDetail[i][j] == 1){
-                    var obstacle = new Obstacle(ctx, i, j);
-                    this.mapDetail[i][j] = obstacle;
+                    temp = new Obstacle(ctx, i, j);
+                    this.mapDetail[i][j] = temp;
                 }
-                if(this.mapDetail[i][j] == 10){
-                    var slime = new Slime(ctx, i, j, player);
-                    this.mapDetail[i][j] = slime;
+                if(this.mapDetail[i][j] == 11){
+                    temp = new Slime(ctx, i, j, player);
+                    this.mapDetail[i][j] = temp;
+                }
+                if(this.mapDetail[i][j] == 21){
+                    temp = new Caltrop(ctx, i, j);
+                    this.mapDetail[i][j] = temp;
                 }
             }
         }

@@ -1,13 +1,15 @@
-// 11 * 21 of (47 * 47)
-
 function Map(ctx, firstTimeMapLoad){
     this.mapDetail = [];
     this.tileMap = null;
-
+    // 11 * 21 of (47 * 47)
     this.init = function(){
         for(var i = 0; i < 11; i++){
             this.mapDetail[i] = [];
             for(var j = 0; j < 21; j++){
+                if((i == 4 && j == 0) || (i == 5 && j == 0)){
+                    this.mapDetail[i].push(0);
+                    continue;
+                }
                 if(i % 4 == 0 && j % 4 == 0){
                     // var obstacle = new Obstacle(ctx, i, j);
                     // this.mapDetail[i].push(obstacle);
@@ -21,9 +23,7 @@ function Map(ctx, firstTimeMapLoad){
                 }
             }
         }
-        console.log(this.mapDetail);
         this.tileMap = JSON.parse(JSON.stringify(this.mapDetail));
-        // this.setMapTIles();
     }
 
     this.setMapTIles = function(player){

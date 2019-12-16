@@ -28,6 +28,7 @@ img.src = './assets/images/background1.png';
 
 function Game(canvas){
 	this.coin = 0;
+    this.rays = [];
 	this.frames = 0;
 	this.enemies = [];
 	this.player = null;
@@ -39,6 +40,7 @@ function Game(canvas){
 	this.parentElement = canvas;
 	this.firstTimeLevelMapLoaded = true;
 	this.ctx = canvas.getContext('2d');
+	this.boundaryLine = null;
 
 	var that = this;
 	this.map = null;
@@ -72,8 +74,9 @@ function Game(canvas){
 				}
 			}
 		}
-		console.log(this.enemies);
-		console.log(this.obstacles);
+
+		this.boundaryLine = new Boundary(this.ctx);
+
 
 		//need seperation later
 		// for(var i = 0; i < 2; i++){
@@ -94,7 +97,6 @@ function Game(canvas){
 		this.background.draw();
 		this.map.draw();
 		this.player.init();
-		// this.enemies[this.enemies.length - 1].draw();
 		this.animate();
 	}
 
@@ -104,11 +106,14 @@ function Game(canvas){
 		this.ctx.translate(-viewControl.x,-viewControl.y);		//translate for viewport adjustment
 		this.background.draw();	//draw backgroud image
 		this.map.draw();
+
+	
+		
+
+
 		if(gameFlags.levelComplete == false){
 			this.player.update(this.obstacles, this.enemies);	//Update player position 
-		// 	for(var i = 0; i < this.obstacles.length; i++){
-		// 		this.obstacles[i].draw();
-		// 	}
+			
 			for(var i = 0; i < this.enemies.length; i++){
 				this.enemies[i].update(this.obstacles);	//update enemies position
 			}
@@ -137,7 +142,17 @@ function Game(canvas){
 			this.map.draw();
 			console.log('Level Complete');
 		}
+		this.rays = [];
+        for(var j = 0; j < 360; j +=5){
+            this.rays.push(new Ray(this.ctx, this.player.x + this.player.width / 2, this.player.y + this.player.height / 2, j ));
+        }
+        for(var j = 0; j < this.rays.length; j++){
+			this.rays[j].draw();
+			console.log(this.rays[j].dx, this.rays[j].dy);
+        }
+		// console.log(this.rays[0]);
 		frames++;
+		this.boundaryLine.draw();
 		this.ctx.restore();
 		requestAnimationFrame(function(){that.animate()});
 	}

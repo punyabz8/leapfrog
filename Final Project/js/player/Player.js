@@ -15,11 +15,12 @@ function Player(ctx){
 
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
-    this.criticalDamage = 0.2;
+    this.criticalDamage = 0.1;
     this.poisionDamage = 30;
     this.poisionDamageIncrement = 3;
-    this.criticalDamageIncreament = 0.05;
+    this.criticalDamageIncreament = 0.025;
     this.attackingFlags = {critical:true, poision:false, doubleArrow: false};
+    this.rays = [];
     
     this.movingState = false;
 
@@ -30,20 +31,22 @@ function Player(ctx){
         this.draw();
         console.log('player drawn');
     }
-
-    // Circle background of hero
-    this.playerBackgroundEffect = function(){
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(3, 232, 252, 0.2)';
-        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 40, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(128, 255, 251, 0.4)';
-        ctx.stroke();
-    }
-
     
     this.attack = function(enemies){
+
+        // this.rays = [];
+        // for(var j = 0; j < 360; j +=5){
+        //     this.rays.push(new Ray(ctx, this.x + this.width / 2, this.y + this.height / 2, j));
+        // }
+        // for(var j = 0; j < this.rays.length; j++){
+		// 	this.rays[j].draw();
+        // }
+        
+
+
+
+
+
         var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
             distance = Math.sqrt(Math.pow((this.x - enemies[i].x),2) + Math.pow((this.y - enemies[i].y),2));
@@ -97,6 +100,9 @@ function Player(ctx){
         }
         if(this.y > viewControl.y + gameHeight - 300){
             viewControl.y = viewControl.y + this.speed;
+            if(this.y > mapInfo.y - 300){
+                viewControl.y = mapInfo.y - gameHeight;
+            }
             if(viewControl.y + gameHeight > mapInfo.y){
                 viewControl.y = mapInfo.y - gameHeight;
             }
@@ -153,11 +159,9 @@ function Player(ctx){
 
     this.checkCollisionWithEnemies = function(enemies){
         for(var i = 0; i < enemies.length; i++){
-            if (this.x < enemies[i].x + enemies[i].width &&
-                this.x + this.width > enemies[i].x &&
-                this.y < enemies[i].y + enemies[i].height &&
-                this.y + this.height > enemies[i].y)
+            if (collisionCheck(this, enemies[i]))
                 {
+                    this.hitByEnemy(enemies[i].damagePoint);
                     var wy = ((this.width + enemies[i].width) / 2) * ((this.x + this.width / 2) - (enemies[i].x + enemies[i].width / 2));
                     var hx = ((this.height + enemies[i].height) / 2) * ((this.y + this.height / 2) - (enemies[i].y + enemies[i].height / 2));
                     if(wy < hx){
@@ -240,8 +244,18 @@ function Player(ctx){
     }
 
     this.hitByEnemy = function(damageFromEnemy){
-        console.log('htlle');
         this.hitPoint -= damageFromEnemy;
+    }
+
+    // Circle background of hero
+    this.playerBackgroundEffect = function(){
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(3, 232, 252, 0.2)';
+        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 40, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(128, 255, 251, 0.4)';
+        ctx.stroke();
     }
 
     this.draw = function(){

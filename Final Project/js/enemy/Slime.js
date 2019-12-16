@@ -15,44 +15,43 @@ function Slime(ctx, x, y, player){
     this.attackingTarget = player;    // Attacking target (hero)
     this.state = {alive:true, attack:true, collided:false};
     
+    
     this.checkCollisionWithplayer = function(){
-        if (this.x < this.attackingTarget.x + this.attackingTarget.width &&
-            this.x + this.width > this.attackingTarget.x &&
-            this.y < this.attackingTarget.y + this.attackingTarget.height &&
-            this.y + this.height > this.attackingTarget.y)
+        if (collisionCheck(this, this.attackingTarget))
             {
-                // var wy = ((this.width + this.attackingTarget.width) / 2) * ((this.x + this.width / 2) - (this.attackingTarget.x + this.attackingTarget.width / 2));
-                // var hx = ((this.height + this.attackingTarget.height) / 2) * ((this.y + this.height / 2) - (this.attackingTarget.y + this.attackingTarget.height / 2));
-                // if(wy < hx){
-                //     if(wy > -hx){
-                //         // console.log('bottom');
-                //         this.dy = 1;
-                //         this.movementToggle = -1;
-                //         this.y = this.attackingTarget.y + this.attackingTarget.height + 1;
-                //     }
-                //     else{
-                //         // console.log('left');
-                //         this.dx = -1;
-                //         this.movementToggle = 1;
-                //         this.x = this.attackingTarget.x - this.width - 1;
-                //         this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
-                //     }
-                // }else{
-                //     if(wy > -hx){
-                //         // console.log('right');
-                //         this.dx = 1;
-                //         this.movementToggle = -1;
-                //         this.x = this.attackingTarget.x + this.attackingTarget.width + 1;
-                //         this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
-                //     }
-                //     else{
-                //         // console.log('top');
-                //         this.dy = -1;
-                //         this.movementToggle = -1;
-                //         this.y = this.attackingTarget.y - this.height - 1;
-                //     }
-                // }
-                this.attackingTarget.hitByEnemy(this.damagePoint);
+                console.log(this.attackingTarget);
+                var wy = ((this.width + this.attackingTarget.width) / 2) * ((this.x + this.width / 2) - (this.attackingTarget.x + this.attackingTarget.width / 2));
+                var hx = ((this.height + this.attackingTarget.height) / 2) * ((this.y + this.height / 2) - (this.attackingTarget.y + this.attackingTarget.height / 2));
+                if(wy < hx){
+                    if(wy > -hx){
+                        // console.log('bottom');
+                        this.dy = 1;
+                        this.movementToggle = -1;
+                        this.y = this.attackingTarget.y + this.attackingTarget.height + 1;
+                    }
+                    else{
+                        // console.log('left');
+                        this.dx = -1;
+                        this.movementToggle = 1;
+                        this.x = this.attackingTarget.x - this.width - 1;
+                        this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                    }
+                }else{
+                    if(wy > -hx){
+                        // console.log('right');
+                        this.dx = 1;
+                        this.movementToggle = -1;
+                        this.x = this.attackingTarget.x + this.attackingTarget.width + 1;
+                        this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                    }
+                    else{
+                        // console.log('top');
+                        this.dy = -1;
+                        this.movementToggle = -1;
+                        this.y = this.attackingTarget.y - this.height - 1;
+                    }
+                }
+                // this.attackingTarget.hitByEnemy(this.damagePoint);
                 console.log('Slime collided with this.attackingTarget');
             }
     }
@@ -132,10 +131,10 @@ function Slime(ctx, x, y, player){
     }
     
     this.update = function(obstacle){
+        this.checkBoundry();
         this.checkObstacle(obstacle);
+        this.checkCollisionWithplayer();
         if(this.movementToggle == 1){
-            this.checkBoundry();
-            this.checkCollisionWithplayer();
             // var distance = Math.sqrt(Math.pow(((this.x + this.width / 2)  - (player.x + player.width / 2)), 2) + Math.pow(((this.y + this.height / 2) - (player.y + player.height / 2)), 2));
             this.x += this.speed * this.dx;
             this.y += this.speed * this.dy;

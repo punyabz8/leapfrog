@@ -1,9 +1,9 @@
 function Player(ctx){
     this.dx = 1;
     this.dy = 1;
-    this.coin = 250;
+    this.coin = 0;
     this.level = 1;
-    this.speed = 8;     //player speed
+    this.speed = 6;     //player speed
     this.width = 47;
     this.arrows = [];
     this.height = 47;
@@ -235,17 +235,8 @@ function Player(ctx){
     this.updateCoinAndExp = function(coinFromEnemy, expFromEnemy){
         this.coinDeposit += coinFromEnemy;
         this.expPoint += expFromEnemy;
-        console.log(this.expPoint);
-        if(gameFlags.levelComplete == true){
-            this.coin += this.coinDeposit;
-            if(this.expPoint > this.level * 250){
-                this.level++;
-                this.playerFlags.levelChangedStatus = true;
-                //call skill function
-                // this.addSkill();dsa
-            }
-            this.coinDeposit == 0;
-        }
+        console.log('conideposit :', this.coinDeposit);
+       
     }
     this.addSkill = function(){
 
@@ -297,6 +288,16 @@ function Player(ctx){
             if(this.arrows[i].collidedState == true){
                 this.arrows.splice(i, 1);
             }
+        }
+        if(gameFlags.levelComplete == true){
+            this.coin += this.coinDeposit;
+            if(this.expPoint > this.level * 250){
+                this.level++;
+                this.playerFlags.levelChangedStatus = true;
+                //call skill function
+                // this.addSkill();dsa
+            }
+            this.coinDeposit = 0;
         }
         this.healthBar.updateHealthBar(this);
         this.draw();
@@ -365,8 +366,8 @@ function Player(ctx){
 
     this.draw = function(){
         this.playerBackgroundEffect();
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        // ctx.strokeStyle = 'black';
+        // ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
     }
 

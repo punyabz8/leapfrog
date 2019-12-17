@@ -18,9 +18,9 @@ var collisionCheck = function(obj1,obj2){
 // toggle shadow setting for canvas
 var toggleShadow = function(context){
 	if(context.shadowColor == 'rgba(0, 0, 0, 0)'){
-		context.shadowBlur = 30;
-        context.shadowOffsetX = 15;
-        context.shadowOffsetY = 20;
+		context.shadowBlur = 25;
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 15;
 		context.shadowColor = 'black';
 	}else{
 		context.shadowBlur = 0;

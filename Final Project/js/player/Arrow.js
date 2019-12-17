@@ -1,9 +1,9 @@
 function Arrow(ctx, player){
 	this.dx = 0;
 	this.dy = 0;
-	this.speed = 40;
-	this.width = 20;
-	this.height = 10;
+	this.speed = 30;
+	this.width = 10;
+	this.height = 55;
 	this.eCenterX = 0;
 	this.eCentery = 0;
 	this.angle = null;
@@ -13,12 +13,14 @@ function Arrow(ctx, player){
 	this.x = Math.floor(player.x + player.width / 2);
 	this.y = Math.floor(player.y + player.height / 2);
 
+
 	this.init = function(){
 		this.eCenterX = Math.floor(player.enemyTarget.x + player.enemyTarget.width / 2);
 		this.eCentery = Math.floor(player.enemyTarget.y + player.enemyTarget.height / 2);
 		this.angle = Math.atan2( this.y - this.eCentery ,  this.x - this.eCenterX);
 		this.dx = - Math.cos(this.angle);
 		this.dy = - Math.sin(this.angle);
+		console.log('angle',this.angle * 180 / Math.PI, 'in radian :', this.angle);
 		this.draw();
 	}
 
@@ -26,7 +28,6 @@ function Arrow(ctx, player){
 		if(this.collidedState == false){
 			this.x += this.speed * this.dx;
 			this.y += this.speed * this.dy;
-
 			this.draw();
 		}
 	}
@@ -81,7 +82,20 @@ function Arrow(ctx, player){
 	this.draw = function(){
 		ctx.beginPath();
 		ctx.fillStyle = 'red';
-		// ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
 		ctx.fillRect(this.x, this.y, this.width, this.height);
+
+		// ctx.save();
+		// ctx.translate(-this.x, -this.y);
+		// // ctx.rotate(this.angle * Math.PI / 180);
+		// ctx.rotate((-this.angle));
+		// ctx.fillStyle = 'red';
+
+		// ctx.fillRect(this.x, this.y, this.width, this.height);
+		// // ctx.drawImage(arrowImg, this.x , this.y , this.width, this.height)
+
+		// // Reset transformation matrix to the identity matrix
+		// ctx.setTransform(1, 0, 0, 1, 0, 0);
+		// ctx.restore();
+
 	}
 }

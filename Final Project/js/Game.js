@@ -26,6 +26,12 @@ var gameFlags = {
 var img = new Image();
 img.src = './assets/images/background1.png';
 
+var arrowImg = new Image();
+arrowImg.src = './assets/images/arrow.png';
+
+var loadingImg = new Image();
+loadingImg.src = './assets/images/loading.png';
+
 var imagesObstacles = [];
 var imagesEnemies = [];
 var imagesTraps = ['caltrop.png'];
@@ -124,7 +130,6 @@ function Game(canvas){
 			for(var i = this.enemies.length - 1; i >= 0; i--)
 			{
 				if(this.enemies[i].hitPoint <= 0){
-					console.log(this.enemies[i]);
 					this.player.updateCoinAndExp(this.enemies[i].coinOnDead, this.enemies[i].expPoint);
 					this.enemies.splice(i, 1);
 					var temp = i;
@@ -139,7 +144,6 @@ function Game(canvas){
 							}
 						}
 					}
-					console.log(this.enemies);
 				}
 			}
 			if(this.player.hitPoint <= 0){
@@ -162,7 +166,7 @@ function Game(canvas){
 			if(gameFlags.nextLevel == true){
 				this.prepareNextLevel();
 			}
-			this.experienceBar.updateExperienceBar(this.player.coin, this.player.level);
+			this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
 			console.log('Level Complete');
 		}else{
 			// this.map.draw();
@@ -174,11 +178,10 @@ function Game(canvas){
 			}
 			console.log('Game Over');
 		}
-
 		frames++;
 		this.ctx.restore();
 		requestAnimationFrame(function(){that.animate()});
-		if(frames % 500 == 0){
+		if(frames % 5000 == 0){
 			console.clear();
 		}
 	}

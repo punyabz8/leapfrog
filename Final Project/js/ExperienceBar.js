@@ -15,7 +15,7 @@ function ExperienceBar(ctx){
 
 	this.draw = function(playerLevel){
 		toggleShadow(ctx);
-		ctx.lineWidth = '2';
+		ctx.lineWidth = '3';
 		ctx.strokeStyle = 'black';
 		ctx.strokeRect(this.x, this.y, this.width, this.height);
 		this.fillExperienceBar();
@@ -24,9 +24,13 @@ function ExperienceBar(ctx){
 	}
 
 	this.showPlayerLevel = function(playerLevel){
+
 		ctx.font = '30px serif';
+		ctx.lineWidth = '4';
+		ctx.strokeStyle = 'black';
+		ctx.strokeText('Lv.' + playerLevel, this.x + this.width / 2 - 25, this.y + 5, 50);
 		ctx.fillStyle = 'white';
-		ctx.fillText('Lv.' + playerLevel, this.x + this.width / 2 - 25, this.y + 5, 100);
+		ctx.fillText('Lv.' + playerLevel, this.x + this.width / 2 - 25, this.y + 5, 50);
 	}
 
 	this.fillExperienceBar = function(){
@@ -35,6 +39,6 @@ function ExperienceBar(ctx){
 		grd.addColorStop(1, '#e09411');
 		ctx.fillStyle = '#ffb017';
 		// ctx.fillStyle = grd;
-		ctx.fillRect(this.x, this.y, (this.width * ((this.currentExperience * 100) / this.maxExperienceThisLevel)) / 100, this.height);
+		ctx.fillRect(this.x + 2, this.y + 2, (this.width * ((this.currentExperience * 100) / this.maxExperienceThisLevel)) / 100, this.height - 4);
 	}
 }

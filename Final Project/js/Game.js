@@ -24,7 +24,11 @@ var gameFlags = {
 }
 var img = new Image();
 img.src = './assets/images/background1.png';
-// img.src = './assets/images/jungleMap.png';
+
+var imagesObstacles = [];
+var imagesEnemies = [];
+var imagesTraps = ['caltrop.png'];
+
 
 function Game(canvas){
 	this.coin = 0;
@@ -40,7 +44,6 @@ function Game(canvas){
 	this.parentElement = canvas;
 	this.firstTimeLevelMapLoaded = true;
 	this.ctx = canvas.getContext('2d');
-	this.boundaryLine = null;
 
 	var that = this;
 	this.map = null;
@@ -78,7 +81,6 @@ function Game(canvas){
 			}
 		}
 
-		this.boundaryLine = new Boundary(this.ctx);
 	}
 
 	
@@ -101,11 +103,15 @@ function Game(canvas){
 		this.map.draw();
 		
 		if(gameFlags.levelComplete == false && gameFlags.gameOver == false){
+			// for(var i = 0; i < this.traps.length; i++){
+				
+			// 	this.traps[i].update();	
+				
+			// }
 			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			for(var i = 0; i < this.enemies.length; i++){
 				this.enemies[i].update(this.obstacles);	//update enemies position
 			}
-
 			// Delete dead enemies
 			for(var i = this.enemies.length - 1; i >= 0; i--)
 			{
@@ -134,6 +140,9 @@ function Game(canvas){
 			if(this.player.hitPoint <= 0){
 				gameFlags.gameOver = true;
 			}
+			for(var i = 0; i < this.traps.length; i++){
+				this.traps[i].update();	
+			}
 			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			this.map.draw();
 			console.log('Level Complete');
@@ -143,7 +152,6 @@ function Game(canvas){
 		}
 
 		frames++;
-		this.boundaryLine.draw();
 		this.ctx.restore();
 		requestAnimationFrame(function(){that.animate()});
 	}

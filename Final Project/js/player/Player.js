@@ -15,16 +15,13 @@ function Player(ctx){
 
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
-    this.criticalDamage = 0.1;
-    this.poisionDamage = 30;
-    this.poisionDamageIncrement = 3;
-    this.criticalDamageIncreament = 0.025;
-    this.attackingFlags = {critical:true, poision:false, doubleArrow: false};
+    
     this.rays = [];
     this.lines = null;
     this.enemies = null;
     this.movingState = false;
     this.playerPositionNearDoor = false;
+    this.skill = null;
 
     var distance = 0;
     var tempArrow = [];
@@ -33,7 +30,8 @@ function Player(ctx){
         this.draw();
         this.enemies = enemies;
         this.lines = new Line(enemies, obstacles);
-		this.lines.createLine();
+        this.lines.createLine();
+        this.skill = new Skill();
         console.log('player drawn');
     }
 
@@ -167,6 +165,9 @@ function Player(ctx){
                 this.x + this.width > gameBoundary.right ? this.x = gameBoundary.right - this.height : false;
                 this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
             }
+            if(this.y < gameBoundary.top - 120){
+                console.log('next Level');
+            }
 
         }
     }
@@ -279,7 +280,6 @@ function Player(ctx){
         this.keyPressed();
         this.checkBoundry(levelCompleteFlag);
         this.checkObstacle(obstacles);
-        // console.log('up',this.hitPoint);
         for(var z = 0; z < traps.length; z++){
             if(traps[z].checkCollosion(this) == true){
                 if(traps[z].performedDamage == false && traps[z].damageCooldown == 0){
@@ -295,10 +295,7 @@ function Player(ctx){
             if(traps[z].damageCooldown == 0){
                 traps[z].performedDamage = false;
             }
-            // console.log('traps :',traps[z].damageCooldown);
-            // console.log('traps :',traps[z].performedDamage);
         }
-        // console.log(this.hitPoint);
         this.checkCollisionWithEnemies(enemies);
         this.draw(); 
         this.attackCooldown > 0 ? this.attackCooldown-- : this.attackCooldown = this.attackingTime;
@@ -326,6 +323,7 @@ function Player(ctx){
             }
         }
         // this.lines.updateEnemyLine(enemies);	//create lines of objects (rectangle -> 4 lines)
+
     }
 
     // Circle background of hero
@@ -341,7 +339,7 @@ function Player(ctx){
 
     this.draw = function(){
         ctx.beginPath();
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 20;
         ctx.shadowOffsetX = 10;
         ctx.shadowOffsetY = 15;
         ctx.fillStyle = 'blue';

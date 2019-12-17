@@ -1,6 +1,4 @@
 function Slime(ctx, x, y, player){
-    this.dx = 1;
-    this.dy = 1;
     this.speed = 4;
     this.width = 47;
     this.height = 47;
@@ -15,9 +13,13 @@ function Slime(ctx, x, y, player){
     this.movementCooldown = 40;
     this.performedDamage = false;
     this.attackingTarget = player;    // Attacking target (hero)
+    this.dx = getRandomInt(-5, 5) > 0 ? 1 : -1;
+    this.dy = getRandomInt(-5, 5) > 0 ? 1 : -1;
     this.state = {alive:true, attack:true, collided:false};
 
-    
+    this.init = function(){
+        this.draw();
+    }
     
     this.checkCollisionWithplayer = function(){
         if (collisionCheck(this, this.attackingTarget))
@@ -29,13 +31,11 @@ function Slime(ctx, x, y, player){
                     if(wy > -hx){
                         // console.log('bottom');
                         this.dy = 1;
-                        // this.movementToggle = -1;
                         this.y = this.attackingTarget.y + this.attackingTarget.height + 1;
                     }
                     else{
                         // console.log('left');
                         this.dx = -1;
-                        // this.movementToggle = 1;
                         this.x = this.attackingTarget.x - this.width - 1;
                         this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
                     }
@@ -43,14 +43,12 @@ function Slime(ctx, x, y, player){
                     if(wy > -hx){
                         // console.log('right');
                         this.dx = 1;
-                        // this.movementToggle = -1;
-                        this.x = this.attackingTarget.x + this.attackingTarget.width + 1;
                         this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
+                        this.x = this.attackingTarget.x + this.attackingTarget.width + 1;
                     }
                     else{
                         // console.log('top');
                         this.dy = -1;
-                        // this.movementToggle = -1;
                         this.y = this.attackingTarget.y - this.height - 1;
                     }
                 }
@@ -128,8 +126,8 @@ function Slime(ctx, x, y, player){
     }
 
     this.damageByHit = function(arrow){
-        var criticalDamage = player.attackingFlags.critical == true ? player.criticalDamage : 0;
-        var poisionDamage = player.attackingFlags.poision == true ? player.poisionDamage : 0;
+        var criticalDamage = player.skill.attackingFlags.critical == true ? player.skill.criticalDamage : 0;
+        var poisionDamage = player.skill.attackingFlags.poision == true ? player.skill.poisionDamage : 0;
         this.hitPoint = this.hitPoint - (arrow.damagePoint + arrow.damagePoint * criticalDamage + poisionDamage);
     }
     

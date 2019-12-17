@@ -4,6 +4,10 @@ function Obstacle (ctx, x, y){
     this.width = 47;
     this.height = 47;
 
+    this.init = function(){
+        this.draw();
+    }
+
     this.draw = function(){
         ctx.beginPath();
         ctx.fillStyle = 'red';

@@ -6,11 +6,19 @@ function Caltrop (ctx, x, y){
     this.damagePoint = 75;
     this.damageCooldown = 0;
     this.performedDamage = false;
+    this.imagePositionX = this.x;
+    this.imagePositiony = this.y - 5;
+    this.caltropImage = null;
+
+    this.init = function(){
+        this.caltropImage = new Image();
+        this.caltropImage.src = './assets/images/caltrop.png';
+        this.draw();
+    }
 
     this.draw = function(){
         ctx.beginPath();
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.caltropImage, this.imagePositionX, this.imagePositiony, this.width, this.height + 5);
     }
 
     this.update = function(player){

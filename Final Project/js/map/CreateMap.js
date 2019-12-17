@@ -1,4 +1,4 @@
-function Map(ctx, firstTimeMapLoad){
+function CreateMap(ctx){
     this.mapDetail = [];
     this.tileMap = null;
     // 11 * 21 of (47 * 47)
@@ -6,29 +6,13 @@ function Map(ctx, firstTimeMapLoad){
         for(var i = 0; i < 11; i++){
             this.mapDetail[i] = [];
             for(var j = 0; j < 21; j++){
-                if((i == 4 && j == 0) || (i == 5 && j == 0)){
-                    this.mapDetail[i].push(0);
-                    continue;
-                }
-                if(i % 4 == 0 && j % 4 == 0){
-                    this.mapDetail[i].push(1);
-                    continue;
-                }
-                if(i % 9 == 0 && j % 9 == 0){
-                    this.mapDetail[i].push(21);
-                    continue;
-                }
-                if(i % 7 == 0 && j % 7 == 0){
-                    this.mapDetail[i].push(11);
-                }else{
-                    this.mapDetail[i].push(0);
-                }
+                this.mapDetail[i].push(0);
             }
         }
         this.tileMap = JSON.parse(JSON.stringify(this.mapDetail));
     }
 
-    this.setMapTIles = function(player){
+    this.UpdateMapTIles = function(player){
         for(var i = 0; i < this.mapDetail.length; i++){
             for(var j = 0; j < this.mapDetail[i].length; j++){
                 var temp = null;
@@ -42,7 +26,6 @@ function Map(ctx, firstTimeMapLoad){
                 }
                 if(this.mapDetail[i][j] == 21){
                     temp = new Caltrop(ctx, i, j);
-                    console.log(temp);
                     this.mapDetail[i][j] = temp;
                 }
             }
@@ -54,15 +37,9 @@ function Map(ctx, firstTimeMapLoad){
         for(var i = 0; i < this.mapDetail.length; i++){
             for(var j = 0; j < this.mapDetail[i].length; j++){
                 if(this.mapDetail[i][j] != 0 && firstTimeMapLoad == true){
-                    this.mapDetail[i][j].init();
+                    this.mapDetail[i][j].draw();
                 }
                 if(this.mapDetail[i][j] != 0 && firstTimeMapLoad == false){
-                    if(this.tileMap[i][j] > 20 && this.tileMap[i][j] < 31){
-                        ctx.shadowColor = 'transparent';			
-                        this.mapDetail[i][j].update(this);
-                        ctx.shadowColor = 'black';			
-                        continue;
-                    }
                     this.mapDetail[i][j].update(this);
                 }
             }

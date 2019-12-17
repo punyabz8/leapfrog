@@ -19,7 +19,6 @@ function Arrow(ctx, player){
 		this.angle = Math.atan2( this.y - this.eCentery ,  this.x - this.eCenterX);
 		this.dx = - Math.cos(this.angle);
 		this.dy = - Math.sin(this.angle);
-
 		this.draw();
 	}
 
@@ -55,18 +54,9 @@ function Arrow(ctx, player){
 		}
 	}
 
-	this.checkCollosion = function(obj){
-		if (this.x < obj.x + obj.width &&
-			this.x + this.width > obj.x &&
-			this.y < obj.y + obj.height &&
-			this.y + this.height > obj.y) {
-				return true;
-		}
-	}
-
 	this.checkObstacle = function(obstacles){
 		for(i = 0; i < obstacles.length; i++){
-			if(this.checkCollosion(obstacles[i])){
+			if(collisionCheck(obstacles[i], this)){
 				this.collidedState = true;
 				this.collidedTo = 'obstacle';
 			}
@@ -75,7 +65,7 @@ function Arrow(ctx, player){
 
 	this.checkEnemyCollision = function(enemies){
 		for(i = 0; i < enemies.length; i++){
-			if(this.checkCollosion(enemies[i])){
+			if(collisionCheck(enemies[i], this)){
 				this.collidedState = true;
 				this.collidedTo = 'enemy';
 				var arr = [];

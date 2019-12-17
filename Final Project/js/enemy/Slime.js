@@ -3,8 +3,9 @@ function Slime(ctx, x, y, player){
     this.width = 47;
     this.height = 47;
     this.hitPoint = 300;    // HP
+    this.expPoint = 100;
     this.maxHealth = 300;
-    this.coinOnDead = 50;
+    this.coinOnDead = 20;
     this.x = 47 * x + 20;     //Initial x-position of slime
     this.y = 47 * y + 465;     //Initial y-position of slime
     this.healthBar = null;
@@ -136,13 +137,12 @@ function Slime(ctx, x, y, player){
     }
 
     this.damageByHit = function(arrow){
-        var criticalDamage = player.skill.attackingFlags.critical == true ? player.skill.criticalDamage : 0;
-        var poisionDamage = player.skill.attackingFlags.poision == true ? player.skill.poisionDamage : 0;
+        var criticalDamage = player.skill.skillFlags.critical == true ? player.skill.criticalDamage : 0;
+        var poisionDamage = player.skill.skillFlags.poision == true ? player.skill.poisionDamage : 0;
         this.hitPoint = this.hitPoint - (arrow.damagePoint + arrow.damagePoint * criticalDamage + poisionDamage);
     }
     
     this.update = function(obstacle){
-        // debugger;
         this.imagePositionX = this.x;
         this.imagePositionY = this.y;
         this.checkBoundry();

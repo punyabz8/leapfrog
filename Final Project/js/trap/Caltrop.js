@@ -23,7 +23,7 @@ function Caltrop (ctx, x, y){
         toggleShadow(ctx);
     }
 
-    this.update = function(player){
+    this.update = function(){
         this.draw();
     }
 

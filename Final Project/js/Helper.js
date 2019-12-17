@@ -4,6 +4,7 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
+//detect collision between two objects (rectangle)
 var collisionCheck = function(obj1,obj2){
 	if (obj1.x < obj2.x + obj2.width &&
 		obj1.x + obj1.width > obj2.x &&
@@ -14,6 +15,7 @@ var collisionCheck = function(obj1,obj2){
 		}
 }
 
+// toggle shadow setting for canvas
 var toggleShadow = function(context){
 	if(context.shadowColor == 'rgba(0, 0, 0, 0)'){
 		context.shadowBlur = 30;

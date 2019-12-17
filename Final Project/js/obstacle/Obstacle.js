@@ -14,9 +14,7 @@ function Obstacle (ctx, x, y){
     }
 
     this.draw = function(){
-        // ctx.fillRect(this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
         ctx.drawImage(this.image, this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
-        // toggleShadow(ctx);
     }
 
     this.update = function(){

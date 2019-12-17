@@ -9,7 +9,6 @@ function Pool (ctx, x, y){
     }
 
     this.draw = function(){
-        ctx.beginPath();
         ctx.fillStyle = 'blue';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }

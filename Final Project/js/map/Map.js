@@ -1,6 +1,7 @@
 function Map(ctx, firstTimeMapLoad){
     this.mapDetail = [];
     this.tileMap = null;
+    this.firstTimeMapLoad = firstTimeMapLoad;
     // 11 * 21 of (47 * 47)
     this.init = function(){
         for(var i = 0; i < 11; i++){
@@ -18,7 +19,7 @@ function Map(ctx, firstTimeMapLoad){
                     this.mapDetail[i].push(21);
                     continue;
                 }
-                if(i % 7 == 0 && j % 7 == 0){
+                if(i % 10 == 0 && j % 20 == 0){
                     this.mapDetail[i].push(11);
                 }else{
                     this.mapDetail[i].push(0);
@@ -42,37 +43,34 @@ function Map(ctx, firstTimeMapLoad){
                 }
                 if(this.mapDetail[i][j] == 21){
                     temp = new Caltrop(ctx, i, j);
-                    console.log(temp);
                     this.mapDetail[i][j] = temp;
                 }
             }
         }
     }
 
+
     this.draw = function(){
-        ctx.beginPath();
         for(var i = 0; i < this.mapDetail.length; i++){
             for(var j = 0; j < this.mapDetail[i].length; j++){
-                if(this.mapDetail[i][j] != 0 && firstTimeMapLoad == true){
+                if(this.mapDetail[i][j] != 0 && this.firstTimeMapLoad == true){
                     this.mapDetail[i][j].init();
                 }
-                if(this.mapDetail[i][j] != 0 && firstTimeMapLoad == false){
-                    if(this.tileMap[i][j] > 20 && this.tileMap[i][j] < 31){
-                        ctx.shadowColor = 'transparent';			
-                        this.mapDetail[i][j].update(this);
-                        ctx.shadowColor = 'black';			
-                        continue;
-                    }
-                    this.mapDetail[i][j].update(this);
+                if(this.mapDetail[i][j] != 0 && this.firstTimeMapLoad == false){
+                    // if(this.tileMap[i][j] > 20 && this.tileMap[i][j] < 31){
+                    //     this.mapDetail[i][j].update(this);
+                    //     continue;
+                    // }
+                    // this.mapDetail[i][j].update();
                 }
             }
         }
 
-        // ctx.strokeStyle = 'red';
+        // ////Draw Grid 
+        // ctx.strokeStyle = 'white';
         // for(var i = 0; i < this.mapDetail.length; i++){
         //     for(var j = 0; j < this.mapDetail[i].length; j++){
-        //         ctx.strokeRect((i * 48) + 20, (j * 47) + 465, 47, 47);
-        //         console.log('drawing grid');
+        //         ctx.strokeRect((i * 47) + 20, (j * 47) + 465, 47, 47);
         //     }
         // }
     }

@@ -1,11 +1,11 @@
 function Obstacle (ctx, x, y){
     this.x = 47 * x + 20;
     this.y = 47 * y + 465;
-    this.width = 47;
+    this.width = 94;
     this.height = 47;
     this.image = null;
     this.imagePositionX = this.x;
-    this.imagePositiony = this.y - 34;
+    this.imagePositiony = this.y - 20;
 
     this.init = function(){
         this.image = new Image();
@@ -14,9 +14,8 @@ function Obstacle (ctx, x, y){
     }
 
     this.draw = function(){
-        // ctx.fillRect(this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
-        ctx.drawImage(this.image, this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
-        // toggleShadow(ctx);
+        ctx.drawImage(this.image, this.imagePositionX, this.imagePositiony, this.width, this.height + 20);
+
     }
 
     this.update = function(){
@@ -24,8 +23,11 @@ function Obstacle (ctx, x, y){
     }
 
     this.checkCollosion = function(player){
-        if(collisionCheck(player, this)){
-            return true;
+        if (this.x < player.x + player.width &&
+            this.x + this.width > player.x &&
+            this.y < player.y + player.height &&
+            this.y + this.height > player.y) {
+                return true;
         }
     }
 }

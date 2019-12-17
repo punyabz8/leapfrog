@@ -8,17 +8,19 @@ function Caltrop (ctx, x, y){
     this.performedDamage = false;
     this.imagePositionX = this.x;
     this.imagePositiony = this.y - 5;
-    this.caltropImage = null;
+    this.image = null;
 
     this.init = function(){
-        this.caltropImage = new Image();
-        this.caltropImage.src = './assets/images/caltrop.png';
+        this.image = new Image();
+        this.image.src = './assets/images/caltrop.png';
         this.draw();
     }
 
     this.draw = function(){
         ctx.beginPath();
-        ctx.drawImage(this.caltropImage, this.imagePositionX, this.imagePositiony, this.width, this.height + 5);
+        toggleShadow(ctx);
+        ctx.drawImage(this.image, this.imagePositionX, this.imagePositiony, this.width, this.height + 5);
+        toggleShadow(ctx);
     }
 
     this.update = function(player){
@@ -26,11 +28,8 @@ function Caltrop (ctx, x, y){
     }
 
     this.checkCollosion = function(player){
-        if (this.x < player.x + player.width &&
-            this.x + this.width > player.x &&
-            this.y < player.y + player.height &&
-            this.y + this.height > player.y) {
-                return true;
+        if(collisionCheck(player, this)){
+            return true;
         }
     }
 }

@@ -13,3 +13,18 @@ var collisionCheck = function(obj1,obj2){
 			return true;
 		}
 }
+
+var toggleShadow = function(context){
+	if(context.shadowColor == 'rgba(0, 0, 0, 0)'){
+		context.shadowBlur = 30;
+        context.shadowOffsetX = 15;
+        context.shadowOffsetY = 20;
+		context.shadowColor = 'black';
+	}else{
+		context.shadowBlur = 0;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+		context.shadowColor = 'transparent';
+	}
+
+}

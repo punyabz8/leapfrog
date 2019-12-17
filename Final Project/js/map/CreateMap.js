@@ -1,7 +1,7 @@
+// 11 * 21 of (47 * 47)
 function CreateMap(ctx){
     this.mapDetail = [];
     this.tileMap = null;
-    // 11 * 21 of (47 * 47)
     this.init = function(){
         for(var i = 0; i < 11; i++){
             this.mapDetail[i] = [];
@@ -33,7 +33,6 @@ function CreateMap(ctx){
     }
 
     this.draw = function(){
-        ctx.beginPath();
         for(var i = 0; i < this.mapDetail.length; i++){
             for(var j = 0; j < this.mapDetail[i].length; j++){
                 if(this.mapDetail[i][j] != 0 && firstTimeMapLoad == true){
@@ -44,14 +43,6 @@ function CreateMap(ctx){
                 }
             }
         }
-
-        // ctx.strokeStyle = 'red';
-        // for(var i = 0; i < this.mapDetail.length; i++){
-        //     for(var j = 0; j < this.mapDetail[i].length; j++){
-        //         ctx.strokeRect((i * 48) + 20, (j * 47) + 465, 47, 47);
-        //         console.log('drawing grid');
-        //     }
-        // }
     }
 }
 

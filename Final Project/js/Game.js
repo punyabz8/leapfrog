@@ -80,18 +80,19 @@ function Game(canvas){
 				}
 			}
 		}
+		toggleShadow(this.ctx);
 
 	}
 
 	
 
-	// 
 	this.startGame = function(){
 		console.log('Game Started');
 		this.init();
 		this.background.draw();
 		this.map.draw();
 		this.player.init(this.enemies, this.obstacles);
+		firstTileLoaded = false;
 		this.animate();
 	}
 
@@ -100,23 +101,22 @@ function Game(canvas){
 		this.ctx.save();
 		this.ctx.translate(-viewControl.x,-viewControl.y);		//translate for viewport adjustment
 		this.background.draw();	//draw backgroud image
-		this.map.draw();
 		
 		if(gameFlags.levelComplete == false && gameFlags.gameOver == false){
-			// for(var i = 0; i < this.traps.length; i++){
-				
-			// 	this.traps[i].update();	
-				
-			// }
-			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
+			for(var i = 0; i < this.obstacles.length; i++){
+				this.obstacles[i].update();	
+			}
 			for(var i = 0; i < this.enemies.length; i++){
 				this.enemies[i].update(this.obstacles);	//update enemies position
 			}
+			this.map.draw();
+			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			// Delete dead enemies
 			for(var i = this.enemies.length - 1; i >= 0; i--)
 			{
 				if(this.enemies[i].hitPoint <= 0){
 					console.log(this.enemies[i]);
+					this.player.updateCoin(this.enemies[i].coinOnDead);
 					this.enemies.splice(i, 1);
 					var temp = i;
 					for(var k = 0; k < this.map.tileMap.length; k++){
@@ -140,11 +140,8 @@ function Game(canvas){
 			if(this.player.hitPoint <= 0){
 				gameFlags.gameOver = true;
 			}
-			for(var i = 0; i < this.traps.length; i++){
-				this.traps[i].update();	
-			}
-			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			this.map.draw();
+			this.player.update(this.obstacles, this.enemies, gameFlags.levelComplete, this.traps);	//Update player position 
 			console.log('Level Complete');
 		}else{
 			this.map.draw();
@@ -163,6 +160,7 @@ function Game(canvas){
 	this.chooseLevel = function(currentLevel){
 
 	}
+	
 	this.resetMap = function(){
 
 	}

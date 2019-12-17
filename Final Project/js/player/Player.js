@@ -1,37 +1,50 @@
 function Player(ctx){
     this.dx = 1;
     this.dy = 1;
+    this.coin = 0;
     this.level = 1;
     this.speed = 8;     //player speed
     this.width = 47;
     this.arrows = [];
     this.height = 47;
     this.hitPoint = 500;     //Player HP
-    this.weaponType = null;
     this.maxHealth = 500;   //Player Max HP
+    this.weaponType = null;
     this.x = gameWidth / 2;
-    this.y = mapInfo.y - 300;   // starting position of hero
     this.enemyTarget = null;    // which enemy to attack
+    this.y = mapInfo.y - 300;   // starting position of hero
+    this.coinDeposit = 0;
 
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
     
     this.rays = [];
     this.lines = null;
+    this.skill = null;
     this.enemies = null;
+    this.healthBar = null;
     this.movingState = false;
     this.playerPositionNearDoor = false;
-    this.skill = null;
+
+    this.image = null;
+    this.imageWidth = this.width + 15;
+    this.imagePositionX = this.x - 7;
+    this.imagePositionY = this.y - 18;
+    this.levelChangedStatus = false;
 
     var distance = 0;
     var tempArrow = [];
 
     this.init = function(enemies, obstacles){
-        this.draw();
         this.enemies = enemies;
-        this.lines = new Line(enemies, obstacles);
-        this.lines.createLine();
         this.skill = new Skill();
+        this.image = new Image();
+        this.image.src = './assets/images/player.png';
+        // this.lines = new Line(enemies, obstacles);
+        // this.lines.createLine();
+        this.healthBar = new HealthBar(ctx, this, true);
+        this.draw();
+
         console.log('player drawn');
     }
 
@@ -196,17 +209,17 @@ function Player(ctx){
                 var hx = ((this.height + obstacles[i].height) / 2) * ((this.y + this.height / 2) - (obstacles[i].y + obstacles[i].height / 2));
                 if(wy < hx){
                     if(wy > -hx){
-                        this.y = obstacles[i].y + obstacles[i].height + 1;
+                        this.y = obstacles[i].y + obstacles[i].height;
                     }
                     else{
-                        this.x = obstacles[i].x - this.width - 1;
+                        this.x = obstacles[i].x - this.width ;
                     }
                 }else{
                     if(wy > -hx){
-                        this.x = obstacles[i].x + obstacles[i].width + 1;
+                        this.x = obstacles[i].x + obstacles[i].width;
                     }
                     else{
-                        this.y = obstacles[i].y - this.height - 1;
+                        this.y = obstacles[i].y - this.height ;
                     }
                 }
             }
@@ -271,12 +284,28 @@ function Player(ctx){
         // Experience related tack
     }
 
-    this.updateCoin = function(){
-        // Coin related task
+    this.updateCoin = function(coinFromEnemy){
+        this.coinDeposit += coinFromEnemy;
+        if(gameFlags.levelComplete == true){
+            this.coin += this.coinDeposit;
+            if(this.coin > this.level * 250){
+                this.level++;
+                this.levelChangedStatus = true;
+                //call skill function
+                // this.addSkill();
+            }
+            this.coinDeposit == 0;
+        }
+    }
+
+    this.addSkill = function(){
+
     }
 
     this.update = function(obstacles, enemies, levelCompleteFlag, traps){
         tempArrow = [];
+        this.imagePositionX = this.x - 7;
+        this.imagePositionY = this.y - 18;
         this.keyPressed();
         this.checkBoundry(levelCompleteFlag);
         this.checkObstacle(obstacles);
@@ -297,7 +326,7 @@ function Player(ctx){
             }
         }
         this.checkCollisionWithEnemies(enemies);
-        this.draw(); 
+         
         this.attackCooldown > 0 ? this.attackCooldown-- : this.attackCooldown = this.attackingTime;
         this.checkPlayerState();
         if(this.movingState == false && this.attackCooldown == 0){
@@ -322,29 +351,28 @@ function Player(ctx){
                 this.arrows.splice(i, 1);
             }
         }
-        // this.lines.updateEnemyLine(enemies);	//create lines of objects (rectangle -> 4 lines)
-
+        this.healthBar.updateHealthBar(this);
+        this.draw();
     }
 
     // Circle background of hero
     this.playerBackgroundEffect = function(){
         ctx.beginPath();
-        ctx.fillStyle = 'rgba(3, 232, 252, 0.2)';
+        toggleShadow(ctx);
+        ctx.fillStyle = 'rgba(3, 232, 252, 0.3)';
         ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 40, 0, Math.PI * 2);
         ctx.fill();
         ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(128, 255, 251, 0.4)';
+        ctx.strokeStyle = 'rgba(128, 255, 251, 0.5)';
         ctx.stroke();
+        ctx.lineWidth = 0;
+        toggleShadow(ctx);
+
     }
 
     this.draw = function(){
-        ctx.beginPath();
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 15;
-        ctx.fillStyle = 'blue';
-        ctx.shadowColor = '#333';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
         this.playerBackgroundEffect();
+        ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
     }
+
 }

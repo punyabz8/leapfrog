@@ -1,5 +1,5 @@
 function Skill(){
-    this.attackingFlags = {critical:false, poision:false, doubleArrow: false, rage: false, bloodLust: false, health: false};
+    this.attackingFlags = {critical:false, poision:false, doubleArrow: false, rage: false, bloodLust: false, health: false, waterWalking: false};
     this.poisionDamage = 30;
     this.criticalDamage = 0.1;
     this.poisionDamageIncrement = 3;

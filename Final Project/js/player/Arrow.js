@@ -1,7 +1,7 @@
 function Arrow(ctx, player){
 	this.dx = 0;
 	this.dy = 0;
-	this.speed = 30;
+	this.speed = 40;
 	this.width = 20;
 	this.height = 10;
 	this.eCenterX = 0;

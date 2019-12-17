@@ -3,8 +3,11 @@ function Slime(ctx, x, y, player){
     this.width = 47;
     this.height = 47;
     this.hitPoint = 300;    // HP
+    this.maxHealth = 300;
+    this.coinOnDead = 50;
     this.x = 47 * x + 20;     //Initial x-position of slime
     this.y = 47 * y + 465;     //Initial y-position of slime
+    this.healthBar = null;
     this.damagePoint = 75;
     this.collision = false;
     this.damageCooldown = 0;
@@ -17,7 +20,14 @@ function Slime(ctx, x, y, player){
     this.dy = getRandomInt(-5, 5) > 0 ? 1 : -1;
     this.state = {alive:true, attack:true, collided:false};
 
+    this.image = null;
+    this.imageWidth = this.width;
+    this.imagePositionX = this.x
+    this.imagePositionY = this.y;
+
     this.init = function(){
+        this.healthBar = new HealthBar(ctx, this, false);
+        this.healthBar.draw();
         this.draw();
     }
     
@@ -132,6 +142,9 @@ function Slime(ctx, x, y, player){
     }
     
     this.update = function(obstacle){
+        // debugger;
+        this.imagePositionX = this.x;
+        this.imagePositionY = this.y;
         this.checkBoundry();
         this.checkObstacle(obstacle);
         // this.checkCollisionWithplayer();
@@ -157,15 +170,12 @@ function Slime(ctx, x, y, player){
             this.movementCooldown = 50;
             this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1;
         }
-
-        // if(frames % this.movementCooldown == 0){
-        //     this.movementToggle *= -1;
-        // }
+        this.healthBar.updateHealthBar(this);
         this.draw();
     }
 
     this.draw = function(){
-        ctx.beginPath();
+        // ctx.beginPath();
         ctx.fillStyle = 'green';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }

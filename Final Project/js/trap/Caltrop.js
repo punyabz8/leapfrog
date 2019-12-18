@@ -8,18 +8,15 @@ function Caltrop (ctx, x, y){
     this.performedDamage = false;
     this.imagePositionX = this.x;
     this.imagePositiony = this.y - 5;
-    this.image = null;
 
     this.init = function(){
-        this.image = new Image();
-        this.image.src = './assets/images/caltrop.png';
         this.draw();
     }
 
     this.draw = function(){
         ctx.beginPath();
         toggleShadow(ctx);
-        ctx.drawImage(this.image, this.imagePositionX, this.imagePositiony, this.width, this.height + 5);
+        ctx.drawImage(trapImg[0], this.imagePositionX, this.imagePositiony, this.width, this.height + 5);
         toggleShadow(ctx);
     }
 
@@ -28,6 +25,7 @@ function Caltrop (ctx, x, y){
     }
 
     this.checkCollosion = function(player){
+        console.log('caltrop trap');
         if(collisionCheck(player, this)){
             return true;
         }

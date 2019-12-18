@@ -8,7 +8,7 @@ function ExperienceBar(ctx){
 
 	this.updateExperienceBar = function(experience, playerLevel){
 		this.y = viewControl.y + 50;
-		this.maxExperienceThisLevel = playerLevel * 250;
+		this.maxExperienceThisLevel = (playerLevel * 250) * 2;
 		this.currentExperience = experience;
 		this.draw(playerLevel);
 	}

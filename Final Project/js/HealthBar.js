@@ -21,16 +21,14 @@ function HealthBar(ctx, object, flag){
 		ctx.lineWidth = '2';
 		ctx.strokeStyle = 'black';
 		ctx.strokeRect(this.x - object.imageWidth * 0.1, this.y - 20, this.width, 10);
-		// for(var i = 0; i < this.maxHealth; i += this.maxHealth){
-			this.createHealthBar();
-			this.showPlayerHealth();
-		// }
+		this.createHealthBar();
+		this.showPlayerHealth();
 		toggleShadow(ctx);
 	}
 
 	this.showPlayerHealth = function(){
-		ctx.font = '12px serif';
 		ctx.lineWidth = '3';
+		ctx.font = '12px serif';
 		ctx.strokeStyle = 'black';
 		ctx.strokeText(this.currentHealth, this.x + this.width / 2 - 10, this.y - 19, 30);
 		ctx.fillStyle = 'white';

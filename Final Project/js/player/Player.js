@@ -3,18 +3,19 @@ function Player(ctx){
     this.dy = 1;
     this.coin = 0;
     this.level = 1;
-    this.speed = 6;     //player speed
+    this.speed = 8;     //player speed
     this.width = 47;
     this.arrows = [];
     this.height = 47;
     this.expPoint = 0;
+    this.expDeposit = 0;
     this.hitPoint = 500;     //Player HP
+    this.coinDeposit = 0;
     this.maxHealth = 500;   //Player Max HP
     this.weaponType = null;
     this.x = gameWidth / 2;
     this.enemyTarget = null;    // which enemy to attack
     this.y = mapInfo.y - 300;   // starting position of hero
-    this.coinDeposit = 0;
 
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
@@ -32,7 +33,6 @@ function Player(ctx){
     this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
 
     var distance = 0;
-    var tempArrow = [];
 
     this.init = function(enemies, obstacles){
         this.enemies = enemies;
@@ -43,8 +43,6 @@ function Player(ctx){
         // this.lines.createLine();
         this.healthBar = new HealthBar(ctx, this, true);
         this.draw();
-
-        console.log('player drawn');
     }
 
     this.checkEnemyIsInView = function(point){
@@ -104,8 +102,8 @@ function Player(ctx){
             gameFlags.levelComplete = true;
         }
     }
-    this.checkBoundry = function(levelCompleteFlag){ 
-        if(levelCompleteFlag == false){
+    this.checkBoundry = function(){ 
+        if(gameFlags.levelComplete == false){
             this.y < gameBoundary.top ? this.y = gameBoundary.top : false;
             this.x < gameBoundary.left ? this.x = gameBoundary.left : false;
             this.x + this.width > gameBoundary.right ? this.x = gameBoundary.right - this.height : false;
@@ -134,7 +132,6 @@ function Player(ctx){
                 this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
             }
             if(this.y < gameBoundary.top - 120){
-                console.log('next Level');
                 gameFlags.nextLevel = true;
             }
 
@@ -234,19 +231,19 @@ function Player(ctx){
     }
     this.updateCoinAndExp = function(coinFromEnemy, expFromEnemy){
         this.coinDeposit += coinFromEnemy;
-        this.expPoint += expFromEnemy;
+        this.expDeposit += expFromEnemy;
         console.log('conideposit :', this.coinDeposit);
        
     }
     this.addSkill = function(){
 
     }
-    this.update = function(obstacles, enemies, levelCompleteFlag, traps){
+    this.update = function(obstacles, enemies, traps){
         tempArrow = [];
         this.imagePositionX = this.x - 7;
         this.imagePositionY = this.y - 18;
         this.keyPressed();
-        this.checkBoundry(levelCompleteFlag);
+        this.checkBoundry();
         this.checkObstacle(obstacles);
         for(var z = 0; z < traps.length; z++){
             if(traps[z].checkCollosion(this) == true){
@@ -254,7 +251,6 @@ function Player(ctx){
                     this.hitPoint -= traps[z].damagePoint;
                     traps[z].damageCooldown = 100;
                     traps[z].performedDamage = true;
-                    console.log(this.hitPoint);
                 }   
             }
             if(traps[z].damageCooldown > 0){

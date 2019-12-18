@@ -3,13 +3,11 @@ function Obstacle (ctx, x, y){
     this.y = 47 * y + 465;
     this.width = 47;
     this.height = 47;
-    this.image = null;
     this.imagePositionX = this.x;
     this.imagePositiony = this.y - 34;
 
     this.init = function(){
-        this.image = new Image();
-        this.image.src = './assets/images/block.png';
+        // this.image = obstacleImg[0];
         this.draw();
     }
 
@@ -18,7 +16,8 @@ function Obstacle (ctx, x, y){
         ctx.shadowOffsetY = 10;
         ctx.fillRect(this.x, this.y, this.width, this.height);
         toggleShadow(ctx);
-        ctx.drawImage(this.image, this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
+        // console.log(obstacleImg[0]);
+        ctx.drawImage(obstacleImg[0], this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
         toggleShadow(ctx);
     }
 

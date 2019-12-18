@@ -7,7 +7,6 @@ function Obstacle (ctx, x, y){
     this.imagePositiony = this.y - 34;
 
     this.init = function(){
-        // this.image = obstacleImg[0];
         this.draw();
     }
 
@@ -16,7 +15,6 @@ function Obstacle (ctx, x, y){
         ctx.shadowOffsetY = 10;
         ctx.fillRect(this.x, this.y, this.width, this.height);
         toggleShadow(ctx);
-        // console.log(obstacleImg[0]);
         ctx.drawImage(obstacleImg[0], this.imagePositionX, this.imagePositiony, this.width, this.height + 34);
         toggleShadow(ctx);
     }

@@ -12,27 +12,25 @@ function Player(ctx){
     this.hitPoint = 500;     //Player HP
     this.coinDeposit = 0;
     this.maxHealth = 500;   //Player Max HP
-    this.weaponType = null;
     this.x = gameWidth / 2;
-    this.enemyTarget = null;    // which enemy to attack
-    this.y = mapInfo.y - 300;   // starting position of hero
-
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
+    this.y = mapInfo.y - 300;   // starting position of hero
+    this.baseDamagePoint = 50;
     
-    // this.rays = [];
-    // this.lines = null;
     this.skill = null;
+    this.image = null;
     this.enemies = null;
     this.healthBar = null;
-
-    this.image = null;
+    this.enemyTarget = null;    // which enemy to attack
     this.imagePositionX = this.x - 7;
     this.imagePositionY = this.y - 18;
     this.imageWidth = this.width + 15;
     this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
-
+    
     var distance = 0;
+    // this.rays = [];
+    // this.lines = null;
 
     this.init = function(enemies, obstacles){
         this.enemies = enemies;
@@ -148,7 +146,7 @@ function Player(ctx){
                 }
         }else if(keyPressed.hasOwnProperty('W')){
             if(keyPressed.A == false && keyPressed.D == false && keyPressed.W == false && keyPressed.S == false){
-                    this.playerFlags.movingState = false;
+                this.playerFlags.movingState = false;
                 }
         }
     }
@@ -235,6 +233,27 @@ function Player(ctx){
         console.log('conideposit :', this.coinDeposit);
        
     }
+    //Called when game is over(set player values to initial state)
+    this.resetPlayer = function(){
+        this.dx = 1;
+        this.dy = 1;
+        this.coin = 0;
+        this.level = 1;
+        this.arrows = [];
+        this.expPoint = 0;
+        this.expDeposit = 0;
+        this.hitPoint = 500;  
+        this.coinDeposit = 0;
+        this.maxHealth = 500;
+        this.x = gameWidth / 2;
+        this.attackCooldown = 0;  
+        this.attackingTime = 40; 
+        this.y = mapInfo.y - 300;  
+        this.skill = null;
+        this.enemies = null;
+        this.enemyTarget = null;   
+        this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
+    }
     this.addSkill = function(){
 
     }
@@ -287,6 +306,7 @@ function Player(ctx){
         }
         if(gameFlags.levelComplete == true){
             this.coin += this.coinDeposit;
+            this.expPoint += this.expDeposit;
             if(this.expPoint > this.level * 250){
                 this.level++;
                 this.playerFlags.levelChangedStatus = true;
@@ -294,57 +314,12 @@ function Player(ctx){
                 // this.addSkill();dsa
             }
             this.coinDeposit = 0;
+            this.expDeposit = 0;
         }
         this.healthBar.updateHealthBar(this);
         this.draw();
     }
-    this.keyPressed = function(obstacles){
-        if(keyPressed.ArrowLeft == true || keyPressed.a == true || keyPressed.A == true){
-            this.dx = -1;
-            this.x -= this.speed;
-            this.imagePositionX -= this.speed;
-            this.playerFlags.movingState = true;
-        }
-        if(keyPressed.ArrowRight == true || keyPressed.d == true || keyPressed.D == true){
-            this.dx = 1;
-            this.x += this.speed;
-            this.imagePositionX += this.speed;
-            this.playerFlags.movingState = true;
-        }
-        if(keyPressed.ArrowUp == true || keyPressed.w == true || keyPressed.W == true){
-            this.dy = -1;
-            this.y -= this.speed;
-            this.imagePositionY -= this.speed;
-            this.playerFlags.movingState = true;
-        }
-        if(keyPressed.ArrowDown == true || keyPressed.s == true || keyPressed.S == true){
-            this.dy = 1;
-            this.y += this.speed;
-            this.imagePositionY += this.speed;
-            this.playerFlags.movingState = true;
-        }
-        // ViewPort location and movement
-        if(this.y < viewControl.y + 474){
-            viewControl.y = viewControl.y - this.speed;
-            if(this.y < 474){
-                viewControl.y = viewControl.y - this.speed;
-            }
-            if(viewControl.y < 0){
-                viewControl.y = 0;
-            }
-        }
-        if(this.y > viewControl.y + gameHeight - 300){
-            viewControl.y = viewControl.y + this.speed;
-            if(this.y > mapInfo.y - 300){
-                // viewControl.y = mapInfo.y - gameHeight;
-                viewControl.y = viewControl.y + this.speed;
-
-            }
-            if(viewControl.y + gameHeight > mapInfo.y){
-                viewControl.y = mapInfo.y - gameHeight;
-            }
-        }
-    }
+    
     // Circle background of hero
     this.playerBackgroundEffect = function(){
         ctx.beginPath();
@@ -366,5 +341,53 @@ function Player(ctx){
         // ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
     }
+    this.keyPressed = function(){
+        if(this.playerFlags.levelChangedStatus != true){
+            if(keyPressed.ArrowLeft == true || keyPressed.a == true || keyPressed.A == true){
+                this.dx = -1;
+                this.x -= this.speed;
+                this.imagePositionX -= this.speed;
+                this.playerFlags.movingState = true;
+            }
+            if(keyPressed.ArrowRight == true || keyPressed.d == true || keyPressed.D == true){
+                this.dx = 1;
+                this.x += this.speed;
+                this.imagePositionX += this.speed;
+                this.playerFlags.movingState = true;
+            }
+            if(keyPressed.ArrowUp == true || keyPressed.w == true || keyPressed.W == true){
+                this.dy = -1;
+                this.y -= this.speed;
+                this.imagePositionY -= this.speed;
+                this.playerFlags.movingState = true;
+            }
+            if(keyPressed.ArrowDown == true || keyPressed.s == true || keyPressed.S == true){
+                this.dy = 1;
+                this.y += this.speed;
+                this.imagePositionY += this.speed;
+                this.playerFlags.movingState = true;
+            }
+            // ViewPort location and movement
+            if(this.y < viewControl.y + 474){
+                viewControl.y = viewControl.y - this.speed;
+                if(this.y < 474){
+                    viewControl.y = viewControl.y - this.speed;
+                }
+                if(viewControl.y < 0){
+                    viewControl.y = 0;
+                }
+            }
+            if(this.y > viewControl.y + gameHeight - 300){
+                viewControl.y = viewControl.y + this.speed;
+                if(this.y > mapInfo.y - 300){
+                    // viewControl.y = mapInfo.y - gameHeight;
+                    viewControl.y = viewControl.y + this.speed;
 
+                }
+                if(viewControl.y + gameHeight > mapInfo.y){
+                    viewControl.y = mapInfo.y - gameHeight;
+                }
+            }
+        }
+    }
 }

@@ -4,7 +4,6 @@ function Map(ctx, firstTimeMapLoad){
     // 11 * 21 of (47 * 47)
     this.init = function(currentLevel){
         currentLevel = currentLevel % mapLevels.length == 0 ? 0 : currentLevel;
-        console.log(currentLevel);
         this.mapWithObjects = JSON.parse(JSON.stringify(mapLevels[currentLevel]));
         this.tileMap = JSON.parse(JSON.stringify(this.mapWithObjects));
     }

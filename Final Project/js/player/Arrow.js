@@ -3,12 +3,12 @@ function Arrow(ctx, player){
 	this.dy = 0;
 	this.speed = 35;
 	this.width = 10;
-	this.height = 55;
+	this.height = 45;
 	this.eCenterX = 0;
 	this.eCentery = 0;
 	this.angle = null;
-	this.damagePoint = 75;
 	this.collidedTo = null;
+	this.damagePoint = 100;
 	this.collidedState = false;
 	this.x = Math.floor(player.x + player.width / 2);
 	this.y = Math.floor(player.y + player.height / 2);
@@ -65,10 +65,11 @@ function Arrow(ctx, player){
 			if(collisionCheck(enemies[i], this)){
 				this.collidedState = true;
 				this.collidedTo = 'enemy';
-				var arr = [];
+				//arrow hit the enemy (calculate damage)
 				enemies[i].damageByHit(this);
-				arr.push(enemies[i]);
+				var arr = [];
 				arr.push(this);
+				arr.push(enemies[i]);
 				return arr;
 			}
 		}

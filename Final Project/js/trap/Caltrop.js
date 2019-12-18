@@ -25,7 +25,6 @@ function Caltrop (ctx, x, y){
     }
 
     this.checkCollosion = function(player){
-        console.log('caltrop trap');
         if(collisionCheck(player, this)){
             return true;
         }

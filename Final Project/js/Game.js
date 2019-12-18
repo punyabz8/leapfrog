@@ -1,31 +1,3 @@
-var frames = 0;
-var keyPressed = {};
-var gameWidth = 555;
-var gameHeight = window.innerHeight;
-
-var mapInfo = {
-	x: gameWidth,
-	y: 1750
-}
-var viewControl={
-	x: 0,
-	y: (mapInfo.y - gameHeight)
-}
-var gameBoundary={
-	top: 465,
-	left: 20,
-	bottom: 300,
-	right: 537
-}
-var gameFlags = {
-	levelComplete: false,
-	gameOver: false,
-	nextLevel: false,
-	firstTimeMapLoad: true
-}
-
-
-
 function Game(canvas){
 	var that = this;
 	this.map = null;
@@ -99,7 +71,6 @@ function Game(canvas){
 	this.animate = function(){
 		// console.log('Game  level:', this.gameLevel);
 		this.ctx.clearRect(0, 0, gameWidth, gameHeight);
-		console.log(this.traps);
 		if(gameFlags.firstTimeMapLoad == true){
 			this.startGame();
 			gameFlags.firstTimeMapLoad = false;
@@ -146,6 +117,7 @@ function Game(canvas){
 				}
 				this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
 			}else if(gameFlags.levelComplete == true && gameFlags.gameOver == false){
+				
 				if(this.player.hitPoint <= 0){
 					gameFlags.gameOver = true;
 				}
@@ -158,8 +130,11 @@ function Game(canvas){
 				}
 				this.player.update(this.obstacles, this.enemies, this.traps);
 				this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
+
+				if(this.player.playerFlags.levelChangedStatus == true){
+					this.powerUpMenu();
+				}
 				if(gameFlags.nextLevel == true){
-					// console.log('prepareNextLevel called');
 					this.prepareNextLevel();
 				}
 				// console.log('Level Complete');
@@ -170,6 +145,7 @@ function Game(canvas){
 				for(var i = 0; i < this.traps.length; i++){
 					this.traps[i].update();
 				}
+				this.resetGame();
 				// console.log('Game Over');
 			}
 			this.ctx.restore();
@@ -197,8 +173,22 @@ function Game(canvas){
 		this.ctx.fillStyle = 'white';
 		this.ctx.fillText('Play', (gameWidth / 2) - 25, (gameHeight - gameHeight / 6 ) + 35, 50);
 	}
+	this.powerUpMenu = function(){
+		this.ctx.fillStyle = '#111111';
+		this.ctx.fillRect(viewControl.x, viewControl.y, gameWidth, gameHeight);
+		this.ctx.fillStyle = '#102cc9';
+		this.ctx.fillRect(viewControl.x, viewControl.y + 100, gameWidth, 50);
+		this.ctx.strokeStyle = 'white';
+		this.ctx.strokeRect(viewControl.x + 100, viewControl.y + 450, 120, 120);
+		this.ctx.strokeStyle = 'white';
+		this.ctx.strokeRect(viewControl.x + 300, viewControl.y + 450, 120, 120);
+		if(keyPressed[0] == true && this.mouse.x > viewControl.x + 100 && this.mouse.x < viewControl.x + 220 && this.mouse.y > viewControl.y + 450 && this.mouse.y < viewControl.y  + 570){
+			console.log('left power');
+		}else if(keyPressed[0] == true && this.mouse.x > viewControl.x + 300 && this.mouse.x < viewControl.x + 420 && this.mouse.y > viewControl.y + 450 && this.mouse.y < viewControl.y  + 570){
+			console.log('right power');
+		}
+	}
 	this.prepareNextLevel = function(){
-		console.log(this.gameLevel);
 		this.resetMap();
 		gameFlags = {
 			levelComplete: false,
@@ -206,11 +196,14 @@ function Game(canvas){
 			nextLevel: false,
 			firstTimeMapLoad: true
 		};
+		this.player.x = gameWidth / 2;
+		this.player.y = mapInfo.y - 300;   // starting position of hero
+		viewControl.y = mapInfo.y - gameHeight;
 		this.gameLevel++;
-
 		//Show game finished instead
 		this.gameLevel = this.gameLevel % mapLevels.length == 0 ? -1 : this.gameLevel;
 	}
+	//Called upon level complete
 	this.resetMap = function(){
 		//call skillAdd function()
 		this.traps = [];
@@ -218,11 +211,17 @@ function Game(canvas){
 		this.obstacles = [];
 		this.map = null;
 	}
+	//Called when game is over
 	this.resetGame = function(){
-
-	}
-	this.keyPressed = function(event){
-		this.player.keyPressed(event);
+		this.gameCoin += this.player.coin;
+		this.map = null;
+		this.traps = [];
+		this.enemies = [];
+		this.obstacles = [];
+		this.gameLevel = -1;		//current level in game
+		this.player.resetPlayer();
+		gameFlags.gameOver = false;
+		viewControl = {x: 0, y: mapInfo.y - gameHeight};
 	}
 	this.mouseDownHandler = function(event){
 		keyPressed[event.button] = true;

@@ -7,11 +7,12 @@ function Player(ctx){
     this.width = 47;
     this.arrows = [];
     this.height = 47;
-    this.expPoint = 250;
+    this.expPoint = 0;
     this.expDeposit = 0;
     this.hitPoint = 500;     //Player HP
     this.coinDeposit = 0;
     this.maxHealth = 500;   //Player Max HP
+    this.damagePoint = 100;
     this.x = gameWidth / 2;
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
@@ -29,16 +30,11 @@ function Player(ctx){
     this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
     
     var distance = 0;
-    // this.rays = [];
-    // this.lines = null;
 
-    this.init = function(enemies, obstacles){
-        this.enemies = enemies;
+    this.init = function(){
         this.skill = new Skill();
         this.image = new Image();
         this.image.src = './assets/images/player.png';
-        // this.lines = new Line(enemies, obstacles);
-        // this.lines.createLine();
         this.healthBar = new HealthBar(ctx, this, true);
         this.draw();
     }
@@ -53,35 +49,6 @@ function Player(ctx){
 	}
     
     this.attack = function(enemies){
-        // var enemyTargets = [];
-        // this.rays = [];
-        // for(var j = 0; j <= 1; j +=5){
-        //     this.rays.push(new Ray(ctx, this.x + this.width / 2, this.y + this.height / 2, j));
-        // }
-        
-        // for(var j = 0; j < this.rays.length; j++){
-        //     var temp = {};
-        //     var distance = 9999;
-        //     var newDistance = 0;
-        //     for(var l = 0; l < this.lines.allLines.length; l++){
-        //         var pt = this.rays[j].rayCast(this.lines.allLines[l]);
-        //         newDistance = Math.sqrt(Math.pow(((this.x + this.width / 2) - pt.x),2) + Math.pow(((this.y + this.height / 2) - pt.y),2));
-        //         if(distance > newDistance){
-        //             distance = newDistance;
-        //             temp = pt;
-        //         }
-        //     }
-        //     console.log('collision point' ,temp);
-        //     var enemyChecked = this.checkEnemyIsInView(temp);
-        //     // console.log(enemyChecked);
-        //     if(enemyChecked != null){
-        //         this.enemyTarget = enemyChecked ;
-        //     }
-        // }
-        // for(var j = 0; j < this.rays.length; j++){
-        //     this.rays[j].draw();
-        // }
-
         var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
             distance = Math.sqrt(Math.pow((this.x - enemies[i].x),2) + Math.pow((this.y - enemies[i].y),2));
@@ -92,13 +59,29 @@ function Player(ctx){
         }
         this.enemyTarget = nearestEnemy == 99999 ? null : this.enemyTarget;
         if(this.enemyTarget != null){
+            var tempDamage = this.damagePoint;
             firingSound.play();
             var arrow = new Arrow(ctx, this);
-            arrow.init();
+            for(var skillElement in this.skill.skillFlags){
+                if(this.skill.skillFlags[skillElement] == true){
+                    if(skillElement == 'criticalMaster'){
+                        tempDamage += Math.floor(this.damagePoint * this.skill.criticalDamage);
+                    }
+                    if(skillElement == 'poision'){
+                        tempDamage += this.skill.poisionDamage;
+                    }
+                    if(skillElement == 'doubleArrow'){
+                        //double arrow
+                    }
+                    if(skillElement == 'rage' && this.hitPoint <= Math.floor(0.20 * this.maxHealth)){
+                        tempDamage += Math.floor(this.damagePoint * this.skill.rageDamage);
+                    }
+                }
+            }
+            arrow.init(tempDamage);
             arrow.draw();
             this.arrows.push(arrow);
-        }else{
-            gameFlags.levelComplete = true;
+            console.log(tempDamage);
         }
     }
     this.checkBoundry = function(){ 
@@ -229,37 +212,72 @@ function Player(ctx){
         }
     }
     this.updateCoinAndExp = function(coinFromEnemy, expFromEnemy){
-        this.coinDeposit += coinFromEnemy;
         this.expDeposit += expFromEnemy;
-        console.log('conideposit :', this.coinDeposit);
-       
+        this.coinDeposit += coinFromEnemy;
     }
     //Called when game is over(set player values to initial state)
-    this.resetPlayer = function(){
-        this.dx = 1;
-        this.dy = 1;
-        this.coin = 0;
-        this.level = 1;
-        this.arrows = [];
-        this.expPoint = 0;
-        this.expDeposit = 0;
-        this.hitPoint = 500;  
-        this.coinDeposit = 0;
-        this.maxHealth = 500;
-        this.x = gameWidth / 2;
-        this.attackCooldown = 0;  
-        this.attackingTime = 40; 
-        this.y = mapInfo.y - 300;  
-        this.skill = null;
-        this.enemies = null;
-        this.enemyTarget = null;   
-        this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
-    }
-    this.addSkill = function(skill){
-        console.log('addSkill   :',skill);
+    
+    this.addSkill = function(skillInput){
+        var skillActiveCheck = false;
+        console.log('before   ',  this.skill.skillFlags);
+        for(var skillElement in this.skill.skillFlags){
+            if(skillElement == skillInput && this.skill.skillFlags[skillElement] == true){
+                skillActiveCheck = true;
+            }
+        }
+        if(skillActiveCheck == true){
+            if(this.skill.skillFlags[skillInput] == true){
+                console.log('damage point increase', skillInput);
+                if(skillInput == 'doubleArrow'){
+                    this.skill.doubleArrowAmount += 1;
+                    console.log(this.skill.doubleArrowAmount);
+                }
+                if(skillInput == 'criticalMaster'){
+                    this.skill.criticalDamage += this.skill.criticalDamageIncreament;
+                    console.log(this.skill.criticalDamage);
+
+                }
+                if(skillInput == 'poision'){
+                    this.skill.poisionDamage += this.skill.poisionDamageIncrement;
+                    console.log(this.skill.poisionDamage);
+                }
+            }
+        }else{
+            console.log('Boosts here');
+            if(skillInput == 'healthBoost'){
+                this.maxHealth += Math.floor(this.maxHealth * this.skill.healthBoost);
+                this.hitPoint += Math.floor(this.maxHealth * this.skill.healthBoost);
+            }
+            if(skillInput == 'criticalBoost'){
+                this.skill.criticalDamage += this.criticalDamageIncreament;
+                console.log(this.maxHealth);
+            }
+            if(skillInput == 'heal'){
+                this.hitPoint += Math.floor(this.maxHealth * this.skill.healAmount);
+                if(this.hitPoint > this.maxHealth){
+                    this.hitPoint = this.maxHealth;
+                }
+
+            }
+            if(skillInput == 'attackBoost'){
+                this.damagePoint += this.skill.attackBoostAmount;
+            }
+        }
+        // console.log('before skill changed',this.skill.skillFlags);
+        for(var skillElement in this.skill.skillFlags){
+            console.log(skillElement);
+            debugger;
+            if(skillElement == skillInput){
+                this.skill.skillFlags[skillElement] = true;
+                break;
+            }
+        }
+        console.log('áfter',this.skill.skillFlags);
+        // console.log('After skill changed',this.skill.skillFlags);
     }
     this.update = function(obstacles, enemies, traps){
         tempArrow = [];
+        this.enemies = enemies;
         this.imagePositionX = this.x - 7;
         this.imagePositionY = this.y - 18;
         this.keyPressed();
@@ -312,15 +330,18 @@ function Player(ctx){
         }
         if(gameFlags.levelComplete == true){
             this.coin += this.coinDeposit;
-            this.expPoint += this.expDeposit;
+            if(this.expDeposit > 0){
+                this.expPoint += 10;
+                this.expDeposit -= 10;
+            }
+            // this.expPoint += this.expDeposit;
             if(this.expPoint > this.level * 250){
+                this.expPoint = this.expPoint - this.level * 250;
                 this.level++;
+                this.expDeposit = 0;
                 this.playerFlags.levelChangedStatus = true;
-                //call skill function
-                // this.addSkill();dsa
             }
             this.coinDeposit = 0;
-            this.expDeposit = 0;
         }
         this.healthBar.updateHealthBar(this);
         this.draw();
@@ -395,5 +416,25 @@ function Player(ctx){
                 }
             }
         }
+    }
+    this.resetPlayer = function(){
+        this.dx = 1;
+        this.dy = 1;
+        this.coin = 0;
+        this.level = 1;
+        this.arrows = [];
+        this.expPoint = 0;
+        this.enemies = null;
+        this.expDeposit = 0;
+        this.hitPoint = 500;  
+        this.coinDeposit = 0;
+        this.maxHealth = 500;
+        this.x = gameWidth / 2;
+        this.enemyTarget = null;   
+        this.attackCooldown = 0;  
+        this.attackingTime = 40; 
+        this.y = mapInfo.y - 300;  
+        this.skill.resetSkills();
+        this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
     }
 }

@@ -31,11 +31,12 @@ function Game(canvas){
 		document.addEventListener('keyup', function(event){
 			keyPressed[event.key] = false;
 		});
-		canvas.onclick = this.mouseDownHandler.bind(this);
+		canvas.onmousedown = this.mouseDownHandler.bind(this);
 		canvas.onmouseup = this.mouseUpHandler.bind(this);
 		toggleShadow(this.ctx);
 		var player = new Player(this.ctx);
 		this.player = player;
+		this.player.init();
 		this.animate();
 	}
 
@@ -61,7 +62,7 @@ function Game(canvas){
 			}
 			this.background.draw(0);
 			this.map.draw();
-			this.player.init(this.enemies, this.obstacles);
+			this.player.draw();
 			gameFlags.firstTimeMapLoad = false;
 			// this.animate();
 		}else{
@@ -84,6 +85,8 @@ function Game(canvas){
 			this.ctx.save();
 			this.ctx.translate(-viewControl.x,-viewControl.y);		//translate for viewport adjustment
 			this.background.draw(0);	//draw backgroud image
+			if(frames % 1000 == 0){
+			console.log(this.player.skill.skillFlags);}
 
 			if(gameFlags.levelComplete == false && gameFlags.gameOver == false){
 				for(var i = 0; i < this.obstacles.length; i++){
@@ -92,18 +95,27 @@ function Game(canvas){
 				for(var i = 0; i < this.traps.length; i++){
 					this.traps[i].update();
 				}
+				if(this.enemies.length <= 0){
+					gameFlags.levelComplete = true;
+				}
 				for(var i = 0; i < this.enemies.length; i++){
 					this.enemies[i].update(this.obstacles);	//update enemies position
 				}
-				// this.map.draw();
 				this.player.update(this.obstacles, this.enemies, this.traps);	//Update player position
 				// Delete dead enemies
 				for(var i = this.enemies.length - 1; i >= 0; i--)
 				{
 					if(this.enemies[i].hitPoint <= 0){
 						this.player.updateCoinAndExp(this.enemies[i].coinOnDead, this.enemies[i].expPoint);
+						//Increase player health on enemy death when bloodlust skill is active
+						console.log('Entering bloodLust zone', this.player.skill.skillFlags.bloodLust);
+						if(this.player.skill.skillFlags.bloodLust == true){
+							console.log('hello i am bloodLust');
+							this.player.hitPoint += Math.floor(this.player.skill.bloodLustHealth * this.enemies[i].maxHealth);
+						}
 						this.enemies.splice(i, 1);
 						var temp = i;
+						//remove enemy from tiles map
 						for(var k = 0; k < this.map.tileMap.length; k++){
 							for(var j = 0; j < this.map.tileMap[k].length; j++){
 								if(this.map.tileMap[k][j] == 11){
@@ -122,7 +134,6 @@ function Game(canvas){
 				}
 				this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
 			}else if(gameFlags.levelComplete == true && gameFlags.gameOver == false){
-				
 				if(this.player.hitPoint <= 0){
 					gameFlags.gameOver = true;
 				}
@@ -166,12 +177,11 @@ function Game(canvas){
 			}
 		}
 		frames++;
-		if(frames % 1000 == 0){
+		if(frames % 5000 == 0){
 			console.clear();
 		}
 		requestAnimationFrame(that.animate.bind(this));
 	}
-
 	this.playButton = function(){
 		this.ctx.fillStyle = 'green';
 		this.ctx.fillRect(gameWidth / 2 - 50, gameHeight - gameHeight / 6, 100, 50);
@@ -189,26 +199,60 @@ function Game(canvas){
 		this.ctx.strokeRect(viewControl.x + 100, viewControl.y + 450, 120, 120);
 		this.ctx.strokeStyle = 'white';
 		this.ctx.strokeRect(viewControl.x + 300, viewControl.y + 450, 120, 120);
-		if(this.powerScrollingState == true){dsadwa
-			this.powerScrollRight = getRandomInt(this.player.skill.skillList.length);
+
+		if(this.powerScrollingState == true){
 			this.powerScrollLeft = getRandomInt(this.player.skill.skillList.length);
+			do{
+				this.powerScrollRight = getRandomInt(this.player.skill.skillList.length);
+			}while(this.powerScrollLeft == this.powerScrollRight);
 			this.powerScrollingState = false;
+			if(this.powerScrollLeft == 'poisionBoost' || this.powerScrollRight == 'poisionBoost'){
+				if(this.player.skill.skillFlags.poision == false){
+					this.powerScrollingState = true;
+				}
+			}
+			if(this.player.skill.skillList[this.powerScrollLeft] == 'criticalBoost' || this.player.skill.skillList[this.powerScrollRight] == 'criticalBoost'){
+				if(this.player.skill.skillFlags.criticalMaster != true){
+					this.powerScrollingState = true;
+				}
+			}
+			if(this.player.skill.skillList[this.powerScrollLeft] == 'bloodLust' || this.player.skill.skillList[this.powerScrollRight] == 'bloodLust'){
+				if(this.player.skill.skillFlags.bloodLust == true){
+					this.powerScrollingState = true;
+				}
+			}
+			if(this.player.skill.skillList[this.powerScrollLeft] == 'invinsibility' || this.player.skill.skillList[this.powerScrollRight] == 'invinsibility'){
+				if(this.player.skill.skillFlags.invinsibility == true){
+					this.powerScrollingState = true;
+				}
+			}
+			if(this.player.skill.skillList[this.powerScrollLeft] == 'douge' || this.player.skill.skillList[this.powerScrollRight] == 'douge'){
+				if(this.player.skill.skillFlags.douge == true){
+					this.powerScrollingState = true;
+				}
+			}
+			if(this.player.skill.skillList[this.powerScrollLeft] == 'waterWalking' || this.player.skill.skillList[this.powerScrollRight] == 'waterWalking'){
+				if(this.player.skill.skillFlags.waterWalking == true){
+					this.powerScrollingState = true;
+				}
+			}
 		}
-		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollLeft], 'white', 120, viewControl.y + 425, 100);
-		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollRight], 'white', 320, viewControl.y +  425, 100);
+
+		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollLeft], 'white', 100, viewControl.y + 425, 100);
+		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollRight], 'white', 300, viewControl.y +  425, 100);
 
 		if(keyPressed[0] == true && this.mouse.x > 100 && this.mouse.x < 220 && this.mouse.y > 450 && this.mouse.y < 570){
 			buttonClickedSound.play();
-			this.player.addSkill(this.player.skill.skillList[this.powerScrollLeft]);
 			this.powerScrollingState = true;
 			this.player.playerFlags.levelChangedStatus = false;
+			this.player.addSkill(this.player.skill.skillList[this.powerScrollLeft]);
 		}else if(keyPressed[0] == true && this.mouse.x > 300 && this.mouse.x < 420 && this.mouse.y > 450 && this.mouse.y < 570){
 			buttonClickedSound.play();
 			this.powerScrollingState = true;
 			this.player.playerFlags.levelChangedStatus = false;
+			this.player.addSkill(this.player.skill.skillList[this.powerScrollRight]);
 		}
 	}
-
 	this.prepareNextLevel = function(){
 		this.resetMap();
 		gameFlags = {
@@ -227,10 +271,10 @@ function Game(canvas){
 	//Called upon level complete
 	this.resetMap = function(){
 		//call skillAdd function()
+		this.map = null;
 		this.traps = [];
 		this.enemies = [];
 		this.obstacles = [];
-		this.map = null;
 	}
 	//Called when game is over
 	this.resetGame = function(){
@@ -256,4 +300,6 @@ function Game(canvas){
 
 var canvas = document.getElementById('myGame');
 var game = new Game(canvas);
-game.init();
+// if(assetsLoaded == true){
+	game.init();
+// }

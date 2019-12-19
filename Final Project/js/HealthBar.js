@@ -5,7 +5,7 @@ function HealthBar(ctx, object, flag){
 	this.currentHealth = object.hitPoint;
 	this.width = object.imageWidth + object.imageWidth * 0.2;
 	this.playerOrEnemy = flag;
-
+	
 	this.updateHealthBar = function(obj){
 		this.x = obj.imagePositionX;
 		this.y = obj.imagePositionY;

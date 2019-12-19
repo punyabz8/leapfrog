@@ -8,12 +8,13 @@ function Arrow(ctx, player){
 	this.eCentery = 0;
 	this.angle = null;
 	this.collidedTo = null;
-	this.damagePoint = 100;
+	this.damagePoint = 0;
 	this.collidedState = false;
 	this.x = Math.floor(player.x + player.width / 2);
 	this.y = Math.floor(player.y + player.height / 2);
 
-	this.init = function(){
+	this.init = function(playerDamage){
+		this.damagePoint = playerDamage;
 		this.eCenterX = Math.floor(player.enemyTarget.x + player.enemyTarget.width / 2);
 		this.eCentery = Math.floor(player.enemyTarget.y + player.enemyTarget.height / 2);
 		this.angle = Math.atan2( this.y - this.eCentery ,  this.x - this.eCenterX);
@@ -66,7 +67,7 @@ function Arrow(ctx, player){
 				this.collidedState = true;
 				this.collidedTo = 'enemy';
 				//arrow hit the enemy (calculate damage)
-				enemies[i].damageByHit(this);
+				enemies[i].damageByHit(this.damagePoint);
 				var arr = [];
 				arr.push(this);
 				arr.push(enemies[i]);

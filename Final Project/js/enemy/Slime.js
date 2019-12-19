@@ -2,7 +2,7 @@ function Slime(ctx, x, y, player){
     this.speed = 4;
     this.width = 47;
     this.height = 47;
-    this.hitPoint = 10;    // HP
+    this.hitPoint = 150;    // HP
     this.expPoint = 100;
     this.maxHealth = 300;
     this.coinOnDead = 20;
@@ -136,10 +136,8 @@ function Slime(ctx, x, y, player){
         }
     }
 
-    this.damageByHit = function(arrow){
-        var criticalDamage = player.skill.skillFlags.critical == true ? player.skill.criticalDamage : 0;
-        var poisionDamage = player.skill.skillFlags.poision == true ? player.skill.poisionDamage : 0;
-        this.hitPoint = this.hitPoint - (arrow.damagePoint + arrow.damagePoint * criticalDamage + poisionDamage);
+    this.damageByHit = function(damageByArrow){
+        this.hitPoint = this.hitPoint - damageByArrow;
     }
     
     this.update = function(obstacle){

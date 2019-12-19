@@ -1,4 +1,4 @@
-var i, backgroundImg = [], trapImg = [], enemyImg = [], obstacleImg = [], frames = 0, keyPressed = {}, gameWidth = 555, gameHeight = window.innerHeight;
+var i, assetsLoaded = false, backgroundImg = [], trapImg = [], enemyImg = [], obstacleImg = [], frames = 0, keyPressed = {}, gameWidth = 555, gameHeight = window.innerHeight;
 
 var mapInfo = {
     x: gameWidth, 

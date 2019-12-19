@@ -5,14 +5,13 @@ function Game(canvas){
 	this.traps = [];
 	this.enemies = [];
 	this.gameCoin = 0;
-	this.gameLevel = -1;		//current level in game
+	this.gameLevel = -1;	//current level in game
 	this.player = null;		//player holder
 	this.obstacles = [];
 	this.experience = 0;
 	this.background = null;
 	this.viewControl = null;
 	this.mouse = {x: 0, y: 0};
-	this.experienceBar = null;
 	this.parentElement = canvas;
 	this.powerScrollLeft = null;
 	this.powerScrollRight = null;
@@ -24,7 +23,6 @@ function Game(canvas){
 		canvas.height = gameHeight;
 		canvas.style.margin = '0 10%';
 		this.background = new Background(this.ctx);
-		this.experienceBar = new ExperienceBar(this.ctx);
 		document.addEventListener('keydown', function(event){
 			keyPressed[event.key] = true;
 		},true);
@@ -36,7 +34,7 @@ function Game(canvas){
 		toggleShadow(this.ctx);
 		var player = new Player(this.ctx);
 		this.player = player;
-		this.player.init();
+		this.player.init(this.ctx);
 		this.animate();
 	}
 
@@ -83,10 +81,9 @@ function Game(canvas){
 			backgroundSong.pause();
 
 			this.ctx.save();
-			this.ctx.translate(-viewControl.x,-viewControl.y);		//translate for viewport adjustment
-			this.background.draw(0);	//draw backgroud image
-			if(frames % 1000 == 0){
-			console.log(this.player.skill.skillFlags);}
+			//translate for viewport adjustment
+			this.ctx.translate(-viewControl.x,-viewControl.y);		
+			this.background.draw(0);
 
 			if(gameFlags.levelComplete == false && gameFlags.gameOver == false){
 				for(var i = 0; i < this.obstacles.length; i++){
@@ -99,23 +96,24 @@ function Game(canvas){
 					gameFlags.levelComplete = true;
 				}
 				for(var i = 0; i < this.enemies.length; i++){
-					this.enemies[i].update(this.obstacles);	//update enemies position
+					this.enemies[i].update(this.obstacles);
 				}
-				this.player.update(this.obstacles, this.enemies, this.traps);	//Update player position
+				this.player.update(this.obstacles, this.enemies, this.traps);
 				// Delete dead enemies
 				for(var i = this.enemies.length - 1; i >= 0; i--)
 				{
 					if(this.enemies[i].hitPoint <= 0){
 						this.player.updateCoinAndExp(this.enemies[i].coinOnDead, this.enemies[i].expPoint);
 						//Increase player health on enemy death when bloodlust skill is active
-						console.log('Entering bloodLust zone', this.player.skill.skillFlags.bloodLust);
 						if(this.player.skill.skillFlags.bloodLust == true){
-							console.log('hello i am bloodLust');
 							this.player.hitPoint += Math.floor(this.player.skill.bloodLustHealth * this.enemies[i].maxHealth);
+							if(this.player.hitPoint >= this.player.maxHealth){
+								this.player.hitPoint = this.player.maxHealth;
+							}
 						}
 						this.enemies.splice(i, 1);
 						var temp = i;
-						//remove enemy from tiles map
+						//remove enemy from currently loaded tile map
 						for(var k = 0; k < this.map.tileMap.length; k++){
 							for(var j = 0; j < this.map.tileMap[k].length; j++){
 								if(this.map.tileMap[k][j] == 11){
@@ -132,28 +130,31 @@ function Game(canvas){
 				if(this.player.hitPoint <= 0){
 					gameFlags.gameOver = true;
 				}
-				this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
 			}else if(gameFlags.levelComplete == true && gameFlags.gameOver == false){
-				if(this.player.hitPoint <= 0){
-					gameFlags.gameOver = true;
-				}
-				for(var i = 0; i < this.obstacles.length; i++){
-					this.ctx.beginPath();
-					this.obstacles[i].update();
-				}
-				for(var i = 0; i < this.traps.length; i++){
-					this.traps[i].update();
-				}
-				this.player.update(this.obstacles, this.enemies, this.traps);
-				this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
-
+				// Do not update elements if power boost menu pop Up
 				if(this.player.playerFlags.levelChangedStatus == true){
 					this.powerUpMenu('level');
+				}else{
+					//If all levels are completed finish game
+					if(gameFlags.gameFinished == true){
+						this.gameFinishedScreen();
+					}else{
+						if(this.player.hitPoint <= 0){
+							gameFlags.gameOver = true;
+						}
+						if(gameFlags.nextLevel == true){
+							this.prepareNextLevel();
+						}
+						for(var i = 0; i < this.obstacles.length; i++){
+							this.ctx.beginPath();
+							this.obstacles[i].update();
+						}
+						for(var i = 0; i < this.traps.length; i++){
+							this.traps[i].update();
+						}
+						this.player.update(this.obstacles, this.enemies, this.traps);
+					}
 				}
-				if(gameFlags.nextLevel == true){
-					this.prepareNextLevel();
-				}
-				// console.log('Level Complete');
 			}else{
 				for(var i = 0; i < this.obstacles.length; i++){
 					this.obstacles[i].update();
@@ -161,8 +162,10 @@ function Game(canvas){
 				for(var i = 0; i < this.traps.length; i++){
 					this.traps[i].update();
 				}
-				this.resetGame();
-				// console.log('Game Over');
+				if(this.gameOverScreen()){
+					this.resetGame();
+					this.gameLevel = -1;
+				}
 			}
 			this.ctx.restore();
 		}else{
@@ -173,6 +176,7 @@ function Game(canvas){
 			toggleShadow(this.ctx);
 			if(keyPressed[0] == true && this.mouse.x > (gameWidth / 2 - 50) && this.mouse.x < (gameWidth / 2 - 50) + 100 && this.mouse.y > gameHeight - gameHeight / 6 && this.mouse.y < (gameHeight - gameHeight / 6) + 50){
 				this.gameLevel = 0;
+				buttonClickedSound.play();
 				gameFlags.firstTimeMapLoad = true;
 			}
 		}
@@ -195,9 +199,9 @@ function Game(canvas){
 		toggleShadow(this.ctx);
 		createTextField(this.ctx, '30px serif', 'Select your new ability', 'white', viewControl.x + 150, viewControl.y + 130, 200);
 		toggleShadow(this.ctx);
-		this.ctx.strokeStyle = 'white';
+		this.ctx.lineWidth = '5';
+		this.ctx.strokeStyle = 'green';
 		this.ctx.strokeRect(viewControl.x + 100, viewControl.y + 450, 120, 120);
-		this.ctx.strokeStyle = 'white';
 		this.ctx.strokeRect(viewControl.x + 300, viewControl.y + 450, 120, 120);
 
 		if(this.powerScrollingState == true){
@@ -206,41 +210,40 @@ function Game(canvas){
 				this.powerScrollRight = getRandomInt(this.player.skill.skillList.length);
 			}while(this.powerScrollLeft == this.powerScrollRight);
 			this.powerScrollingState = false;
-			if(this.powerScrollLeft == 'poisionBoost' || this.powerScrollRight == 'poisionBoost'){
-				if(this.player.skill.skillFlags.poision == false){
+			if(this.player.skill.skillList[this.powerScrollLeft] == 'poisonBoost' || this.player.skill.skillList[this.powerScrollRight] == 'poisonBoost'){
+				if(this.player.skill.skillFlags.poison == false){
 					this.powerScrollingState = true;
 				}
 			}
 			if(this.player.skill.skillList[this.powerScrollLeft] == 'criticalBoost' || this.player.skill.skillList[this.powerScrollRight] == 'criticalBoost'){
-				if(this.player.skill.skillFlags.criticalMaster != true){
+				if(this.player.skill.skillFlags.criticalMaster == false){
 					this.powerScrollingState = true;
 				}
 			}
-			if(this.player.skill.skillList[this.powerScrollLeft] == 'bloodLust' || this.player.skill.skillList[this.powerScrollRight] == 'bloodLust'){
-				if(this.player.skill.skillFlags.bloodLust == true){
-					this.powerScrollingState = true;
-				}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'rage')){
+				this.powerScrollingState = true;
 			}
-			if(this.player.skill.skillList[this.powerScrollLeft] == 'invinsibility' || this.player.skill.skillList[this.powerScrollRight] == 'invinsibility'){
-				if(this.player.skill.skillFlags.invinsibility == true){
-					this.powerScrollingState = true;
-				}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'douge')){
+				this.powerScrollingState = true;
 			}
-			if(this.player.skill.skillList[this.powerScrollLeft] == 'douge' || this.player.skill.skillList[this.powerScrollRight] == 'douge'){
-				if(this.player.skill.skillFlags.douge == true){
-					this.powerScrollingState = true;
-				}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'poison')){
+				this.powerScrollingState = true;
 			}
-			if(this.player.skill.skillList[this.powerScrollLeft] == 'waterWalking' || this.player.skill.skillList[this.powerScrollRight] == 'waterWalking'){
-				if(this.player.skill.skillFlags.waterWalking == true){
-					this.powerScrollingState = true;
-				}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'bloodLust')){
+				this.powerScrollingState = true;
+			}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'speedBoost')){
+				this.powerScrollingState = true;
+			}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'waterWalking')){
+				this.powerScrollingState = true;
+			}
+			if(this.checkSkillActiveState(this.powerScrollLeft, this.powerScrollRight, 'criticalMaster')){
+				this.powerScrollingState = true;
 			}
 		}
-
-		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollLeft], 'white', 100, viewControl.y + 425, 100);
-		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollRight], 'white', 300, viewControl.y +  425, 100);
-
+		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollLeft], 'white', 115, viewControl.y + 425, 100);
+		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollRight], 'white', 315, viewControl.y +  425, 100);
 		if(keyPressed[0] == true && this.mouse.x > 100 && this.mouse.x < 220 && this.mouse.y > 450 && this.mouse.y < 570){
 			buttonClickedSound.play();
 			this.powerScrollingState = true;
@@ -253,20 +256,53 @@ function Game(canvas){
 			this.player.addSkill(this.player.skill.skillList[this.powerScrollRight]);
 		}
 	}
+	this.checkSkillActiveState = function(left, right, skillName){
+		if(this.player.skill.skillList[left] == skillName || this.player.skill.skillList[right] == skillName){
+			if(this.player.skill.skillFlags[skillName] == true){
+				return true;
+			}
+		}
+	}
+	this.gameOverScreen = function(){
+		createRectangle(this.ctx, 'black', viewControl.x, viewControl.y, gameWidth, gameHeight);
+		createTextStrokeField(this.ctx, '50px serif','3', 'Game Over', 'red', viewControl.x + (gameWidth / 2) - 120, viewControl.y + gameHeight / 2, 300);
+		createTextField(this.ctx, '50px serif', 'Game Over', 'white', viewControl.x + (gameWidth / 2) - 123, viewControl.y +  gameHeight / 2, 300);
+		createTextField(this.ctx, '15px serif', 'Click anywhere to go to main menu', 'white', viewControl.x + (gameWidth / 2) - 123, viewControl.y +  gameHeight - 100, 300);
+		createTextField(this.ctx, '30px serif', 'You have reached Level ' + this.gameLevel + ' in this Adventure', 'white', viewControl.x + (gameWidth / 2) - 170, viewControl.y +  gameHeight / 2 + 50, 300);
+		if(keyPressed[0] == true){
+			buttonClickedSound.play();
+			return true;
+		}
+	}
+	this.gameFinishedScreen = function(){
+		backgroundSong.play();
+		createRectangle(this.ctx, 'black', viewControl.x, viewControl.y, gameWidth, gameHeight);
+		createTextStrokeField(this.ctx, '60px serif','3', 'Congrats on completing all the Levels', 'red', viewControl.x + (gameWidth / 2) - 170, viewControl.y + gameHeight / 2 - 100, 300);
+		createTextField(this.ctx, '40px serif', 'Congrats on completing all the Levels', 'green', viewControl.x + (gameWidth / 2) - 223, viewControl.y +  gameHeight / 2, 300);
+		createTextField(this.ctx, '15px serif', 'Click anywhere to go to main menu', 'white', viewControl.x + (gameWidth / 2) - 123, viewControl.y +  gameHeight - 100, 300);
+		createTextField(this.ctx, '30px serif', 'Now you are qualified Adventurer', 'white', viewControl.x + (gameWidth / 2) - 150, viewControl.y +  gameHeight / 2 + 50, 300);
+		if(keyPressed[0] == true){
+			buttonClickedSound.play();
+			this.resetGame();
+		}
+	}
 	this.prepareNextLevel = function(){
 		this.resetMap();
 		gameFlags = {
 			levelComplete: false,
 			gameOver: false,
 			nextLevel: false,
-			firstTimeMapLoad: true
+			firstTimeMapLoad: true,
+			gameFinished: false
 		};
 		this.player.x = gameWidth / 2;
 		this.player.y = mapInfo.y - 300;   // starting position of hero
 		viewControl.y = mapInfo.y - gameHeight;
 		this.gameLevel++;
 		//Show game finished instead
-		this.gameLevel = this.gameLevel % mapLevels.length == 0 ? -1 : this.gameLevel;
+		if(this.gameLevel % mapLevels.length == 0){
+			gameFlags.gameFinished = true;
+		}
 	}
 	//Called upon level complete
 	this.resetMap = function(){
@@ -285,8 +321,16 @@ function Game(canvas){
 		this.obstacles = [];
 		this.gameLevel = -1;		//current level in game
 		this.player.resetPlayer();
-		gameFlags.gameOver = false;
-		viewControl = {x: 0, y: mapInfo.y - gameHeight};
+		viewControl = {x: 0, y: mapInfo.y - gameHeight, movingState: false};
+		gameFlags = {
+			levelComplete: false,
+			gameOver: false,
+			nextLevel: false,
+			firstTimeMapLoad: true,
+			gameFinished: false
+		};
+		this.gameLevel = -1;
+		console.log('game finished');
 	}
 	this.mouseDownHandler = function(event){
 		keyPressed[event.button] = true;

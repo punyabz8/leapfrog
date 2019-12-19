@@ -1,28 +1,23 @@
-function Pool (ctx, x, y){
+function Pool(ctx, x, y){
+    this.width = 188;
+    this.height = 188;
     this.x = 47 * x + 20;
     this.y = 47 * y + 465;
-    this.width = 47;
-    this.height = 47;
+    this.imagePositionX = this.x;
+    this.imagePositiony = this.y;
 
     this.init = function(){
         this.draw();
     }
-
     this.draw = function(){
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(obstacleImg[2], this.imagePositionX, this.imagePositiony, this.width, this.height);
     }
-
     this.update = function(){
         this.draw();
     }
-
-    this.checkCollosion = function(player){
-        if (this.x < player.x + player.width &&
-            this.x + this.width > player.x &&
-            this.y < player.y + player.height &&
-            this.y + this.height > player.y) {
-                return true;
+    this.checkCollision = function(mobsAndPlayer){
+        if(collisionCheck(mobsAndPlayer, this)){
+            return true;
         }
     }
 }

@@ -7,8 +7,8 @@ function Arrow(ctx, player){
 	this.eCenterX = 0;
 	this.eCentery = 0;
 	this.angle = null;
-	this.collidedTo = null;
 	this.damagePoint = 0;
+	this.collidedTo = null;
 	this.collidedState = false;
 	this.x = Math.floor(player.x + player.width / 2);
 	this.y = Math.floor(player.y + player.height / 2);
@@ -22,7 +22,13 @@ function Arrow(ctx, player){
 		this.dy = - Math.sin(this.angle);
 		this.x -= this.width / 2;
 		this.y -= this.height / 2;
-		this.draw();
+	}
+	this.setPosition = function(newPosition){
+		var newPositionOfX = this.dx > 0 ? 1 : -1;
+		var newPositionOfY = this.dy > 0 ? 1 : -1;
+		this.y += newPosition * (-newPositionOfY);
+		this.x += newPosition * (newPositionOfX) + this.width / 2;
+
 	}
 	this.update = function(){
 		if(this.collidedState == false){
@@ -66,7 +72,6 @@ function Arrow(ctx, player){
 			if(collisionCheck(enemies[i], this)){
 				this.collidedState = true;
 				this.collidedTo = 'enemy';
-				//arrow hit the enemy (calculate damage)
 				enemies[i].damageByHit(this.damagePoint);
 				var arr = [];
 				arr.push(this);
@@ -78,8 +83,8 @@ function Arrow(ctx, player){
 	}
 	this.draw = function(){
 		ctx.beginPath();
-		ctx.fillStyle = 'red';
 		ctx.save();
+		ctx.fillStyle = 'red';
 		ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
 		ctx.rotate(this.angle - Math.PI / 2);
 		ctx.translate( - this.x - this.width / 2, - this.y - this.height / 2);

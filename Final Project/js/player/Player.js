@@ -3,39 +3,43 @@ function Player(ctx){
     this.dy = 1;
     this.coin = 0;
     this.level = 1;
-    this.speed = 8;     //player speed
+    this.speed = 8;
     this.width = 47;
     this.arrows = [];
     this.height = 47;
     this.expPoint = 0;
+    this.skill = null;
+    this.image = null;
+    this.hitPoint = 50;
+    this.spirit = null;
+    this.enemies = null;
     this.expDeposit = 0;
-    this.hitPoint = 500;     //Player HP
     this.coinDeposit = 0;
-    this.maxHealth = 500;   //Player Max HP
+    this.maxHealth = 500;
+    this.healthBar = null;
     this.damagePoint = 100;
     this.x = gameWidth / 2;
-    this.attackCooldown = 0;   // waiting time until next attack
+    this.enemyTarget = null;    // which enemy to attack
+    this.attackCooldown = 0;    // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
     this.y = mapInfo.y - 300;   // starting position of hero
     this.baseDamagePoint = 50;
-    
-    this.skill = null;
-    this.image = null;
-    this.enemies = null;
-    this.healthBar = null;
-    this.enemyTarget = null;    // which enemy to attack
+    this.experienceBar = null;
     this.imagePositionX = this.x - 7;
     this.imagePositionY = this.y - 18;
     this.imageWidth = this.width + 15;
     this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
-    
+
     var distance = 0;
 
-    this.init = function(){
+    this.init = function(ctx){
         this.skill = new Skill();
         this.image = new Image();
+        this.spirit = new Spirit(ctx);
+        this.spirit.init();
         this.image.src = './assets/images/player.png';
         this.healthBar = new HealthBar(ctx, this, true);
+		this.experienceBar = new ExperienceBar(ctx);
         this.draw();
     }
 
@@ -47,7 +51,7 @@ function Player(ctx){
 			}
 		}
 	}
-    
+
     this.attack = function(enemies){
         var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
@@ -61,30 +65,50 @@ function Player(ctx){
         if(this.enemyTarget != null){
             var tempDamage = this.damagePoint;
             firingSound.play();
-            var arrow = new Arrow(ctx, this);
             for(var skillElement in this.skill.skillFlags){
                 if(this.skill.skillFlags[skillElement] == true){
                     if(skillElement == 'criticalMaster'){
                         tempDamage += Math.floor(this.damagePoint * this.skill.criticalDamage);
                     }
-                    if(skillElement == 'poision'){
-                        tempDamage += this.skill.poisionDamage;
-                    }
-                    if(skillElement == 'doubleArrow'){
-                        //double arrow
+                    if(skillElement == 'poison'){
+                        tempDamage += this.skill.poisonDamage;
                     }
                     if(skillElement == 'rage' && this.hitPoint <= Math.floor(0.20 * this.maxHealth)){
                         tempDamage += Math.floor(this.damagePoint * this.skill.rageDamage);
                     }
                 }
             }
-            arrow.init(tempDamage);
-            arrow.draw();
-            this.arrows.push(arrow);
-            console.log(tempDamage);
+            
+            var arrow = new Arrow(ctx, this);
+            if(this.skill.skillFlags.speedBoost == true){
+                arrow.speed += this.skill.attackSpeedBoostAmount;
+            }
+            if(this.skill.skillFlags.doubleArrow == true){
+                arrow.init(tempDamage);
+                var tempArrowData = {x:arrow.x, y: arrow.y, dx: arrow.dx, dy: arrow.dy, angle: arrow.angle};
+                for(var i = 0; i <= this.skill.doubleArrowAmount; i++){
+                    var tempArrow = new Arrow(ctx, this);
+                    tempArrow.init(tempDamage);
+                    tempArrow.x = tempArrowData.x;
+                    tempArrow.y = tempArrowData.y;
+                    tempArrow.dx = tempArrowData.dx;
+                    tempArrow.dy = tempArrowData.dy;
+                    tempArrow.angle = tempArrowData.angle;
+                    if(this.skill.doubleArrowAmount % 2 == 0 && i == this.skill.doubleArrowAmount / 2){
+                        tempArrow.setPosition(i < this.skill.doubleArrowAmount / 2 ? 0  : 0);
+                        this.arrows.push(tempArrow);
+                        continue;
+                    }
+                    tempArrow.setPosition(i <= this.skill.doubleArrowAmount / 2 ? -(10 * (i + 1))  : (10 * (i - 1)));
+                    this.arrows.push(tempArrow);
+                }
+            }else{
+                arrow.init(tempDamage);
+                this.arrows.push(arrow);
+            }
         }
     }
-    this.checkBoundry = function(){ 
+    this.checkBoundry = function(){
         if(gameFlags.levelComplete == false){
             this.y < gameBoundary.top ? this.y = gameBoundary.top : false;
             this.x < gameBoundary.left ? this.x = gameBoundary.left : false;
@@ -94,7 +118,7 @@ function Player(ctx){
             if(this.x >= 220 && this.x + this.height <= 340 && this.y < gameBoundary.top){
                 this.playerFlags.playerPositionNearDoor = true;
             }else if(this.y > gameBoundary.top + 8){
-                this.playerFlags.playerPositionNearDoor = false;    
+                this.playerFlags.playerPositionNearDoor = false;
             }
             if(this.playerFlags.playerPositionNearDoor == true){
                 if(this.x < 220 && this.y > gameBoundary.top - 160){
@@ -120,24 +144,16 @@ function Player(ctx){
         }
     }
     this.checkPlayerState = function(){
-        if(keyPressed.hasOwnProperty('w')){
-            if(keyPressed.a == false && keyPressed.d == false && keyPressed.w == false && keyPressed.s == false ){
-                    this.playerFlags.movingState = false;
-                }
-        }else if(keyPressed.hasOwnProperty('ArrowUp')){
-            if(keyPressed.ArrowLeft == false && keyPressed.ArrowRight == false && keyPressed.ArrowUp == false && keyPressed.ArrowDown == false ){
-                    this.playerFlags.movingState = false;
-                }
-        }else if(keyPressed.hasOwnProperty('W')){
-            if(keyPressed.A == false && keyPressed.D == false && keyPressed.W == false && keyPressed.S == false){
-                this.playerFlags.movingState = false;
-                }
+        if(keyPressed.a == false && keyPressed.d == false && keyPressed.w == false && keyPressed.s == false && keyPressed.ArrowLeft == false && keyPressed.ArrowRight == false && keyPressed.ArrowUp == false && keyPressed.ArrowDown == false && keyPressed.A == false && keyPressed.D == false && keyPressed.W == false && keyPressed.S == false){
+            this.playerFlags.movingState = false;
+        }else{
+            this.playerFlags.movingState = true;
         }
     }
     //check player collision with objects
     this.checkObstacle = function(obstacles){
         for(var i = 0; i < obstacles.length; i++){
-            if(obstacles[i].checkCollosion(this)){
+            if(obstacles[i].checkCollision(this)){
                 var wy = ((this.width + obstacles[i].width) / 2) * ((this.x + this.width / 2) - (obstacles[i].x + obstacles[i].width / 2));
                 var hx = ((this.height + obstacles[i].height) / 2) * ((this.y + this.height / 2) - (obstacles[i].y + obstacles[i].height / 2));
                 if(wy < hx){
@@ -160,48 +176,45 @@ function Player(ctx){
     }
     this.checkCollisionWithEnemies = function(enemies){
         for(var i = 0; i < enemies.length; i++){
-            if (collisionCheck(this, enemies[i]))
-                {
-                    if(enemies[i].performedDamage == false && enemies[i].damageCooldown == 0){
-                        this.hitPoint -= enemies[i].damagePoint;
-                        enemies[i].damageCooldown = 80;
-                        enemies[i].performedDamage = true;
-                        console.log('Hero hit point   :',this.hitPoint);
-
-                    }   
-                    
-                    var wy = ((this.width + enemies[i].width) / 2) * ((this.x + this.width / 2) - (enemies[i].x + enemies[i].width / 2));
-                    var hx = ((this.height + enemies[i].height) / 2) * ((this.y + this.height / 2) - (enemies[i].y + enemies[i].height / 2));
-                    if(wy < hx){
-                        if(wy > -hx){
-                            // console.log('bottom');
-                            this.y = enemies[i].y + enemies[i].height + 1;
-                            this.dy = 1;
-                            this.movementToggle = -1;
-                        }
-                        else{
-                            // console.log('left');
-                            this.x = enemies[i].x - this.width - 1;
-                            this.dx = -1;
-                            this.movementToggle = 1;
-                            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
-                        }
-                    }else{
-                        if(wy > -hx){
-                            // console.log('right');
-                            this.x = enemies[i].x + enemies[i].width + 1;
-                            this.dx = 1;
-                            this.movementToggle = -1;
-                            this.dy = getRandomInt(-5, 5) > 0 ? this.dy = 1 : this.dy = -1; 
-                        }
-                        else{
-                            // console.log('top');
-                            this.y = enemies[i].y - this.height - 1;
-                            this.dy = -1;
-                            this.movementToggle = -1;
-                        }
+            if (collisionCheck(this, enemies[i])){
+                if(enemies[i].performedDamage == false && enemies[i].damageCooldown == 0){
+                    var gamble = 100;
+                    if(this.skill.skillFlags.douge == true){
+                        gamble = getRandomInt(100);
                     }
-                // console.log('player collided with ', enemies[i]);
+                    if(gamble < 20){
+                        createTextField(ctx, '12px serif', 'douged', 'yellow', this.x, this.y - 25, 10);
+                    }else{
+                        this.hitPoint -= enemies[i].damagePoint;
+                    }
+                    enemies[i].damageCooldown = 80;
+                    enemies[i].performedDamage = true;
+                }
+                var wy = ((this.width + enemies[i].width) / 2) * ((this.x + this.width / 2) - (enemies[i].x + enemies[i].width / 2));
+                var hx = ((this.height + enemies[i].height) / 2) * ((this.y + this.height / 2) - (enemies[i].y + enemies[i].height / 2));
+                if(wy < hx){
+                    if(wy > -hx){
+                        this.dy = 1;
+                        this.movementToggle = -1;
+                        this.y = enemies[i].y + enemies[i].height + 1;
+                    }
+                    else{
+                        this.dx = -1;
+                        this.movementToggle = 1;
+                        this.dy = getRandomIntRange(-5, 5) > 0 ? this.dy = 1 : this.dy = -1;
+                    }
+                }else{
+                    if(wy > -hx){
+                        this.dx = 1;
+                        this.movementToggle = -1;
+                        this.dy = getRandomIntRange(-5, 5) > 0 ? this.dy = 1 : this.dy = -1;
+                    }
+                    else{
+                        this.dy = -1;
+                        this.movementToggle = -1;
+                        this.y = enemies[i].y - this.height - 1;
+                    }
+                }
             }
             if(enemies[i].damageCooldown > 0){
                 enemies[i].damageCooldown--;
@@ -216,10 +229,9 @@ function Player(ctx){
         this.coinDeposit += coinFromEnemy;
     }
     //Called when game is over(set player values to initial state)
-    
+
     this.addSkill = function(skillInput){
         var skillActiveCheck = false;
-        console.log('before   ',  this.skill.skillFlags);
         for(var skillElement in this.skill.skillFlags){
             if(skillElement == skillInput && this.skill.skillFlags[skillElement] == true){
                 skillActiveCheck = true;
@@ -227,53 +239,44 @@ function Player(ctx){
         }
         if(skillActiveCheck == true){
             if(this.skill.skillFlags[skillInput] == true){
-                console.log('damage point increase', skillInput);
                 if(skillInput == 'doubleArrow'){
                     this.skill.doubleArrowAmount += 1;
-                    console.log(this.skill.doubleArrowAmount);
                 }
                 if(skillInput == 'criticalMaster'){
                     this.skill.criticalDamage += this.skill.criticalDamageIncreament;
-                    console.log(this.skill.criticalDamage);
 
                 }
-                if(skillInput == 'poision'){
-                    this.skill.poisionDamage += this.skill.poisionDamageIncrement;
-                    console.log(this.skill.poisionDamage);
+                if(skillInput == 'poison'){
+                    this.skill.poisonDamage += this.skill.poisonDamageIncrement;
+                }
+                if(skillInput == 'speedBoost'){
+                    this.attackSpeedBoostAmount += this.skill.attackSpeedBoostIncrement;
                 }
             }
         }else{
-            console.log('Boosts here');
             if(skillInput == 'healthBoost'){
                 this.maxHealth += Math.floor(this.maxHealth * this.skill.healthBoost);
                 this.hitPoint += Math.floor(this.maxHealth * this.skill.healthBoost);
             }
             if(skillInput == 'criticalBoost'){
-                this.skill.criticalDamage += this.criticalDamageIncreament;
-                console.log(this.maxHealth);
+                this.skill.criticalDamage += this.skill.criticalDamageIncreament;
             }
             if(skillInput == 'heal'){
                 this.hitPoint += Math.floor(this.maxHealth * this.skill.healAmount);
                 if(this.hitPoint > this.maxHealth){
                     this.hitPoint = this.maxHealth;
                 }
-
             }
             if(skillInput == 'attackBoost'){
                 this.damagePoint += this.skill.attackBoostAmount;
             }
         }
-        // console.log('before skill changed',this.skill.skillFlags);
         for(var skillElement in this.skill.skillFlags){
-            console.log(skillElement);
-            debugger;
             if(skillElement == skillInput){
                 this.skill.skillFlags[skillElement] = true;
                 break;
             }
         }
-        console.log('áfter',this.skill.skillFlags);
-        // console.log('After skill changed',this.skill.skillFlags);
     }
     this.update = function(obstacles, enemies, traps){
         tempArrow = [];
@@ -284,12 +287,12 @@ function Player(ctx){
         this.checkBoundry();
         this.checkObstacle(obstacles);
         for(var z = 0; z < traps.length; z++){
-            if(traps[z].checkCollosion(this) == true){
+            if(traps[z].checkCollision(this) == true){
                 if(traps[z].performedDamage == false && traps[z].damageCooldown == 0){
                     this.hitPoint -= traps[z].damagePoint;
                     traps[z].damageCooldown = 100;
                     traps[z].performedDamage = true;
-                }   
+                }
             }
             if(traps[z].damageCooldown > 0){
                 traps[z].damageCooldown--;
@@ -306,7 +309,7 @@ function Player(ctx){
         }else{
             walkingSound.pause();
         }
-        
+
         if(this.playerFlags.movingState == false && this.attackCooldown == 0){
             this.attack(enemies);
         }
@@ -314,10 +317,7 @@ function Player(ctx){
         {
             this.arrows[i].checkBoundry();
             this.arrows[i].checkObstacle(obstacles);
-            var enemyCollision = this.arrows[i].checkEnemyCollision(enemies);
-            if(enemyCollision != null){
-                // enemyCollision
-            }
+            this.arrows[i].checkEnemyCollision(enemies);
             if(this.arrows[i].collidedState == false){
                 this.arrows[i].update();
             }
@@ -328,13 +328,13 @@ function Player(ctx){
                 this.arrows.splice(i, 1);
             }
         }
+        // Save Exp and coin at the completion of level
         if(gameFlags.levelComplete == true){
             this.coin += this.coinDeposit;
             if(this.expDeposit > 0){
                 this.expPoint += 10;
                 this.expDeposit -= 10;
             }
-            // this.expPoint += this.expDeposit;
             if(this.expPoint > this.level * 250){
                 this.expPoint = this.expPoint - this.level * 250;
                 this.level++;
@@ -343,10 +343,14 @@ function Player(ctx){
             }
             this.coinDeposit = 0;
         }
-        this.healthBar.updateHealthBar(this);
         this.draw();
+        this.spirit.update(obstacles, enemies, this);
+        this.healthBar.updateHealthBar(this);
+        if(viewControl.movingState == true){
+            this.experienceBar.updateExperienceBar(this.expPoint, this.level);
+        }
     }
-    
+
     // Circle background of hero
     this.playerBackgroundEffect = function(){
         ctx.beginPath();
@@ -368,6 +372,9 @@ function Player(ctx){
         // ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
     }
+    /**
+     * 
+     */
     this.keyPressed = function(){
         if(this.playerFlags.levelChangedStatus != true){
             if(keyPressed.ArrowLeft == true || keyPressed.a == true || keyPressed.A == true){
@@ -403,20 +410,21 @@ function Player(ctx){
                 if(viewControl.y < 0){
                     viewControl.y = 0;
                 }
+                viewControl.movingState = true;
             }
-            if(this.y > viewControl.y + gameHeight - 300){
+            if(this.y > viewControl.y + gameHeight - 360){
                 viewControl.y = viewControl.y + this.speed;
-                if(this.y > mapInfo.y - 300){
-                    // viewControl.y = mapInfo.y - gameHeight;
+                if(this.y > mapInfo.y - 360){
                     viewControl.y = viewControl.y + this.speed;
-
                 }
                 if(viewControl.y + gameHeight > mapInfo.y){
                     viewControl.y = mapInfo.y - gameHeight;
                 }
+                viewControl.movingState = true;
             }
         }
     }
+    // reset all player status to initial state
     this.resetPlayer = function(){
         this.dx = 1;
         this.dy = 1;
@@ -424,16 +432,16 @@ function Player(ctx){
         this.level = 1;
         this.arrows = [];
         this.expPoint = 0;
-        this.enemies = null;
         this.expDeposit = 0;
-        this.hitPoint = 500;  
+        this.hitPoint = 500;
+        this.enemies = null;
         this.coinDeposit = 0;
         this.maxHealth = 500;
         this.x = gameWidth / 2;
-        this.enemyTarget = null;   
-        this.attackCooldown = 0;  
-        this.attackingTime = 40; 
-        this.y = mapInfo.y - 300;  
+        this.enemyTarget = null;
+        this.attackCooldown = 0;
+        this.attackingTime = 40;
+        this.y = mapInfo.y - 300;
         this.skill.resetSkills();
         this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
     }

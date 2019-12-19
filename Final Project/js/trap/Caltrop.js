@@ -24,7 +24,7 @@ function Caltrop (ctx, x, y){
         this.draw();
     }
 
-    this.checkCollosion = function(player){
+    this.checkCollision = function(player){
         if(collisionCheck(player, this)){
             return true;
         }

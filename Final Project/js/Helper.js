@@ -1,4 +1,4 @@
-function getRandomInt(min, max) {
+function getRandomIntRange(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
@@ -34,9 +34,25 @@ var toggleShadow = function(context){
 	}
 
 }
-
+var createStrokeRectangle = function (ctx, color, x, y, width, height, lineWidth){
+	ctx.strokeStyle = color;
+	ctx.lineWidth = lineWidth;
+	ctx.strokeRect(x, y, width, height);
+	ctx.lineWidth = '0';
+}
+var createRectangle = function (ctx, color, x, y, width, height){
+	ctx.fillStyle = color;
+	ctx.fillRect(x, y, width, height);
+}
 var createTextField = function(ctx,font, text, color, x, y, textWide){
 	ctx.font = font;
 	ctx.fillStyle = color;
 	ctx.fillText(text, x, y, textWide);
+}
+var createTextStrokeField = function(ctx,font, width, text, color, x, y, textWide){
+	ctx.font = font;
+	ctx.lineWidth = width;
+	ctx.strokeStyle = color;
+	ctx.strokeText(text, x, y, textWide);
+	ctx.lineWidth = '0';
 }

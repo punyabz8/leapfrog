@@ -14,6 +14,9 @@ function Game(canvas){
 	this.mouse = {x: 0, y: 0};
 	this.experienceBar = null;
 	this.parentElement = canvas;
+	this.powerScrollLeft = null;
+	this.powerScrollRight = null;
+	this.powerScrollingState = true;
 	this.ctx = canvas.getContext('2d');
 
 	this.init = function(){
@@ -76,6 +79,8 @@ function Game(canvas){
 			gameFlags.firstTimeMapLoad = false;
 		}
 		if(this.gameLevel >= 0){
+			backgroundSong.pause();
+
 			this.ctx.save();
 			this.ctx.translate(-viewControl.x,-viewControl.y);		//translate for viewport adjustment
 			this.background.draw(0);	//draw backgroud image
@@ -132,7 +137,7 @@ function Game(canvas){
 				this.experienceBar.updateExperienceBar(this.player.expPoint, this.player.level);
 
 				if(this.player.playerFlags.levelChangedStatus == true){
-					this.powerUpMenu();
+					this.powerUpMenu('level');
 				}
 				if(gameFlags.nextLevel == true){
 					this.prepareNextLevel();
@@ -150,6 +155,7 @@ function Game(canvas){
 			}
 			this.ctx.restore();
 		}else{
+			backgroundSong.play();
 			this.background.draw(1);
 			toggleShadow(this.ctx);
 			this.playButton();
@@ -169,25 +175,40 @@ function Game(canvas){
 	this.playButton = function(){
 		this.ctx.fillStyle = 'green';
 		this.ctx.fillRect(gameWidth / 2 - 50, gameHeight - gameHeight / 6, 100, 50);
-		this.ctx.font = '30px serif';
-		this.ctx.fillStyle = 'white';
-		this.ctx.fillText('Play', (gameWidth / 2) - 25, (gameHeight - gameHeight / 6 ) + 35, 50);
+		createTextField(this.ctx, '30px serif', 'play', 'white', (gameWidth / 2) - 25, (gameHeight - gameHeight / 6 ) + 35, 50);
 	}
-	this.powerUpMenu = function(){
+	this.powerUpMenu = function(state){
 		this.ctx.fillStyle = '#111111';
 		this.ctx.fillRect(viewControl.x, viewControl.y, gameWidth, gameHeight);
 		this.ctx.fillStyle = '#102cc9';
 		this.ctx.fillRect(viewControl.x, viewControl.y + 100, gameWidth, 50);
+		toggleShadow(this.ctx);
+		createTextField(this.ctx, '30px serif', 'Select your new ability', 'white', viewControl.x + 150, viewControl.y + 130, 200);
+		toggleShadow(this.ctx);
 		this.ctx.strokeStyle = 'white';
 		this.ctx.strokeRect(viewControl.x + 100, viewControl.y + 450, 120, 120);
 		this.ctx.strokeStyle = 'white';
 		this.ctx.strokeRect(viewControl.x + 300, viewControl.y + 450, 120, 120);
-		if(keyPressed[0] == true && this.mouse.x > viewControl.x + 100 && this.mouse.x < viewControl.x + 220 && this.mouse.y > viewControl.y + 450 && this.mouse.y < viewControl.y  + 570){
-			console.log('left power');
-		}else if(keyPressed[0] == true && this.mouse.x > viewControl.x + 300 && this.mouse.x < viewControl.x + 420 && this.mouse.y > viewControl.y + 450 && this.mouse.y < viewControl.y  + 570){
-			console.log('right power');
+		if(this.powerScrollingState == true){dsadwa
+			this.powerScrollRight = getRandomInt(this.player.skill.skillList.length);
+			this.powerScrollLeft = getRandomInt(this.player.skill.skillList.length);
+			this.powerScrollingState = false;
+		}
+		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollLeft], 'white', 120, viewControl.y + 425, 100);
+		createTextField(this.ctx, '20px serif', this.player.skill.skillList[this.powerScrollRight], 'white', 320, viewControl.y +  425, 100);
+
+		if(keyPressed[0] == true && this.mouse.x > 100 && this.mouse.x < 220 && this.mouse.y > 450 && this.mouse.y < 570){
+			buttonClickedSound.play();
+			this.player.addSkill(this.player.skill.skillList[this.powerScrollLeft]);
+			this.powerScrollingState = true;
+			this.player.playerFlags.levelChangedStatus = false;
+		}else if(keyPressed[0] == true && this.mouse.x > 300 && this.mouse.x < 420 && this.mouse.y > 450 && this.mouse.y < 570){
+			buttonClickedSound.play();
+			this.powerScrollingState = true;
+			this.player.playerFlags.levelChangedStatus = false;
 		}
 	}
+
 	this.prepareNextLevel = function(){
 		this.resetMap();
 		gameFlags = {

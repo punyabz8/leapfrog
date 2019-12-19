@@ -2,7 +2,7 @@ function Slime(ctx, x, y, player){
     this.speed = 4;
     this.width = 47;
     this.height = 47;
-    this.hitPoint = 300;    // HP
+    this.hitPoint = 10;    // HP
     this.expPoint = 100;
     this.maxHealth = 300;
     this.coinOnDead = 20;

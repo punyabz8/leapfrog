@@ -7,7 +7,7 @@ function Player(ctx){
     this.width = 47;
     this.arrows = [];
     this.height = 47;
-    this.expPoint = 0;
+    this.expPoint = 250;
     this.expDeposit = 0;
     this.hitPoint = 500;     //Player HP
     this.coinDeposit = 0;
@@ -92,6 +92,7 @@ function Player(ctx){
         }
         this.enemyTarget = nearestEnemy == 99999 ? null : this.enemyTarget;
         if(this.enemyTarget != null){
+            firingSound.play();
             var arrow = new Arrow(ctx, this);
             arrow.init();
             arrow.draw();
@@ -254,8 +255,8 @@ function Player(ctx){
         this.enemyTarget = null;   
         this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
     }
-    this.addSkill = function(){
-
+    this.addSkill = function(skill){
+        console.log('addSkill   :',skill);
     }
     this.update = function(obstacles, enemies, traps){
         tempArrow = [];
@@ -280,9 +281,14 @@ function Player(ctx){
             }
         }
         this.checkCollisionWithEnemies(enemies);
-         
         this.attackCooldown > 0 ? this.attackCooldown-- : this.attackCooldown = this.attackingTime;
         this.checkPlayerState();
+        if(this.playerFlags.movingState == true){
+            walkingSound.play();
+        }else{
+            walkingSound.pause();
+        }
+        
         if(this.playerFlags.movingState == false && this.attackCooldown == 0){
             this.attack(enemies);
         }

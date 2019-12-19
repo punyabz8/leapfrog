@@ -4,6 +4,10 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
+function getRandomInt(max) {
+	return Math.floor(Math.random() * Math.floor(max));
+}
+
 //detect collision between two objects (rectangle)
 var collisionCheck = function(obj1,obj2){
 	if (obj1.x < obj2.x + obj2.width &&
@@ -29,4 +33,10 @@ var toggleShadow = function(context){
 		context.shadowColor = 'transparent';
 	}
 
+}
+
+var createTextField = function(ctx,font, text, color, x, y, textWide){
+	ctx.font = font;
+	ctx.fillStyle = color;
+	ctx.fillText(text, x, y, textWide);
 }

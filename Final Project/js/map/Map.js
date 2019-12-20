@@ -8,9 +8,7 @@ function Map(ctx, firstTimeMapLoad){
         console.log(this.tileMap);
         this.mapWithObjects = JSON.parse(JSON.stringify(mapLevels[currentLevel]));
         this.tileMap = JSON.parse(JSON.stringify(this.mapWithObjects));
-
     }
-
     this.setMapTIles = function(player){
         for(var i = 0; i < this.mapWithObjects.length; i++){
             var tempFence = 0;
@@ -25,6 +23,10 @@ function Map(ctx, firstTimeMapLoad){
                         temp = new Slime(ctx, i, j, player);
                         this.mapWithObjects[i][j] = temp;
                     }
+                    // if(this.mapWithObjects[i][j] == 12){
+                    //     temp = new ArcherEnemy(ctx, i, j, player);
+                    //     this.mapWithObjects[i][j] = temp;
+                    // }
                     if(this.mapWithObjects[i][j] == 21){
                         temp = new Caltrop(ctx, i, j);
                         this.mapWithObjects[i][j] = temp;

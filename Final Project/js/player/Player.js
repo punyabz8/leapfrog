@@ -439,6 +439,10 @@ function Player(ctx){
             }
         }
     }
+    this.damageByHit = function(damageByArrow){
+        this.hitPoint = this.hitPoint - damageByArrow;
+        createTextField(ctx, '12px serif', damageByArrow, 'red', this.x, this.y - 25, 10);
+    }
     // reset all player status to initial state
     this.resetPlayer = function(){
         this.dx = 1;

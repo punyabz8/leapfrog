@@ -1,11 +1,12 @@
-function Slime(ctx, x, y, player){
+function ArcherEnemy(ctx, x, y, player){
     this.speed = 4;
     this.width = 47;
     this.height = 47;
-    this.hitPoint = 300;
-    this.expPoint = 100;
+    this.arrows = [];
+    this.hitPoint = 500;
+    this.expPoint = 200;
     this.maxHealth = 300;
-    this.coinOnDead = 20;
+    this.coinOnDead = 50;
     this.x = 47 * x + 20;
     this.y = 47 * y + 465;
     this.healthBar = null;
@@ -14,17 +15,14 @@ function Slime(ctx, x, y, player){
     this.damageCooldown = 0;
     this.movementToggle = 1;
     this.movementTile = 5 * 47;
-    this.movementCooldown = 40;
+    this.movementCooldown = 300;
     this.performedDamage = false;
-    this.attackingTarget = player;
+    this.enemyTarget = player;
     this.dx = getRandomIntRange(-2, 2) >= 0 ? 1 : -1;
     this.dy = getRandomIntRange(-2, 2) >= 0 ? 1 : -1;
     this.state = {alive:true, attack:true, collided:false};
-    this.spriteInfo = {srcX: 0, srcY: 0, sheetWidth: 145, sheetHeight: 200, frameCount: 3, cols: 3, rows: 4, width: 50, height: 50, currentFrame: 0};
 
-    this.imageWidth = this.width;
-    this.imagePositionX = this.x
-    this.imagePositionY = this.y;
+    var distance = 0;
 
     this.init = function(){
         this.healthBar = new HealthBar(ctx, this, false);
@@ -32,33 +30,33 @@ function Slime(ctx, x, y, player){
         this.draw();
     }
     this.checkCollisionWithplayer = function(){
-        if (collisionCheck(this, this.attackingTarget)){
-            var wy = ((this.width + this.attackingTarget.width) / 2) * ((this.x + this.width / 2) - (this.attackingTarget.x + this.attackingTarget.width / 2));
-            var hx = ((this.height + this.attackingTarget.height) / 2) * ((this.y + this.height / 2) - (this.attackingTarget.y + this.attackingTarget.height / 2));
+        if (collisionCheck(this, this.enemyTarget)){
+            var wy = ((this.width + this.enemyTarget.width) / 2) * ((this.x + this.width / 2) - (this.enemyTarget.x + this.enemyTarget.width / 2));
+            var hx = ((this.height + this.enemyTarget.height) / 2) * ((this.y + this.height / 2) - (this.enemyTarget.y + this.enemyTarget.height / 2));
             if(wy < hx){
                 if(wy > -hx){
                     // collision on bottom
                     this.dy = -1;
-                    this.y = this.attackingTarget.y + this.attackingTarget.height + 1;
+                    this.y = this.enemyTarget.y + this.enemyTarget.height + 1;
                     this.dx = getRandomIntRange(-2, 2) >= 0 ? this.dx = 1 : this.dx = -1;
                 }
                 else{
                     // collision on left
                     this.dx = -1;
-                    this.x = this.attackingTarget.x - this.width - 1;
+                    this.x = this.enemyTarget.x - this.width - 1;
                     this.dy = getRandomIntRange(-2, 2) >= 0 ? this.dy = 1 : this.dy = -1;
                 }
             }else{
                 if(wy > -hx){
                     //collision on right
                     this.dx = 1;
-                    this.x = this.attackingTarget.x + this.attackingTarget.width + 1;
+                    this.x = this.enemyTarget.x + this.enemyTarget.width + 1;
                     this.dy = getRandomIntRange(-2, 2) >= 0 ? this.dy = 1 : this.dy = -1;
                 }
                 else{
                     // collision on top
                     this.dy = 1;
-                    this.y = this.attackingTarget.y - this.height - 1;
+                    this.y = this.enemyTarget.y - this.height - 1;
                 }
             }
             this.movementToggle = -1;
@@ -124,10 +122,14 @@ function Slime(ctx, x, y, player){
     this.damageByHit = function(damageByArrow){
         this.hitPoint = this.hitPoint - damageByArrow;
         createTextField(ctx, '12px serif', damageByArrow, 'red', this.x, this.y - 25, 10);
+
+    }
+    this.attack = function(player){
+        var arrow = new Arrow(ctx, this);
+        arrow.init(this.damagePoint);
+        this.arrows.push(arrow);
     }
     this.update = function(obstacle){
-        this.imagePositionX = this.x;
-        this.imagePositionY = this.y;
         this.checkObstacle(obstacle);
         this.checkBoundry();
         this.checkCollisionWithplayer();
@@ -148,33 +150,28 @@ function Slime(ctx, x, y, player){
                 this.movementTile -= this.speed;
             }
         }
-        this.healthBar.updateHealthBar(this);
-        if(frames % 10 == 0){
-            if(this.dx == -1 && this.dy == -1){
-                this.spriteInfo.srcY = 51;
-                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
-                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
-            }
-            if(this.dx == -1 && this.dy == 1){
-                this.spriteInfo.srcY = 101;
-                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
-                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
-            }
-            if(this.dx == 1 && this.dy == -1){
-                this.spriteInfo.srcY = 151;
-                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
-                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
-            }
-            if(this.dx == 1 && this.dy == 1){
-                this.spriteInfo.srcY = 1;
-                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
-                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
+        if(this.attackingCooldown == 0){
+            this.attack(player);
+            this.attackingCooldown = 100;
+        }
+        if(this.attackingCooldown >0){
+            this.attackingCooldown--;
+        }
+        for(var i = 0; i < this.arrows.length; i++)
+        {
+            this.arrows[i].checkBoundry();
+            this.arrows[i].checkObstacle(obstacle);
+            this.arrows[i].checkEnemyCollision(player);
+            if(this.arrows[i].collidedState == false){
+                this.arrows[i].update();
             }
         }
+        this.healthBar.updateHealthBar(this);
         this.draw();
     }
     this.draw = function(){
-        console.log(this.spriteInfo);
-        ctx.drawImage(slimeImg, this.spriteInfo.srcX, this.spriteInfo.srcY, 50, 50, this.x, this.y, this.width, this.height);
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        // ctx.drawImage(slimeImg, this.spriteInfo.srcX, this.spriteInfo.srcY, 50, 50, this.x, this.y, this.width, this.height);
     }
 }

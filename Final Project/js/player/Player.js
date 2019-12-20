@@ -10,7 +10,7 @@ function Player(ctx){
     this.expPoint = 0;
     this.skill = null;
     this.image = null;
-    this.hitPoint = 50;
+    this.hitPoint = 500;
     this.spirit = null;
     this.enemies = null;
     this.expDeposit = 0;
@@ -29,6 +29,8 @@ function Player(ctx){
     this.imagePositionY = this.y - 18;
     this.imageWidth = this.width + 15;
     this.playerFlags = {movingState: false, levelChangedStatus: false, playerPositionNearDoor: false};
+    this.spriteNotMovingInfo = {srcX: 0, srcY: 0, sheetWidth: 560, sheetHeight: 640, frameCount: 4, cols: 4, rows: 4, width: 140, height: 160, currentFrame: 0};
+
 
     var distance = 0;
 
@@ -51,7 +53,6 @@ function Player(ctx){
 			}
 		}
 	}
-
     this.attack = function(enemies){
         var nearestEnemy = 99999;
         for(var i = 0; i < enemies.length; i++){
@@ -78,7 +79,6 @@ function Player(ctx){
                     }
                 }
             }
-            
             var arrow = new Arrow(ctx, this);
             if(this.skill.skillFlags.speedBoost == true){
                 arrow.speed += this.skill.attackSpeedBoostAmount;
@@ -307,9 +307,30 @@ function Player(ctx){
         if(this.playerFlags.movingState == true){
             walkingSound.play();
         }else{
+            if(frames % 40 == 0){
+                if(this.dy == -1){
+                    this.spriteNotMovingInfo.srcY = 1;
+                    this.spriteNotMovingInfo.srcX = this.spriteNotMovingInfo.currentFrame * this.spriteNotMovingInfo.width;
+                    this.spriteNotMovingInfo.currentFrame = ++this.spriteNotMovingInfo.currentFrame % this.spriteNotMovingInfo.cols;
+                }
+                if(this.dx == -1){
+                    this.spriteNotMovingInfo.srcY = 321;
+                    this.spriteNotMovingInfo.srcX = this.spriteNotMovingInfo.currentFrame * this.spriteNotMovingInfo.width;
+                    this.spriteNotMovingInfo.currentFrame = ++this.spriteNotMovingInfo.currentFrame % this.spriteNotMovingInfo.cols;
+                }
+                if(this.dx == 1){
+                    this.spriteNotMovingInfo.srcY = 161;
+                    this.spriteNotMovingInfo.srcX = this.spriteNotMovingInfo.currentFrame * this.spriteNotMovingInfo.width;
+                    this.spriteNotMovingInfo.currentFrame = ++this.spriteNotMovingInfo.currentFrame % this.spriteNotMovingInfo.cols;
+                }
+                if(this.dy == 1){
+                    this.spriteNotMovingInfo.srcY = 481;
+                    this.spriteNotMovingInfo.srcX = this.spriteNotMovingInfo.currentFrame * this.spriteNotMovingInfo.width;
+                    this.spriteNotMovingInfo.currentFrame = ++this.spriteNotMovingInfo.currentFrame % this.spriteNotMovingInfo.cols;
+                }
+            }
             walkingSound.pause();
         }
-
         if(this.playerFlags.movingState == false && this.attackCooldown == 0){
             this.attack(enemies);
         }
@@ -363,18 +384,12 @@ function Player(ctx){
         ctx.stroke();
         ctx.lineWidth = 0;
         toggleShadow(ctx);
-
     }
-
     this.draw = function(){
         this.playerBackgroundEffect();
-        // ctx.strokeStyle = 'black';
-        // ctx.strokeRect(this.x, this.y, this.width, this.height);
-        ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
+        ctx.drawImage(playerNotMovingImg, this.spriteNotMovingInfo.srcX, this.spriteNotMovingInfo.srcY, 140, 160, this.x, this.y, this.width, this.height);
+        // ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
     }
-    /**
-     * 
-     */
     this.keyPressed = function(){
         if(this.playerFlags.levelChangedStatus != true){
             if(keyPressed.ArrowLeft == true || keyPressed.a == true || keyPressed.A == true){

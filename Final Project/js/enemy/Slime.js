@@ -20,8 +20,8 @@ function Slime(ctx, x, y, player){
     this.dx = getRandomIntRange(-2, 2) >= 0 ? 1 : -1;
     this.dy = getRandomIntRange(-2, 2) >= 0 ? 1 : -1;
     this.state = {alive:true, attack:true, collided:false};
+    this.spriteInfo = {srcX: 0, srcY: 0, sheetWidth: 145, sheetHeight: 200, frameCount: 3, cols: 3, rows: 4, width: 50, height: 50, currentFrame: 0};
 
-    this.image = null;
     this.imageWidth = this.width;
     this.imagePositionX = this.x
     this.imagePositionY = this.y;
@@ -31,7 +31,6 @@ function Slime(ctx, x, y, player){
         this.healthBar.draw();
         this.draw();
     }
-
     this.checkCollisionWithplayer = function(){
         if (collisionCheck(this, this.attackingTarget)){
             var wy = ((this.width + this.attackingTarget.width) / 2) * ((this.x + this.width / 2) - (this.attackingTarget.x + this.attackingTarget.width / 2));
@@ -65,7 +64,6 @@ function Slime(ctx, x, y, player){
             this.movementToggle = -1;
         }
     }
-
     this.checkBoundry = function(){
         if(this.x < gameBoundary.left){
             this.dx = 1;
@@ -92,7 +90,6 @@ function Slime(ctx, x, y, player){
             this.dx = getRandomIntRange(-2, 2) >= 0 ? this.dx = 1 : this.dx = -1;
         }
     }
-
     this.checkObstacle = function(obstacles){
         for(var i = 0; i < obstacles.length; i++){
             if(obstacles[i].checkCollision(this)){
@@ -129,7 +126,6 @@ function Slime(ctx, x, y, player){
         createTextField(ctx, '12px serif', damageByArrow, 'red', this.x, this.y - 25, 10);
 
     }
-
     this.update = function(obstacle){
         this.imagePositionX = this.x;
         this.imagePositionY = this.y;
@@ -154,13 +150,32 @@ function Slime(ctx, x, y, player){
             }
         }
         this.healthBar.updateHealthBar(this);
+        if(frames % 10 == 0){
+            if(this.dx == -1 && this.dy == -1){
+                this.spriteInfo.srcY = 51;
+                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
+                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
+            }
+            if(this.dx == -1 && this.dy == 1){
+                this.spriteInfo.srcY = 101;
+                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
+                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
+            }
+            if(this.dx == 1 && this.dy == -1){
+                this.spriteInfo.srcY = 151;
+                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
+                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
+            }
+            if(this.dx == 1 && this.dy == 1){
+                this.spriteInfo.srcY = 1;
+                this.spriteInfo.srcX = this.spriteInfo.currentFrame * this.spriteInfo.width;
+                this.spriteInfo.currentFrame = ++this.spriteInfo.currentFrame % this.spriteInfo.cols;
+            }
+        }
         this.draw();
     }
-
     this.draw = function(){
-        ctx.fillStyle = 'green';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        console.log(this.spriteInfo);
+        ctx.drawImage(slimeImg, this.spriteInfo.srcX, this.spriteInfo.srcY, 50, 50, this.x, this.y, this.width, this.height);
     }
-
-
 }

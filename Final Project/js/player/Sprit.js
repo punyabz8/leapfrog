@@ -10,12 +10,12 @@ function Spirit(ctx){
     this.image = null;
     this.angle = null;
     this.damagePoint = 50;
-    this.x = gameWidth / 2;
     this.enemyTarget = null;    // which enemy to attack
     this.attackCooldown = 0;   // waiting time until next attack
     this.attackingTime = 40;    // time to wait for next consecutive attack
     this.y = mapInfo.y - 300;   // starting position of Spirit
     this.baseDamagePoint = 50;
+    this.x = gameWidth / 2 - 100;
     this.imagePositionX = this.x - 7;
     this.imagePositionY = this.y - 18;
     this.imageWidth = this.width + 15;
@@ -42,7 +42,11 @@ function Spirit(ctx){
         this.enemyTarget = nearestEnemy == 99999 ? null : this.enemyTarget;
         if(this.enemyTarget != null){
             var arrow = new Arrow(ctx, this);
-            arrow.init(this.damagePoint);
+            var tmpDamage = this.damagePoint;
+            if(this.skill.skillFlags.attackBoost == true){
+                tmpDamage += this.damagePoint * this.skill.attackBoostAmount;
+            }
+            arrow.init(tmpDamage);
             this.arrows.push(arrow);
         }
     }
@@ -53,10 +57,10 @@ function Spirit(ctx){
         this.y + this.height > mapInfo.y - gameBoundary.bottom ? this.y = mapInfo.y - this.height - gameBoundary.bottom : false;
     }
     this.addSkill = function(playerLevel){
-        if(playerLevel > 10){
+        if(playerLevel >= 5){
             this.skill.recovery = true;
         }
-        if(playerLevel > 20){
+        if(playerLevel >= 10){
             this.skill.attackBoost = true;
         }
     }
@@ -88,6 +92,14 @@ function Spirit(ctx){
             this.x += this.speed * this.dx;
             this.y += this.speed * this.dy;
         }
+        if(player.level % 5 == 0){
+            this.addSkill(player.level);
+        }
+        if(this.skill.skillFlags.recovery == true){
+            if(frames % 100 == 0){
+                player.hitPoint += this.skill.recoveryAmount;
+            }
+        }
         this.draw();
     }
     this.checkHeroPosition = function(player){
@@ -108,7 +120,7 @@ function Spirit(ctx){
     this.draw = function(){
         ctx.drawImage(this.image, this.imagePositionX, this.imagePositionY, this.width + 15, this.height + 18);
     }
-    // reset all player status to initial state
+    // reset all Spirit status to initial state
     this.resetSpirit = function(){
         this.dx = 1;
         this.dy = 1;

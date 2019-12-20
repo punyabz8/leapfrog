@@ -48,7 +48,6 @@ function Player(ctx){
     this.checkEnemyIsInView = function(point){
 		for(var j = 0; j < this.enemies.length; j++){
 			if(point.x >= this.enemies[j].x && point.x <= this.enemies[j].x + this.enemies[j].width && point.y >= this.enemies[j].y && point.y <= this.enemies[j].y + this.enemies[j].height){
-                console.log('hello Enemy is in view');
 				return this.enemies[j];
 			}
 		}

@@ -174,7 +174,6 @@ function Slime(ctx, x, y, player){
         this.draw();
     }
     this.draw = function(){
-        console.log(this.spriteInfo);
         ctx.drawImage(slimeImg, this.spriteInfo.srcX, this.spriteInfo.srcY, 50, 50, this.x, this.y, this.width, this.height);
     }
 }
